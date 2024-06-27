@@ -548,10 +548,10 @@ def scout_report(data_frame, gender, league, season, xtra, template, pos, player
 
     if season in ['22-23','2023','23-24','2024']:
         # clubpath = r"C:\Users\Asus\Downloads\GJNbLo0WAAEhEdJ-modified.png"
-        clubpath = r"..IMG_5104-modified.png"
+        clubpath = r"https://github.com/IMG_5104-modified.png"
         # clubpath = raw_valsdf['Team logo'].values[0]
-        # image = Image.open(urllib.request.urlopen(clubpath))
-        image = Image.open(clubpath)
+        image = Image.open(urllib.request.urlopen(clubpath))
+        # image = Image.open(clubpath)
         newax = fig.add_axes([.44,.43,0.15,0.15], anchor='C', zorder=1)
         newax.imshow(image)
         newax.axis('off')
