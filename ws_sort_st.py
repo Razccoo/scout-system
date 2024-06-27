@@ -548,7 +548,7 @@ def scout_report(data_frame, gender, league, season, xtra, template, pos, player
 
     if season in ['22-23','2023','23-24','2024']:
         # clubpath = r"C:\Users\Asus\Downloads\GJNbLo0WAAEhEdJ-modified.png"
-        clubpath = "https://github.com/Razccoo/scout-system/blob/master/IMG_5104-modified.png"
+        clubpath = "https://i.ibb.co/0MKMML5/IMG-5104-modified.png"
         # clubpath = raw_valsdf['Team logo'].values[0]
         image = Image.open(urllib.request.urlopen(clubpath))
         # image = Image.open(clubpath)
