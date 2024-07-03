@@ -366,7 +366,7 @@ def main():
         
         # Add option to compare player's metrics
         comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
-        selected_comparison = st.sidebar.selectbox("İle karşılaştırın", comparison_options)
+        selected_comparison = st.sidebar.selectbox("Karşılaştırma", comparison_options)
 
         # Show custom schema inputs only if "Create Custom Schema" is selected
         if schema_type:
