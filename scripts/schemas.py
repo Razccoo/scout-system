@@ -1,6 +1,7 @@
 # schemas.py
 
-param_list = ['Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 'İkili Mücadeleler / 90', 'Kazanılan İkili Mücadeleler %', 'Savunma Eylemleri / 90',
+def params_list():
+    param_list = ['Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 'İkili Mücadeleler / 90', 'Kazanılan İkili Mücadeleler %', 'Savunma Eylemleri / 90',
  'Savunma İkili Mücadeleleri / 90', 'Kazanılan Savunma İkili Mücadeleleri %', 'Hava Mücadeleleri / 90', 'Kazanılan Hava Mücadeleleri %', 'Kayarak Müdahaleler / 90',
  'Kayarak Müdahaleler (pAdj)', 'Engellenen Şutlar / 90', 'Top Kesme / 90', 'Top Kesme (pAdj)', 'Fauller / 90', 'Sarı Kartlar', 'Sarı Kartlar / 90', 'Kırmızı Kartlar',
  'Kırmızı Kartlar / 90', 'Başarılı Hücum Hareketleri / 90', 'Goller / 90', 'Penaltısız Goller', 'Penaltısız Goller / 90', 'Beklenen Gol (xG) / 90',
@@ -17,25 +18,32 @@ param_list = ['Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 
  'Engellenen Goller / 90', 'Kaleciye Geri Paslar / 90', 'Çıkışlar / 90', 'Hava Mücadeleleri / 90.1', 'Serbest Vuruşlar / 90', 'Direkt Serbest Vuruşlar / 90',
  'Direkt Serbest Vuruşlar Hedef %', 'Kornerler / 90', 'Kullanılan Penaltılar', 'Penaltı Dönüşümü %', 'Top Çalma & Kapmalar (pAdj) / 90', '1., 2., 3. Asist',
  'xA başına Şut Asisti', 'Kazanılan Hava Mücadeleleri / 90', 'Kartlar / 90', 'Gol Yememe %', 'npxG', 'npxG / 90', 'Şut Başına npxG', 'Dikey Pas %']
+    
+    return param_list
 
-schema_params = {
+def schema_params():
+    schema_params = {
     "Defending": ["Kazanılan Hava Mücadeleleri %", "Top Çalma & Kapmalar (pAdj) / 90", "Savunma Eylemleri / 90"],
     "Ball Progression": ["Kademeli Taşımalar / 90", "Kademeli Paslar / 90", "Hızlanmalar / 90", "Başarılı Dribbling %"],
     "Attacking": ["Ceza Sahasında Dokunuşlar / 90", "Şutlar / 90", "Şut Başına npxG", "Gol/ Şut %", "Penaltısız Goller / 90", "npxG / 90"],
     "Chance Creation": ["Akıllı Paslar / 90", "İkinci Asist / 90", "Asist / 90", "xA başına Şut Asisti", "Beklenen Asist (xA) / 90", "Şut Asistleri / 90"],
     "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Pas %", "Başarılı Kısa / Orta Paslar %"]
 }
+    return schema_params
 
 
-wingers_params = {
+def wingers_params():
+    wingers_params = {
     "Vision": ["Smart passes per 90", "Key passes per 90", "xA per 90", "Shot assists per 90", "Second assists per 90", "Deep completions per 90"],
     "Passing": ["Vertical Pass %", "Short / medium passes per 90", "Accurate short / medium passes, %", "Long passes per 90", "Accurate long passes, %", "Crosses per 90", "Accurate crosses, %"],
     "Quality Final Action": ["Goal conversion, %", "npxG per shot", "Non-penalty goals per 90", "Shots on target, %", "Assists per 90"],
     "Aggression": ["pAdj Tkl+Int per 90", "Fouls per 90", "Duels per 90", "Aerial duels won, %", "Duels won, %"],
     "Build-Up": ["Accelerations per 90", "Progressive runs per 90", "Progressive passes per 90", "Dribbles per 90", "Successful dribbles, %"]
 }
+    return wingers_params
 
-label_mapping = {
+def label_mapping():
+    label_mapping = {
     "Kazanılan Hava Mücadeleleri %": "Kazanılan\nHava Müc.\n%",
     "Top Çalma & Kapmalar (pAdj) / 90": "Top Çalma &\nKapmalar\n(pAdj)",
     "Savunma Eylemleri / 90": "Savunma\nEylemleri",
@@ -60,8 +68,17 @@ label_mapping = {
     "Başarılı Uzun Pas %": "Uzun\nPas %",
     "Başarılı Kısa / Orta Paslar %": "Kısa ve Orta\nPas %"
 }
+    return label_mapping
 
-column_mapping = {
+def column_mapping():
+    column_mapping = {
+    "Player": "Oyuncu",
+    "Age": "Yaş",
+    "Minutes played": "Oynadığı dakikalar",
+    # "League": "Lig",
+    "Position": "Pozisyon",
+    "Main Position": "Ana Pozisyon",
+    "Team within selected timeframe": "Kulüp",
     "Goals": "Goller",
     "xG": "Beklenen Gol (xG)",
     "Assists": "Asistler",
@@ -179,4 +196,4 @@ column_mapping = {
     "npxG per shot": "Şut Başına npxG",
     "Vertical Pass %": "Dikey Pas %"
 }
-    
+    return column_mapping

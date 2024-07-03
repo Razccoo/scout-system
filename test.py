@@ -58,7 +58,7 @@ def read_csv2(link):
     }
     
     df['Main Position'] = df['Main Position'].replace(position_replacements)
-    df.rename(columns=schemas.column_mapping, inplace=True)
+    df.rename(columns=schemas.column_mapping(), inplace=True)
     df.fillna(0,inplace=True)
     
     return df
@@ -97,7 +97,7 @@ def add_labels(angles, values, labels, offset, ax, text_colors):
         )
 
 def scout_report(df):
-    df["name"] = df["name"].replace(schemas.label_mapping)
+    df["name"] = df["name"].replace(schemas.label_mapping())
     RAW_VALUES = df["raw_value"].values
     VALUES = df["value"].values
     LABELS = df["name"].values
@@ -182,7 +182,7 @@ def scout_report(df):
     def wrap_labels(labels, width):
         wrapped = []
         for label in labels:
-            if label not in schemas.label_mapping.values():
+            if label not in schemas.label_mapping().values():
                 wrapped.append('\n'.join(textwrap.wrap(label, width)))
             else:
                 wrapped.append(label)
@@ -220,51 +220,51 @@ def scout_report(df):
 def filter_by_position(df, position):
     fw = ["CF", "RW", "LW", "AMF"]
     if position == "Forvetler (OOS, K, SF)":
-        return df[df['Main Position'].str.contains('|'.join(fw), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(fw), na=False)]
     
     stw = ["CF", "RW", "LW", "LAMF", "RAMF"]
     if position == "Forvetler ve Kanatlar":
-        return df[df['Main Position'].str.contains('|'.join(stw), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(stw), na=False)]
     
     fwns = ["RW", "LW", "AMF"]
     if position == "Santrforsuz Forvetler (OOS, K)":
-        return df[df['Main Position'].str.contains('|'.join(fwns), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(fwns), na=False)]
     
     wing = ["RW", "LW", "WF", "LAMF", "RAMF"]
     if position == "Kanatlar":
-        return df[df['Main Position'].str.contains('|'.join(wing), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(wing), na=False)]
 
     mids = ["DMF", "CMF", "AMF"]
     if position == "Orta Saha (DOS, OS, OOS)":
-        return df[df['Main Position'].str.contains('|'.join(mids), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(mids), na=False)]
 
     cms = ["CMF", "AMF"]
     if position == "DOS Olmayan Orta Saha (OS, OOS)":
-        return df[df['Main Position'].str.contains('|'.join(cms), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cms), na=False)]
 
     dms = ["CMF", "DMF"]
     if position == "OOS Olmayan Orta Saha (DOS, OS)":
-        return df[df['Main Position'].str.contains('|'.join(dms), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(dms), na=False)]
 
     fbs = ["LB", "RB", "WB"]
     if position == "Bekler (FB/KB)":
-        return df[df['Main Position'].str.contains('|'.join(fbs), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(fbs), na=False)]
 
     defs = ["LB", "RB", "WB", "CB", "DMF"]
     if position == "Defansif Oyuncular (STP, FB/KB, DOS)":
-        return df[df['Main Position'].str.contains('|'.join(defs), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(defs), na=False)]
 
     cbdm = ["CB", "DMF"]
     if position == "Stoper & Defansif Orta Saha":
-        return df[df['Main Position'].str.contains('|'.join(cbdm), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cbdm), na=False)]
 
     cf = ["CF"]
     if position == "Santrforlar":
-        return df[df['Main Position'].str.contains('|'.join(cf), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cf), na=False)]
 
     cb = ["CB"]
     if position == "Stoperler":
-        return df[df['Main Position'].str.contains('|'.join(cb), na=False)]
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cb), na=False)]
     else:
         return df
 
@@ -307,9 +307,8 @@ def main():
     # Load the league data from the constructed URL
     try:
         league_season_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
-        league_season_data['League'] = f'{selected_league}'
-        league_season_data = league_season_data[['Player', 'Age', 'Minutes played', 'League', 'Position', 'Main Position', 'Team within selected timeframe'] + list(schemas.column_mapping.values())]
-        
+        league_season_data = league_season_data[list(schemas.column_mapping().values())]
+        league_season_data['Lig'] = f'{selected_league}'
         # Primary Position selector
         position_options = [
             "Forvetler (OOS, K, SF)", "Forvetler ve Kanatlar", "Santrforsuz Forvetler (OOS, K)", 
@@ -351,16 +350,16 @@ def main():
         # Filter the data based on the selected filters
         filtered_data = filter_by_position(league_season_data, selected_position)
         filtered_data = filtered_data[
-            (filtered_data['Minutes played'] >= min_minutes_played) &
-            (filtered_data['Age'] <= max_age)
+            (filtered_data['Oynadığı dakikalar'] >= min_minutes_played) &
+            (filtered_data['Yaş'] <= max_age)
         ].reset_index(drop=True)
         
         # Load the top 5 leagues data if needed
         if selected_comparison == "Top 5 Ligi":
             top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
             comparison_data = top_5_league_data[
-                (top_5_league_data['Minutes played'] >= min_minutes_played) &
-                (top_5_league_data['Age'] <= max_age)
+                (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
+                (top_5_league_data['Yaş'] <= max_age)
             ].reset_index(drop=True)
         else:
             comparison_data = filtered_data
@@ -386,43 +385,43 @@ def main():
         if st.button("Radar Oluştur"):
             player_data = filtered_data[
                 (filtered_data['Player'] == player_name) &
-                (filtered_data['Age'] == player_age)
+                (filtered_data['Yaş'] == player_age)
             ]
             
             # Initialize combined_data
             combined_data = pd.DataFrame()
         
             # Check if the player is already playing in the top 5 leagues
-            player_in_top_5 = any(player_data['League'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]))
+            player_in_top_5 = any(player_data['Lig'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]))
         
             if selected_comparison == "Top 5 Ligi":
                 if player_in_top_5:
                     # Player is already in the top 5 leagues, use filtered data
                     player_data = filtered_data[
                         (filtered_data['Player'] == player_name) &
-                        (filtered_data['Age'] == player_age)
+                        (filtered_data['Yaş'] == player_age)
                     ]
                 else:
                     # Player is not in the top 5 leagues, combine data
                     player_data_temp = filtered_data[
                         (filtered_data['Player'] == player_name) &
-                        (filtered_data['Age'] == player_age)
+                        (filtered_data['Yaş'] == player_age)
                     ]
                     combined_data = pd.concat([comparison_data, player_data_temp]).reset_index(drop=True)
                     player_data = combined_data[
                         (combined_data['Player'] == player_name) &
-                        (combined_data['Age'] == player_age)
+                        (combined_data['Yaş'] == player_age)
                     ]
             else:
                 combined_data = comparison_data
                 player_data = combined_data[
                     (combined_data['Player'] == player_name) &
-                    (combined_data['Age'] == player_age)
+                    (combined_data['Yaş'] == player_age)
                 ]
             
-            player_pos = player_data['Main Position'].iloc[0]
-            player_min = player_data['Minutes played'].iloc[0]
-            player_team = player_data['Team within selected timeframe'].iloc[0]
+            player_pos = player_data['Ana Pozisyonu'].iloc[0]
+            player_min = player_data['Oynadığı dakikalar'].iloc[0]
+            player_team = player_data['Kulüp'].iloc[0]
             title_note = " 90 Dk Başına"
             
             if not player_data.empty:
@@ -431,7 +430,7 @@ def main():
                 
                 # Use selected schema
                 if selected_schema == "Default Schema":
-                    schema_to_use = schemas.schema_params
+                    schema_to_use = schemas.schema_params()
                 else:
                     schema_to_use = st.session_state.custom_schemas[selected_schema]
                 
@@ -446,7 +445,7 @@ def main():
                         if metric in player_data.columns:
                             player_value = player_data.iloc[0][metric]
                             ranked_values = rank_column(combined_data, metric)
-                            player_ranked_value = ranked_values[combined_data.index[combined_data['Player'] == player_name].tolist()[0]]
+                            player_ranked_value = ranked_values[combined_data.index[combined_data['Oyuncu'] == player_name].tolist()[0]]
                             radar_values.append(player_ranked_value)
                             radar_labels.append(metric)
                             radar_groups.append(group)
