@@ -219,51 +219,51 @@ def scout_report(df):
 
 def filter_by_position(df, position):
     fw = ["CF", "RW", "LW", "AMF"]
-    if position == "Forwards (AM, W, CF)":
+    if position == "Forvetler (OOS, K, SF)":
         return df[df['Main Position'].str.contains('|'.join(fw), na=False)]
     
     stw = ["CF", "RW", "LW", "LAMF", "RAMF"]
-    if position == "Strikers and Wingers":
+    if position == "Forvetler ve Kanatlar":
         return df[df['Main Position'].str.contains('|'.join(stw), na=False)]
     
     fwns = ["RW", "LW", "AMF"]
-    if position == "Forwards no ST (AM, W)":
+    if position == "Santrforsuz Forvetler (OOS, K)":
         return df[df['Main Position'].str.contains('|'.join(fwns), na=False)]
     
     wing = ["RW", "LW", "WF", "LAMF", "RAMF"]
-    if position == "Wingers":
+    if position == "Kanatlar":
         return df[df['Main Position'].str.contains('|'.join(wing), na=False)]
 
     mids = ["DMF", "CMF", "AMF"]
-    if position == "Central Midfielders (DM, CM, CAM)":
+    if position == "Orta Saha (DOS, OS, OOS)":
         return df[df['Main Position'].str.contains('|'.join(mids), na=False)]
 
     cms = ["CMF", "AMF"]
-    if position == "Central Midfielders no DM (CM, CAM)":
+    if position == "DOS Olmayan Orta Saha (OS, OOS)":
         return df[df['Main Position'].str.contains('|'.join(cms), na=False)]
 
     dms = ["CMF", "DMF"]
-    if position == "Central Midfielders no CAM (DM, CM)":
+    if position == "OOS Olmayan Orta Saha (DOS, OS)":
         return df[df['Main Position'].str.contains('|'.join(dms), na=False)]
 
     fbs = ["LB", "RB", "WB"]
-    if position == "Fullbacks (FBs/WBs)":
+    if position == "Bekler (FB/KB)":
         return df[df['Main Position'].str.contains('|'.join(fbs), na=False)]
 
     defs = ["LB", "RB", "WB", "CB", "DMF"]
-    if position == "Defenders (CB, FB/WB, DM)":
+    if position == "Defansif Oyuncular (STP, FB/KB, DOS)":
         return df[df['Main Position'].str.contains('|'.join(defs), na=False)]
 
     cbdm = ["CB", "DMF"]
-    if position == "CBs & DMs":
+    if position == "Stoper & Defansif Orta Saha":
         return df[df['Main Position'].str.contains('|'.join(cbdm), na=False)]
 
     cf = ["CF"]
-    if position == "Strikers":
+    if position == "Santrforlar":
         return df[df['Main Position'].str.contains('|'.join(cf), na=False)]
 
     cb = ["CB"]
-    if position == "Centre-Backs":
+    if position == "Stoperler":
         return df[df['Main Position'].str.contains('|'.join(cb), na=False)]
     else:
         return df
