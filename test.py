@@ -327,7 +327,7 @@ def main():
     st.sidebar.header("Seçenekler")
     
     # Selection box for schema type at the top of the sidebar
-    schema_type = st.sidebar.toggle("Özel Şablon Kullan")
+    schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
     
     # Load league information
     league_data = read_csv(league_info_url)
