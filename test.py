@@ -18,6 +18,7 @@ font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apa
                         'RobotoSlab[wght].ttf')
 # URL for the league information CSV
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
+crop_url = 'https://crop-circle.imageonline.co/'
 
 schema_params = {
     "Defending": ["Aerial duels won, %", "pAdj Tkl+Int per 90", "Successful defensive actions per 90"],
@@ -320,26 +321,26 @@ def load_top_5_leagues():
 #####################################################################################################################################
 
 def main():
-    st.title("Soccer Prospect Research & Radar Creation")
-    st.subheader("All data from Wyscout")
-    st.subheader('Created by @AlfieReiss, Inspiration from @BeGriffis')
-    st.sidebar.header("Options")
+    st.title("Futbol Yetenek Araştırması & Radar Oluşturma")
+    st.subheader("Tüm veriler Wyscout'tan")
+    st.subheader('Hazırlayan @AlfieScouting, Konsept @BeGriffis')
+    st.sidebar.header("Seçenekler")
     
     # Selection box for schema type at the top of the sidebar
-    schema_type = st.sidebar.toggle("Use Custom Template")
+    schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
     
     # Load league information
     league_data = read_csv(league_info_url)
     leagues = league_data['League'].unique()
     
     # League selector
-    selected_league = st.sidebar.selectbox("Select a League", leagues)
+    selected_league = st.sidebar.selectbox("Lig Seçiniz", leagues)
     
     # Filter seasons based on the selected league
     filtered_seasons = league_data[league_data['League'] == selected_league]['Season'].unique()
     
     # Season selector
-    selected_season = st.sidebar.selectbox("Select a Season", filtered_seasons)
+    selected_season = st.sidebar.selectbox("Sezon Seçiniz", filtered_seasons)
     
     full_league_name = f"{selected_league} {selected_season}"
     
@@ -355,36 +356,36 @@ def main():
             "Central Midfielders no CAM (DM, CM)", "Fullbacks (FBs/WBs)", 
             "Defenders (CB, FB/WB, DM)", "CBs & DMs", "Strikers", "Centre-Backs"
         ]
-        selected_position = st.sidebar.selectbox("Select a Position", position_options)
+        selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
         
         # Minimum Minutes Played input
-        min_minutes_played = st.sidebar.number_input("Minimum Minutes Played", value=900, min_value=0)
+        min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
         
         # Max Age slider
         max_age = st.sidebar.slider("Max Age", min_value=16, max_value=45, value=25)
         
         # Add option to compare player's metrics
-        comparison_options = ["Own League", "Top 5 Leagues"]
-        selected_comparison = st.sidebar.selectbox("Compare with", comparison_options)
+        comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
+        selected_comparison = st.sidebar.selectbox("Karşılaştırma", comparison_options)
 
         # Show custom schema inputs only if "Create Custom Schema" is selected
         if schema_type:
-            st.sidebar.header("Create Custom Schema")
-            custom_schema_name = st.sidebar.text_input("Custom Schema Name")
-            num_groups = st.sidebar.number_input("Number of Groups", min_value=1, max_value=10, value=1)
+            st.sidebar.header("Özel Şablon Oluşturma")
+            custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
+            num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
             
             available_metrics = list(league_season_data.columns)
             custom_schema = {}
             
             for i in range(1, num_groups + 1):
-                selected_metrics = st.sidebar.multiselect(f"Select metrics for Group {i}", available_metrics)
+                selected_metrics = st.sidebar.multiselect(f"Grup {i} için metrikleri seçin", available_metrics)
                 custom_schema[f"Group {i}"] = selected_metrics
             
-            if st.sidebar.button("Save Custom Schema"):
+            if st.sidebar.button("Özel Şablonu Kaydet"):
                 if "custom_schemas" not in st.session_state:
                     st.session_state.custom_schemas = {}
                 st.session_state.custom_schemas[custom_schema_name] = custom_schema
-                st.sidebar.success(f"Custom schema '{custom_schema_name}' saved.", icon="✅")
+                st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
 
         # Filter the data based on the selected filters
         filtered_data = filter_by_position(league_season_data, selected_position)
@@ -394,7 +395,7 @@ def main():
         ].reset_index(drop=True)
         
         # Load the top 5 leagues data if needed
-        if selected_comparison == "Top 5 Leagues":
+        if selected_comparison == "Top 5 Ligi":
             top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
             comparison_data = top_5_league_data[
                 (top_5_league_data['Minutes played'] >= min_minutes_played) &
@@ -407,30 +408,50 @@ def main():
         st.write(filtered_data)
         
         # Inputs for player's radar
-        st.header("Player's Radar to Generate")
-        player_name = st.text_input("Player Name")
-        player_age = st.number_input("Player Age", min_value=16, max_value=45, value=25)
+        st.header("Futbolcu Radarı Oluşturma")
+        player_name = st.text_input("Futbolcu Adı")
+        player_age = st.number_input("Futbolcu Yaşı", max_value=45, value=0)
         
         # Schema selector
         schema_options = ["Default Schema"]
         if "custom_schemas" in st.session_state:
             schema_options += list(st.session_state.custom_schemas.keys())
-        selected_schema = st.selectbox("Select Schema", schema_options)
+        selected_schema = st.selectbox("Şablon Seçin", schema_options)
         
         # Image uploader for player's image
-        player_image = st.file_uploader("Upload Player's Image", type=["png", "jpg", "jpeg"])
+        st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
+        player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
         
-        if st.button("Generate Radar"):
-            if selected_comparison == "Top 5 Leagues":
-                player_data_temp = filtered_data[
-                    (filtered_data['Player'] == player_name) &
-                    (filtered_data['Age'] == player_age)
-                ]
-                combined_data = pd.concat([comparison_data, player_data_temp]).reset_index(drop=True)
-                player_data = combined_data[
-                    (combined_data['Player'] == player_name) &
-                    (combined_data['Age'] == player_age)
-                ]
+        if st.button("Radar Oluştur"):
+            player_data = filtered_data[
+                (filtered_data['Player'] == player_name) &
+                (filtered_data['Age'] == player_age)
+            ]
+            
+            # Initialize combined_data
+            combined_data = pd.DataFrame()
+        
+            # Check if the player is already playing in the top 5 leagues
+            player_in_top_5 = any(player_data['League'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]))
+        
+            if selected_comparison == "Top 5 Ligi":
+                if player_in_top_5:
+                    # Player is already in the top 5 leagues, use filtered data
+                    player_data = filtered_data[
+                        (filtered_data['Player'] == player_name) &
+                        (filtered_data['Age'] == player_age)
+                    ]
+                else:
+                    # Player is not in the top 5 leagues, combine data
+                    player_data_temp = filtered_data[
+                        (filtered_data['Player'] == player_name) &
+                        (filtered_data['Age'] == player_age)
+                    ]
+                    combined_data = pd.concat([comparison_data, player_data_temp]).reset_index(drop=True)
+                    player_data = combined_data[
+                        (combined_data['Player'] == player_name) &
+                        (combined_data['Age'] == player_age)
+                    ]
             else:
                 combined_data = comparison_data
                 player_data = combined_data[
@@ -441,7 +462,7 @@ def main():
             player_pos = player_data['Main Position'].iloc[0]
             player_min = player_data['Minutes played'].iloc[0]
             player_team = player_data['Team within selected timeframe'].iloc[0]
-            title_note = " Per 90"
+            title_note = " 90 Dk Başına"
             
             if not player_data.empty:
                 st.subheader(f"Data for {player_name} (Age {player_age})")
