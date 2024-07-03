@@ -8,4 +8,4 @@ statistics
 streamlit
 plotly
 highlight_text
-PIL
+pillow
