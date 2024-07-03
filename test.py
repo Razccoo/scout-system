@@ -419,7 +419,7 @@ def main():
         selected_schema = st.selectbox("Şablon Seçin", schema_options)
         
         # Image uploader for player's image
-        st.markdown("Yuvarlak resim eklemek için, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
+        st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
         player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
         
         if st.button("Radar Oluştur"):
