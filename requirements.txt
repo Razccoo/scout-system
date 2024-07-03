@@ -7,6 +7,5 @@ scipy
 statistics
 streamlit
 plotly
-textwrap
 highlight-tekst
 PIL
