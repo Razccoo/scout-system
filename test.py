@@ -4,12 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mplsoccer import FontManager
 from PIL import Image
-import urllib.parse
 from scipy import stats
 import textwrap
 from highlight_text import fig_text
-import json
-import io
+from scripts import schemas
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -21,168 +19,6 @@ font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apa
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 crop_url = 'https://crop-circle.imageonline.co/'
 
-schema_params = {
-    "Defending": ["Kazanılan Hava Mücadeleleri %", "Top Çalma & Kapmalar (pAdj) / 90", "Savunma Eylemleri / 90"],
-    "Ball Progression": ["Kademeli Taşımalar / 90", "Kademeli Paslar / 90", "Hızlanmalar / 90", "Başarılı Dribbling %"],
-    "Attacking": ["Ceza Sahasında Dokunuşlar / 90", "Şutlar / 90", "Şut Başına npxG", "Gol/ Şut %", "Penaltısız Goller / 90", "npxG / 90"],
-    "Chance Creation": ["Akıllı Paslar / 90", "İkinci Asist / 90", "Asist / 90", "xA başına Şut Asisti", "Beklenen Asist (xA) / 90", "Şut Asistleri / 90"],
-    "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Pas %", "Başarılı Kısa / Orta Paslar %"]
-}
-
-
-wingers_params = {
-    "Vision": ["Smart passes per 90", "Key passes per 90", "xA per 90", "Shot assists per 90", "Second assists per 90", "Deep completions per 90"],
-    "Passing": ["Vertical Pass %", "Short / medium passes per 90", "Accurate short / medium passes, %", "Long passes per 90", "Accurate long passes, %", "Crosses per 90", "Accurate crosses, %"],
-    "Quality Final Action": ["Goal conversion, %", "npxG per shot", "Non-penalty goals per 90", "Shots on target, %", "Assists per 90"],
-    "Aggression": ["pAdj Tkl+Int per 90", "Fouls per 90", "Duels per 90", "Aerial duels won, %", "Duels won, %"],
-    "Build-Up": ["Accelerations per 90", "Progressive runs per 90", "Progressive passes per 90", "Dribbles per 90", "Successful dribbles, %"]
-}
-
-label_mapping = {
-    "Kazanılan Hava Mücadeleleri %": "Kazanılan\nHava Müc.\n%",
-    "Top Çalma & Kapmalar (pAdj) / 90": "Top Çalma &\nKapmalar\n(pAdj)",
-    "Savunma Eylemleri / 90": "Savunma\nEylemleri",
-    "Kademeli Taşımalar / 90": "Kademeli\nTaşımalar",
-    "Kademeli Paslar / 90": "Kademeli\nPaslar",
-    "Hızlanmalar / 90": "Topla\nHızlanma",
-    "Başarılı Dribbling %": "Başarılı\nDribling %",
-    "Ceza Sahasında Dokunuşlar / 90": "Ceza\nsahasında\ndokunuşlar",
-    "Şutlar / 90": "Şutlar",
-    "Şut Başına npxG": "Şut başına\nnpxG",
-    "Gol/ Şut %": "Gol/\nŞut %",
-    "Penaltısız Goller / 90": "Penaltısız\nGoller",
-    "npxG / 90": "npxG",
-    "Akıllı Paslar / 90": "Akıllı\nPaslar",
-    "İkinci Asist / 90": "İkinci\nAsist",
-    "Asist / 90": "Asist",
-    "xA başına Şut Asisti": "xA başına\nŞut Asisti",
-    "Beklenen Asist (xA) / 90": "Beklenen\nAsist (xA)",
-    "Şut Asistleri / 90": "Şut\nAsist",
-    "Başarılı Orta %": "Başarılı\nOrta %",
-    "Başarılı Akıllı Pas %": "Akıllı\nPas %",
-    "Başarılı Uzun Pas %": "Uzun\nPas %",
-    "Başarılı Kısa / Orta Paslar %": "Kısa ve Orta\nPas %"
-}
-
-column_mapping = {
-    "Goals": "Goller",
-    "xG": "Beklenen Gol (xG)",
-    "Assists": "Asistler",
-    "xA": "Beklenen Asist (xA)",
-    "Duels per 90": "İkili Mücadeleler / 90",
-    "Duels won, %": "Kazanılan İkili Mücadeleler %",
-    "Birth country": "Doğum Ülkesi",
-    "Passport country": "Pasaport Ülkesi",
-    "Foot": "Ayak",
-    "Height": "Boy",
-    "Weight": "Kilo",
-    "On loan": "Kiralık",
-    "Successful defensive actions per 90": "Savunma Eylemleri / 90",
-    "Defensive duels per 90": "Savunma İkili Mücadeleleri / 90",
-    "Defensive duels won, %": "Kazanılan Savunma İkili Mücadeleleri %",
-    "Aerial duels per 90": "Hava Mücadeleleri / 90",
-    "Aerial duels won, %": "Kazanılan Hava Mücadeleleri %",
-    "Sliding tackles per 90": "Kayarak Müdahaleler / 90",
-    "PAdj Sliding tackles": "Kayarak Müdahaleler (pAdj)",
-    "Shots blocked per 90": "Engellenen Şutlar / 90",
-    "Interceptions per 90": "Top Kesme / 90",
-    "PAdj Interceptions": "Top Kesme (pAdj)",
-    "Fouls per 90": "Fauller / 90",
-    "Yellow cards": "Sarı Kartlar",
-    "Yellow cards per 90": "Sarı Kartlar / 90",
-    "Red cards": "Kırmızı Kartlar",
-    "Red cards per 90": "Kırmızı Kartlar / 90",
-    "Successful attacking actions per 90": "Başarılı Hücum Hareketleri / 90",
-    "Goals per 90": "Goller / 90",
-    "Non-penalty goals": "Penaltısız Goller",
-    "Non-penalty goals per 90": "Penaltısız Goller / 90",
-    "xG per 90": "Beklenen Gol (xG) / 90",
-    "Head goals": "Kafa Golleri",
-    "Head goals per 90": "Kafa Golleri / 90",
-    "Shots": "Şutlar",
-    "Shots per 90": "Şutlar / 90",
-    "Shots on target, %": "Hedefi Bulan Şutlar %",
-    "Goal conversion, %": "Gol/ Şut %",
-    "Assists per 90": "Asist / 90",
-    "Crosses per 90": "Ortalar / 90",
-    "Accurate crosses, %": "Başarılı Orta %",
-    "Crosses from left flank per 90": "Sol Kanattan Ortalar / 90",
-    "Accurate crosses from left flank, %": "Sol Kanattan Başarılı Ortalar %",
-    "Crosses from right flank per 90": "Sağ Kanattan Ortalar / 90",
-    "Accurate crosses from right flank, %": "Sağ Kanattan Başarılı Ortalar %",
-    "Crosses to goalie box per 90": "Kaleci Kutusuna Ortalar / 90",
-    "Dribbles per 90": "Dribblingler / 90",
-    "Successful dribbles, %": "Başarılı Dribbling %",
-    "Offensive duels per 90": "Hücum İkili Mücadeleleri / 90",
-    "Offensive duels won, %": "Kazanılan Hücum İkili Mücadeleleri %",
-    "Touches in box per 90": "Ceza Sahasında Dokunuşlar / 90",
-    "Progressive runs per 90": "Kademeli Taşımalar / 90",
-    "Accelerations per 90": "Hızlanmalar / 90",
-    "Received passes per 90": "Alınan Paslar / 90",
-    "Received long passes per 90": "Alınan Uzun Paslar / 90",
-    "Fouls suffered per 90": "Maruz Kalınan Fauller / 90",
-    "Passes per 90": "Paslar / 90",
-    "Accurate passes, %": "Başarılı Pas %",
-    "Forward passes per 90": "İleri Paslar / 90",
-    "Accurate forward passes, %": "Başarılı İleri Paslar %",
-    "Back passes per 90": "Geri Paslar / 90",
-    "Accurate back passes, %": "Başarılı Geri Paslar %",
-    "Short / medium passes per 90": "Kısa / Orta Paslar / 90",
-    "Accurate short / medium passes, %": "Başarılı Kısa / Orta Paslar %",
-    "Long passes per 90": "Uzun Paslar / 90",
-    "Accurate long passes, %": "Başarılı Uzun Paslar %",
-    "Average pass length, m": "Ortalama Pas Uzunluğu, m",
-    "Average long pass length, m": "Ortalama Uzun Pas Uzunluğu, m",
-    "xA per 90": "Beklenen Asist (xA) / 90",
-    "Shot assists per 90": "Şut Asistleri / 90",
-    "Second assists per 90": "İkinci Asist / 90",
-    "Third assists per 90": "Üçüncü Asist / 90",
-    "Smart passes per 90": "Akıllı Paslar / 90",
-    "Accurate smart passes, %": "Başarılı Akıllı Pas %",
-    "Key passes per 90": "Anahtar Paslar / 90",
-    "Passes to final third per 90": "Son Üçüncüye Paslar / 90",
-    "Accurate passes to final third, %": "Son Üçüncüye Başarılı Paslar %",
-    "Passes to penalty area per 90": "Ceza Sahasına Paslar / 90",
-    "Accurate passes to penalty area, %": "Ceza Sahasına Başarılı Paslar %",
-    "Through passes per 90": "Ara Paslar / 90",
-    "Accurate through passes, %": "Başarılı Ara Paslar %",
-    "Deep completions per 90": "Derin Tamamlamalar / 90",
-    "Deep completed crosses per 90": "Derin Tamamlanan Ortalar / 90",
-    "Progressive passes per 90": "Kademeli Paslar / 90",
-    "Accurate progressive passes, %": "Başarılı Kademeli Paslar %",
-    "Accurate vertical passes, %": "Başarılı Dikey Paslar %",
-    "Vertical passes per 90": "Dikey Paslar / 90",
-    "Conceded goals": "Yenilen Goller",
-    "Conceded goals per 90": "Yenilen Goller / 90",
-    "Shots against": "Karşı Şutlar",
-    "Shots against per 90": "Karşı Şutlar / 90",
-    "Clean sheets": "Gol Yememe",
-    "Save rate, %": "Kurtarış Oranı %",
-    "xG against": "Karşı Beklenen Gol (xG)",
-    "xG against per 90": "Karşı Beklenen Gol (xG) / 90",
-    "Prevented goals": "Engellenen Goller",
-    "Prevented goals per 90": "Engellenen Goller / 90",
-    "Back passes received as GK per 90": "Kaleciye Geri Paslar / 90",
-    "Exits per 90": "Çıkışlar / 90",
-    "Aerial duels per 90.1": "Hava Mücadeleleri / 90.1",
-    "Free kicks per 90": "Serbest Vuruşlar / 90",
-    "Direct free kicks per 90": "Direkt Serbest Vuruşlar / 90",
-    "Direct free kicks on target, %": "Direkt Serbest Vuruşlar Hedef %",
-    "Corners per 90": "Kornerler / 90",
-    "Penalties taken": "Kullanılan Penaltılar",
-    "Penalty conversion, %": "Penaltı Dönüşümü %",
-    "pAdj Tkl+Int per 90": "Top Çalma & Kapmalar (pAdj) / 90",
-    "1st, 2nd, 3rd assists": "1., 2., 3. Asist",
-    "xA per Shot Assist": "xA başına Şut Asisti",
-    "Aerial duels won per 90": "Kazanılan Hava Mücadeleleri / 90",
-    "Cards per 90": "Kartlar / 90",
-    "Clean sheets, %": "Gol Yememe %",
-    "npxG": "npxG",
-    "npxG per 90": "npxG / 90",
-    "npxG per shot": "Şut Başına npxG",
-    "Vertical Pass %": "Dikey Pas %"
-}
-    
 def rename_columns(df, mapping):
     return df.rename(columns=mapping)
 
@@ -222,7 +58,7 @@ def read_csv2(link):
     }
     
     df['Main Position'] = df['Main Position'].replace(position_replacements)
-    df.rename(columns=column_mapping, inplace=True)
+    df.rename(columns=schemas.column_mapping, inplace=True)
     df.fillna(0,inplace=True)
     
     return df
@@ -261,7 +97,7 @@ def add_labels(angles, values, labels, offset, ax, text_colors):
         )
 
 def scout_report(df):
-    df["name"] = df["name"].replace(label_mapping)
+    df["name"] = df["name"].replace(schemas.label_mapping)
     RAW_VALUES = df["raw_value"].values
     VALUES = df["value"].values
     LABELS = df["name"].values
@@ -346,7 +182,7 @@ def scout_report(df):
     def wrap_labels(labels, width):
         wrapped = []
         for label in labels:
-            if label not in label_mapping.values():
+            if label not in schemas.label_mapping.values():
                 wrapped.append('\n'.join(textwrap.wrap(label, width)))
             else:
                 wrapped.append(label)
@@ -472,7 +308,7 @@ def main():
     try:
         league_season_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
         league_season_data['League'] = f'{selected_league}'
-        league_season_data = league_season_data[['Player', 'Age', 'Minutes played', 'League', 'Position', 'Main Position', 'Team within selected timeframe'] + list(column_mapping.values())]
+        league_season_data = league_season_data[['Player', 'Age', 'Minutes played', 'League', 'Position', 'Main Position', 'Team within selected timeframe'] + list(schemas.column_mapping.values())]
         
         # Primary Position selector
         position_options = [
@@ -595,7 +431,7 @@ def main():
                 
                 # Use selected schema
                 if selected_schema == "Default Schema":
-                    schema_to_use = schema_params
+                    schema_to_use = schemas.schema_params
                 else:
                     schema_to_use = st.session_state.custom_schemas[selected_schema]
                 
