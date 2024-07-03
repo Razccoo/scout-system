@@ -312,10 +312,10 @@ def main():
         
         # Primary Position selector
         position_options = [
-            "Forwards (AM, W, CF)", "Strikers and Wingers", "Forwards no ST (AM, W)", 
-            "Wingers", "Central Midfielders (DM, CM, CAM)", "Central Midfielders no DM (CM, CAM)",
-            "Central Midfielders no CAM (DM, CM)", "Fullbacks (FBs/WBs)", 
-            "Defenders (CB, FB/WB, DM)", "CBs & DMs", "Strikers", "Centre-Backs"
+            "Forvetler (OOS, K, SF)", "Forvetler ve Kanatlar", "Santrforsuz Forvetler (OOS, K)", 
+            "Kanatlar", "Orta Saha (DOS, OS, OOS)", "DOS Olmayan Orta Saha (OS, OOS)",
+            "OOS Olmayan Orta Saha (DOS, OS)", "Bekler (FB/KB)", 
+            "Defansif Oyuncular (STP, FB/KB, DOS)", "Stoper & Defansif Orta Saha", "Santrforlar", "Stoperler"
         ]
         selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
         
