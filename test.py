@@ -434,7 +434,7 @@ def main():
             # Check if the player is already playing in the top 5 leagues
             player_in_top_5 = any(player_data['League'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]))
         
-            if selected_comparison == "Top 5 Leagues":
+            if selected_comparison == "Top 5 Ligi":
                 if player_in_top_5:
                     # Player is already in the top 5 leagues, use filtered data
                     player_data = filtered_data[
