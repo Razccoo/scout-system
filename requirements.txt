@@ -1,9 +1,12 @@
 seaborn
 pandas
 matplotlib
+mplsoccer
 numpy
 scipy
 statistics
 streamlit
 plotly
-highlight-text
+textwrap
+highlight-tekst
+PIL
