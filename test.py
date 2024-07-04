@@ -128,7 +128,7 @@ def scout_report(df):
         IDXS += list(range(offset + PAD, offset + size + PAD))
         offset += size + PAD
 
-    fig, ax = plt.subplots(figsize=(10, 10), subplot_kw={"projection": "polar"})
+    fig, ax = plt.subplots(figsize=(10, 11), subplot_kw={"projection": "polar"})
     ax.set_theta_offset(OFFSET)
     ax.set_ylim(-.5, 1)
     ax.set_frame_on(False)
@@ -487,7 +487,7 @@ def main():
 
                 if selected_comparison == "Top 5 Ligi":
                     plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}',
-                                fontsize=17,
+                                fontsize=15,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
                                 fontweight="bold", fontname="DejaVu Sans",
@@ -495,7 +495,7 @@ def main():
                                 y=.99)
                 else:
                     plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}',
-                                fontsize=17,
+                                fontsize=15,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
                                 fontweight="bold", fontname="DejaVu Sans",
