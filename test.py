@@ -483,7 +483,7 @@ def main():
                 
                 if player_image is not None:
                     image = Image.open(player_image)
-                    newax = fig.add_axes([.425, .405, 0.18, 0.18], anchor='C', zorder=1)
+                    newax = fig.add_axes([.425, .395, 0.18, 0.18], anchor='C', zorder=1)
                     newax.imshow(image)
                     newax.axis('off')
 
