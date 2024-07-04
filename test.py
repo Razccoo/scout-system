@@ -446,7 +446,7 @@ def main():
                 
                 # Use selected schema
                 if selected_schema == "Default Schema":
-                    schema_to_use = schemas.schema_params([selected_schema_type])
+                    schema_to_use = schemas.schema_params[selected_schema_type]
                 else:
                     schema_to_use = st.session_state.custom_schemas[selected_schema]
                 
