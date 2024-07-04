@@ -128,7 +128,8 @@ def scout_report(df):
         IDXS += list(range(offset + PAD, offset + size + PAD))
         offset += size + PAD
 
-    fig, ax = plt.subplots(figsize=(10, 11), subplot_kw={"projection": "polar"})
+    fig, ax = plt.subplots(figsize=(10, 10), subplot_kw={"projection": "polar"})
+    fig.subplots_adjust(top=0.8)
     ax.set_theta_offset(OFFSET)
     ax.set_ylim(-.5, 1)
     ax.set_frame_on(False)
