@@ -94,7 +94,7 @@ def label_mapping():
     "Şut Asistleri / 90": "Şut\nAsist",
     "Başarılı Orta %": "Baş.\nOrta %",
     "Başarılı Akıllı Pas %": "Baş.\nAkıllı Pas\n%",
-    "Başarılı Uzun Paslar %": "Baş. Uzun\nPas %",
+    "Başarılı Uzun Paslar %": "Baş.\nUzun Pas %",
     "Başarılı Kısa / Orta Paslar %": "Kısa ve Orta\nPas %",
     "Kazanılan Fauller / 90": "Kazanılan\nFauller",
     "Fauller / 90": "Fauller",
