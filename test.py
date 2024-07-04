@@ -349,7 +349,7 @@ def main():
             custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
             num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
             
-            available_metrics = params_list()
+            available_metrics = schemas.params_list()
             custom_schema = {}
             
             for i in range(1, num_groups + 1):
