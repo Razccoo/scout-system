@@ -486,7 +486,7 @@ def main():
                     newax.axis('off')
 
                 if selected_comparison == "Top 5 Ligi":
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, Veriler{title_note}\n\n',
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}',
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
@@ -494,7 +494,7 @@ def main():
                                 x=0.5,
                                 y=.99)
                 else:
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}\n\n',
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}',
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
