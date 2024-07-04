@@ -155,7 +155,8 @@ def scout_report(df):
         ax.plot(x2, [.4] * 50, color="#bebebe", lw=0.8)
         ax.plot(x2, [.60] * 50, color="#bebebe", lw=0.8)
         ax.plot(x2, [.80] * 50, color="#bebebe", lw=0.8)
-        ax.plot(x2, [1] * 50, color="#bebebe", lw=0.8)
+        x3 = np.linspace(0, 2 * np.pi, num=50)  # Full circle
+        ax.plot(x3, [1] * 50, color="#bebebe", lw=0.8)
 
         offset += size + PAD
     
