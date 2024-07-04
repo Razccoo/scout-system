@@ -42,8 +42,8 @@ def read_csv2(link):
     
     df = df.dropna(subset=['Position', 'Team within selected timeframe', 'Age']).reset_index(drop=True)
     df = df.dropna(subset=['Position']).reset_index(drop=True)
-    df['Main Position'] = df['Position'].str.split().str[0].str.rstrip(',')
-    df = df.dropna(subset=['Ana Posizyon']).reset_index(drop=True)
+    df['Ana Pozisyon'] = df['Position'].str.split().str[0].str.rstrip(',')
+    df = df.dropna(subset=['Ana Pozisyon']).reset_index(drop=True)
     position_replacements = {
         'LAMF': 'LW',
         'RAMF': 'RW',
@@ -57,7 +57,7 @@ def read_csv2(link):
         'LWB': 'LB'
     }
     
-    df['Main Position'] = df['Main Position'].replace(position_replacements)
+    df['Ana Pozisyon'] = df['Ana Pozisyon'].replace(position_replacements)
     df.fillna(0,inplace=True)
     df.rename(columns=schemas.column_mapping(), inplace=True)
   
