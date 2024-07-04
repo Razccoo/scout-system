@@ -21,32 +21,30 @@ def params_list():
     
     return param_list
 
-def schema_params():
-    schema_params = {
-        "attacking": {
-            "Defending": ["Kazanılan Hava Mücadeleleri %", "Top Çalma & Kesmeler (pAdj) / 90", "Başarılı Savunma Eylemleri / 90"],
-            "Ball Progression": ["Kademeli Taşımalar / 90", "Kademeli Paslar / 90", "Topla Hizlanmalar / 90", "Başarılı Dribbling %"],
-            "Attacking": ["Ceza Sahasında Dokunuşlar / 90", "Şutlar / 90", "Şut Başına npxG", "Gol/ Şut %", "Penaltısız Goller / 90", "npxG / 90"],
-            "Chance Creation": ["Akıllı Paslar / 90", "İkinci Asist / 90", "Asist / 90", "xA başına Şut Asisti", "Beklenen Asist (xA) / 90", "Şut Asistleri / 90"],
-            "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Pas %", "Başarılı Kısa / Orta Paslar %"]
-        },
-        "defending": {
-            "Defending": [
-                "Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
-                "Engellenen Şutlar / 90", "Top Kesme (pAdj)", "Kazanılan Hava Mücadeleleri / 90", 
-                "Kazanılan Hava Mücadeleleri %"
-            ],
-            "Attacking": [
-                "Başarılı Uzun Pas %", "Ortalar / 90", "Başarılı Orta %", 
-                "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
-                "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
-            ],
-            "Fouling": [
-                "Fauller / 90", "Kartlar / 90", "Yapılan Fauller / 90"
-            ]
-        }
+schema_params = {
+    "attacking": {
+        "Defending": ["Kazanılan Hava Mücadeleleri %", "Top Çalma & Kesmeler (pAdj) / 90", "Başarılı Savunma Eylemleri / 90"],
+        "Ball Progression": ["Kademeli Taşımalar / 90", "Kademeli Paslar / 90", "Topla Hizlanmalar / 90", "Başarılı Dribbling %"],
+        "Attacking": ["Ceza Sahasında Dokunuşlar / 90", "Şutlar / 90", "Şut Başına npxG", "Gol/ Şut %", "Penaltısız Goller / 90", "npxG / 90"],
+        "Chance Creation": ["Akıllı Paslar / 90", "İkinci Asist / 90", "Asist / 90", "xA başına Şut Asisti", "Beklenen Asist (xA) / 90", "Şut Asistleri / 90"],
+        "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Pas %", "Başarılı Kısa / Orta Paslar %"]
+    },
+    "defending": {
+        "Defending": [
+            "Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
+            "Engellenen Şutlar / 90", "Top Kesme (pAdj)", "Kazanılan Hava Mücadeleleri / 90", 
+            "Kazanılan Hava Mücadeleleri %"
+        ],
+        "Attacking": [
+            "Başarılı Uzun Pas %", "Ortalar / 90", "Başarılı Orta %", 
+            "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
+            "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
+        ],
+        "Fouling": [
+            "Fauller / 90", "Kartlar / 90", "Yapılan Fauller / 90"
+        ]
     }
-    return schema_params
+}
 
 
 def wingers_params():
