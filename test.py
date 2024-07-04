@@ -419,7 +419,7 @@ def main():
                     (combined_data['Yaş'] == player_age)
                 ]
             
-            player_pos = player_data['Ana Pozisyonu'].iloc[0]
+            player_pos = player_data['Ana Pozisyon'].iloc[0]
             player_min = player_data['Oynadığı dakikalar'].iloc[0]
             player_team = player_data['Kulüp'].iloc[0]
             title_note = " 90 Dk Başına"
