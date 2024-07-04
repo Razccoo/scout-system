@@ -483,7 +483,7 @@ def main():
                     newax.axis('off')
 
                 if selected_comparison == "Top 5 Ligi":
-                    fig.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, Veriler{title_note}\n\n',
+                    fig.suptitle('\n'.join([f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, Veriler{title_note}\n\n']),
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
@@ -491,13 +491,7 @@ def main():
                                 x=0.5,
                                 y=.97)
                 else:
-                    fig.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}\n\n',
-                                fontsize=17,
-                                fontfamily="DejaVu Sans",
-                                color="#4A2E19", #4A2E19
-                                fontweight="bold", fontname="DejaVu Sans",
-                                x=0.5,
-                                y=.97)
+                    fig.suptitle('\n'.join([f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}\n\n']),
                 
                 fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop,) 
                 st.pyplot(fig, dpi=400)
