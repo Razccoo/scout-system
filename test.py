@@ -90,7 +90,7 @@ def get_label_rotation(angle, offset):
     return rotation, alignment
 
 def add_labels(angles, values, labels, offset, ax, text_colors):
-    padding = .10
+    padding = .05
     
     for angle, value, label, text_col in zip(angles, values, labels, text_colors):
         angle = angle
@@ -99,7 +99,7 @@ def add_labels(angles, values, labels, offset, ax, text_colors):
 
         ax.text(
             x=angle, 
-            y=1.05,
+            y=1.10,
             s=label, 
             ha=alignment, 
             va="center", 
