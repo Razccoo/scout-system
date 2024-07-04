@@ -490,7 +490,7 @@ def main():
                                 fontweight="bold", fontname="DejaVu Sans",
                                 x=0.5,
                                 y=.97)
-                else
+                else:
                     plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar, veriler {title_note}',
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
