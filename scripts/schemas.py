@@ -61,7 +61,7 @@ def label_mapping():
     label_mapping = {
     "Kazanılan Hava Mücadeleleri %": "Kazanılan\nHava Müc.\n%",
     "Top Çalma & Kesmeler (pAdj) / 90": "Top Çalma &\nKesmeler\n(pAdj)",
-    "Savunma Eylemleri / 90": "Savunma\nEylemleri",
+    "Başarılı Savunma Eylemleri / 90": "Savunma\nEylemleri",
     "Kademeli Taşımalar / 90": "Kademeli\nTaşımalar",
     "Kademeli Paslar / 90": "Kademeli\nPaslar",
     "Topla Hizlanmalar / 90": "Topla\nHızlanma",
