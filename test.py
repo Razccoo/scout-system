@@ -82,7 +82,7 @@ def get_label_rotation(angle, offset):
     if angle <= np.pi / 2:
         alignment = "center"
         rotation = rotation + 180
-    elif 4.3 < angle < np.pi * 2:
+    elif 4 < angle < np.pi * 2:
         alignment = "center"
         rotation = rotation - 180
     else: 
