@@ -31,13 +31,27 @@ schema_params = {
     },
     "defending": {
         "Defending": [
-            "Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
+            "Başarılı Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
             "Engellenen Şutlar / 90", "Top Kesme (pAdj)", "Kazanılan Hava Mücadeleleri / 90", 
             "Kazanılan Hava Mücadeleleri %"
         ],
         "Attacking": [
             "Başarılı Uzun Pas %", "Ortalar / 90", "Başarılı Orta %", 
             "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
+            "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
+        ],
+        "Fouling": [
+            "Fauller / 90", "Kartlar / 90", "Yapılan Fauller / 90"
+        ]
+    },
+    "cb": {
+        "Defending": [
+            "Başarılı Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
+            "Engellenen Şutlar / 90", "Top Kesme (pAdj)", "Kazanılan Hava Mücadeleleri / 90", 
+            "Kazanılan Hava Mücadeleleri %"
+        ],
+        "Attacking": [
+            "Başarılı Uzun Pas %", "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
             "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
         ],
         "Fouling": [
