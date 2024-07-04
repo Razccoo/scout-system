@@ -438,7 +438,7 @@ def main():
             player_pos = player_data['Ana Pozisyon'].iloc[0]
             player_min = player_data['Oynadığı dakikalar'].iloc[0]
             player_team = player_data['Kulüp'].iloc[0]
-            title_note = " 90 Dk Başına"
+            title_note = " 90 Dakika Başına"
             
             if not player_data.empty:
                 st.subheader(f"Data for {player_name} (Age {player_age})")
@@ -483,7 +483,7 @@ def main():
                     newax.axis('off')
 
                 if selected_comparison == "Top 5 Ligi":
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, veriler {title_note}',
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, Veriler{title_note}',
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
@@ -491,7 +491,7 @@ def main():
                                 x=0.5,
                                 y=.97)
                 else:
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar, veriler {title_note}',
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}',
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
