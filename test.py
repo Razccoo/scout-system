@@ -476,7 +476,7 @@ def main():
                 
                 fig.text(0.15, 0.02, "@ALFIESCOUTING", ha='left', va='center', size=26, fontproperties=font_bold.prop,) 
     
-                st.pyplot(fig, dpi=400)
+                st.pyplot(fig, dpi=300)
                 radar_data
             else:
                 st.error(f"No data found for {player_name} with age {player_age}")
