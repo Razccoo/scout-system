@@ -483,21 +483,21 @@ def main():
                     newax.axis('off')
 
                 if selected_comparison == "Top 5 Ligi":
-                    plt.suptitle('\n'.join([f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, Veriler{title_note}\n\n']),
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, Veriler{title_note}\n\n',
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
                                 fontweight="bold", fontname="DejaVu Sans",
                                 x=0.5,
-                                y=.95)
+                                y=.99)
                 else:
-                    plt.suptitle('\n'.join([f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}\n\n']),
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}\n\n',
                                 fontsize=17,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
                                 fontweight="bold", fontname="DejaVu Sans",
                                 x=0.5,
-                                y=.95)
+                                y=.99)
                 
                 fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop,) 
                 st.pyplot(fig, dpi=400)
