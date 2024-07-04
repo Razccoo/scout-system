@@ -415,9 +415,10 @@ def main():
             if selected_comparison == "Top 5 Ligi":
                 if player_in_top_5:
                     # Player is already in the top 5 leagues, use filtered data
-                    player_data = filtered_data[
-                        (filtered_data['Oyuncu'] == player_name) &
-                        (filtered_data['Yaş'] == player_age)
+                    combined_data = comparison_data
+                    player_data = combined_data[
+                        (combined_data['Oyuncu'] == player_name) &
+                        (combined_data['Yaş'] == player_age)
                     ]
                 else:
                     # Player is not in the top 5 leagues, combine data
