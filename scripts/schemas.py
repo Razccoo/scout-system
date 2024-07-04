@@ -8,7 +8,7 @@ def params_list():
  'Kafa Golleri', 'Kafa Golleri / 90', 'Şutlar', 'Şutlar / 90', 'Hedefi Bulan Şutlar %', 'Gol/ Şut %', 'Asist / 90', 'Ortalar / 90', 'Başarılı Orta %', 'Sol Kanattan Ortalar / 90',
  'Sol Kanattan Başarılı Ortalar %', 'Sağ Kanattan Ortalar / 90', 'Sağ Kanattan Başarılı Ortalar %', 'Kaleci Kutusuna Ortalar / 90', 'Dribblingler / 90',
  'Başarılı Dribbling %', 'Hücum İkili Mücadeleleri / 90', 'Kazanılan Hücum İkili Mücadeleleri %', 'Ceza Sahasında Dokunuşlar / 90', 'Kademeli Taşımalar / 90',
- 'Topla Hizlanmalar / 90', 'Alınan Paslar / 90', 'Alınan Uzun Paslar / 90', 'Maruz Kalınan Fauller / 90', 'Paslar / 90', 'Başarılı Pas %', 'İleri Paslar / 90', 'Başarılı İleri Paslar %',
+ 'Topla Hizlanmalar / 90', 'Alınan Paslar / 90', 'Alınan Uzun Paslar / 90', 'Kazanılan Fauller / 90', 'Paslar / 90', 'Başarılı Pas %', 'İleri Paslar / 90', 'Başarılı İleri Paslar %',
  'Geri Paslar / 90', 'Başarılı Geri Paslar %', 'Kısa / Orta Paslar / 90', 'Başarılı Kısa / Orta Paslar %', 'Uzun Paslar / 90', 'Başarılı Uzun Paslar %', 'Ortalama Pas Uzunluğu, m',
  'Ortalama Uzun Pas Uzunluğu, m', 'Beklenen Asist (xA) / 90', 'Şut Asistleri / 90', 'İkinci Asist / 90', 'Üçüncü Asist / 90', 'Akıllı Paslar / 90',
  'Başarılı Akıllı Pas %', 'Anahtar Paslar / 90', 'Son Üçüncüye Paslar / 90', 'Son Üçüncüye Başarılı Paslar %', 'Ceza Sahasına Paslar / 90',
@@ -41,7 +41,7 @@ schema_params = {
             "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
         ],
         "Fouling": [
-            "Fauller / 90", "Kartlar / 90", "Yapılan Fauller / 90"
+            "Fauller / 90", "Kartlar / 90", "Kazanılan Fauller / 90"
         ]
     },
     "cb": {
@@ -55,7 +55,7 @@ schema_params = {
             "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
         ],
         "Fouling": [
-            "Fauller / 90", "Kartlar / 90", "Yapılan Fauller / 90"
+            "Fauller / 90", "Kartlar / 90", "Kazanılan Fauller / 90"
         ]
     }
 }
@@ -75,11 +75,11 @@ def label_mapping():
     label_mapping = {
     "Kazanılan Hava Mücadeleleri %": "Kazanılan\nHava Müc.\n%",
     "Top Çalma & Kesmeler (pAdj) / 90": "Top Çalma &\nKesmeler\n(pAdj)",
-    "Başarılı Savunma Eylemleri / 90": "Savunma\nEylemleri",
+    "Başarılı Savunma Eylemleri / 90": "Baş. Savunma\nEylemleri",
     "Kademeli Taşımalar / 90": "Kademeli\nTaşımalar",
     "Kademeli Paslar / 90": "Kademeli\nPaslar",
     "Topla Hizlanmalar / 90": "Topla\nHızlanma",
-    "Başarılı Dribbling %": "Başarılı\nDribbling %",
+    "Başarılı Dribbling %": "Baş.\nDribbling %",
     "Ceza Sahasında Dokunuşlar / 90": "Ceza\nsahasında\ndokunuşlar",
     "Şutlar / 90": "Şutlar",
     "Şut Başına npxG": "Şut başına\nnpxG",
@@ -92,10 +92,21 @@ def label_mapping():
     "xA başına Şut Asisti": "xA başına\nŞut Asisti",
     "Beklenen Asist (xA) / 90": "Beklenen\nAsist (xA)",
     "Şut Asistleri / 90": "Şut\nAsist",
-    "Başarılı Orta %": "Başarılı\nOrta %",
-    "Başarılı Akıllı Pas %": "Akıllı\nPas %",
-    "Başarılı Uzun Pas %": "Uzun\nPas %",
-    "Başarılı Kısa / Orta Paslar %": "Kısa ve Orta\nPas %"
+    "Başarılı Orta %": "Baş.\nOrta %",
+    "Başarılı Akıllı Pas %": "Baş. Akıllı\nPas %",
+    "Başarılı Uzun Pas %": "Baş. Uzun\nPas %",
+    "Başarılı Kısa / Orta Paslar %": "Kısa ve Orta\nPas %",
+    "Kazanılan Fauller / 90": "Kazanılan\nFauller",
+    "Fauller / 90": "Fauller",
+    "Kazanılan Hava Mücadeleleri / 90": "Kazanılan\nHava Müc.",
+    "Top Kesme (pAdj)": "Top Kesme\n(pAdj)",
+    "Engellenen Şutlar / 90": "Engellenen\nŞutlar",
+    "Kazanılan Savunma İkili Mücadeleleri %": "Kazanılan\n(Savunma) Müc.\n%",
+    "Top Çalma (pAdj)": "Top Çalma\n(pAdj)",
+    "Kartlar / 90": "Kartlar",
+    "Ortalar / 90": "Ortalar",
+    "1., 2., 3. Asistler": "1., 2., 3.\nAsistler",
+        
 }
     return label_mapping
 
@@ -163,7 +174,7 @@ def column_mapping():
     "Accelerations per 90": "Topla Hizlanmalar / 90",
     "Received passes per 90": "Alınan Paslar / 90",
     "Received long passes per 90": "Alınan Uzun Paslar / 90",
-    "Fouls suffered per 90": "Maruz Kalınan Fauller / 90",
+    "Fouls suffered per 90": "Kazanılan Fauller / 90",
     "Passes per 90": "Paslar / 90",
     "Accurate passes, %": "Başarılı Pas %",
     "Forward passes per 90": "İleri Paslar / 90",
