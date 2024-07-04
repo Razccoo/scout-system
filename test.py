@@ -481,17 +481,25 @@ def main():
                     newax = fig.add_axes([.425, .405, 0.18, 0.18], anchor='C', zorder=1)
                     newax.imshow(image)
                     newax.axis('off')
+
+                if selected_comparison == "Top 5 Ligi":
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar, veriler {title_note}',
+                                fontsize=17,
+                                fontfamily="DejaVu Sans",
+                                color="#4A2E19", #4A2E19
+                                fontweight="bold", fontname="DejaVu Sans",
+                                x=0.5,
+                                y=.97)
+                else
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar, veriler {title_note}',
+                                fontsize=17,
+                                fontfamily="DejaVu Sans",
+                                color="#4A2E19", #4A2E19
+                                fontweight="bold", fontname="DejaVu Sans",
+                                x=0.5,
+                                y=.97)
                 
-                plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} Yüzdelik Sıralamalar{title_note}',
-                            fontsize=17,
-                            fontfamily="DejaVu Sans",
-                            color="#4A2E19", #4A2E19
-                            fontweight="bold", fontname="DejaVu Sans",
-                            x=0.5,
-                            y=.97)
-                
-                fig.text(0.15, 0.02, "@ALFIESCOUTING", ha='left', va='center', size=26, fontproperties=font_bold.prop,) 
-    
+                fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop,) 
                 st.pyplot(fig, dpi=400)
                 radar_data
             else:
