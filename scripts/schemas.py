@@ -77,7 +77,7 @@ def column_mapping():
     "Minutes played": "Oynadığı dakikalar",
     # "League": "Lig",
     "Position": "Pozisyon",
-    "Main Position": "Ana Pozisyon",
+    "Ana Pozisyon": "Ana Pozisyon",
     "Team within selected timeframe": "Kulüp",
     "Goals": "Goller",
     "xG": "Beklenen Gol (xG)",
