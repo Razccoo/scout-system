@@ -27,7 +27,7 @@ schema_params = {
         "Ball Progression": ["Kademeli Taşımalar / 90", "Kademeli Paslar / 90", "Topla Hizlanmalar / 90", "Başarılı Dribbling %"],
         "Attacking": ["Ceza Sahasında Dokunuşlar / 90", "Şutlar / 90", "Şut Başına npxG", "Gol/ Şut %", "Penaltısız Goller / 90", "npxG / 90"],
         "Chance Creation": ["Akıllı Paslar / 90", "İkinci Asist / 90", "Asist / 90", "xA başına Şut Asisti", "Beklenen Asist (xA) / 90", "Şut Asistleri / 90"],
-        "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Pas %", "Başarılı Kısa / Orta Paslar %"]
+        "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Paslar %", "Başarılı Kısa / Orta Paslar %"]
     },
     "defensive": {
         "Defending": [
@@ -36,7 +36,7 @@ schema_params = {
             "Kazanılan Hava Mücadeleleri %"
         ],
         "Attacking": [
-            "Başarılı Uzun Pas %", "Ortalar / 90", "Başarılı Orta %", 
+            "Başarılı Uzun Paslar %", "Ortalar / 90", "Başarılı Orta %", 
             "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
             "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
         ],
@@ -51,7 +51,7 @@ schema_params = {
             "Kazanılan Hava Mücadeleleri %"
         ],
         "Attacking": [
-            "Başarılı Uzun Pas %", "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
+            "Başarılı Uzun Paslar %", "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
             "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
         ],
         "Fouling": [
@@ -93,8 +93,8 @@ def label_mapping():
     "Beklenen Asist (xA) / 90": "Beklenen\nAsist (xA)",
     "Şut Asistleri / 90": "Şut\nAsist",
     "Başarılı Orta %": "Baş.\nOrta %",
-    "Başarılı Akıllı Pas %": "Baş. Akıllı\nPas %",
-    "Başarılı Uzun Pas %": "Baş. Uzun\nPas %",
+    "Başarılı Akıllı Pas %": "Baş.\nAkıllı Pas\n%",
+    "Başarılı Uzun Paslar %": "Baş. Uzun\nPas %",
     "Başarılı Kısa / Orta Paslar %": "Kısa ve Orta\nPas %",
     "Kazanılan Fauller / 90": "Kazanılan\nFauller",
     "Fauller / 90": "Fauller",
