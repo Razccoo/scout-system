@@ -474,7 +474,7 @@ def main():
                             x=0.5,
                             y=.97)
                 
-                fig.text(0.10, 0.02, "@ALFIESCOUTING", ha='left', va='center', size=30, fontproperties=font_bold.prop,) 
+                fig.text(0.15, 0.02, "@ALFIESCOUTING", ha='left', va='center', size=26, fontproperties=font_bold.prop,) 
     
                 st.pyplot(fig, dpi=400)
                 radar_data
