@@ -384,7 +384,7 @@ def main():
         
         if st.button("Radar Oluştur"):
             player_data = filtered_data[
-                (filtered_data['Player'] == player_name) &
+                (filtered_data['Oyuncu'] == player_name) &
                 (filtered_data['Yaş'] == player_age)
             ]
             
@@ -398,24 +398,24 @@ def main():
                 if player_in_top_5:
                     # Player is already in the top 5 leagues, use filtered data
                     player_data = filtered_data[
-                        (filtered_data['Player'] == player_name) &
+                        (filtered_data['Oyuncu'] == player_name) &
                         (filtered_data['Yaş'] == player_age)
                     ]
                 else:
                     # Player is not in the top 5 leagues, combine data
                     player_data_temp = filtered_data[
-                        (filtered_data['Player'] == player_name) &
+                        (filtered_data['Oyuncu'] == player_name) &
                         (filtered_data['Yaş'] == player_age)
                     ]
                     combined_data = pd.concat([comparison_data, player_data_temp]).reset_index(drop=True)
                     player_data = combined_data[
-                        (combined_data['Player'] == player_name) &
+                        (combined_data['Oyuncu'] == player_name) &
                         (combined_data['Yaş'] == player_age)
                     ]
             else:
                 combined_data = comparison_data
                 player_data = combined_data[
-                    (combined_data['Player'] == player_name) &
+                    (combined_data['Oyuncu'] == player_name) &
                     (combined_data['Yaş'] == player_age)
                 ]
             
