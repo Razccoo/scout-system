@@ -383,7 +383,7 @@ def main():
         player_name = st.text_input("Futbolcu Adı")
         player_age = st.number_input("Futbolcu Yaşı", max_value=45, value=0)
 
-        player_main_position = filtered_data.loc[filtered_data['Player'] == player_name, 'Main Position'].values[0]
+        player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
 
         # Determine schema based on player's main position
         selected_schema_type = position_to_schema.get(player_main_position)
