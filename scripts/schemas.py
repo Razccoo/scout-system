@@ -29,7 +29,7 @@ schema_params = {
         "Chance Creation": ["Akıllı Paslar / 90", "İkinci Asist / 90", "Asist / 90", "xA başına Şut Asisti", "Beklenen Asist (xA) / 90", "Şut Asistleri / 90"],
         "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Pas %", "Başarılı Kısa / Orta Paslar %"]
     },
-    "defending": {
+    "defensive": {
         "Defending": [
             "Başarılı Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
             "Engellenen Şutlar / 90", "Top Kesme (pAdj)", "Kazanılan Hava Mücadeleleri / 90", 
