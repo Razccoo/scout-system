@@ -337,7 +337,7 @@ def main():
         min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
         
         # Max Age slider
-        max_age = st.sidebar.slider("Max Age", min_value=16, max_value=45, value=25)
+        max_age = st.sidebar.slider("Max Yaş", min_value=16, max_value=45, value=30)
         
         # Add option to compare player's metrics
         comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
@@ -387,11 +387,6 @@ def main():
         player_name = st.text_input("Futbolcu Adı")
         player_age = st.number_input("Futbolcu Yaşı", max_value=45, value=0)
 
-        player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
-
-        # Determine schema based on player's main position
-        selected_schema_type = position_to_schema.get(player_main_position)
-
         # Schema selector
         schema_options = ["Default Schema"]
         if "custom_schemas" in st.session_state:
@@ -401,13 +396,16 @@ def main():
         # Image uploader for player's image
         st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
         player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
-        
         if st.button("Radar Oluştur"):
             player_data = filtered_data[
                 (filtered_data['Oyuncu'] == player_name) &
                 (filtered_data['Yaş'] == player_age)
             ]
-            
+            player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
+    
+            # Determine schema based on player's main position
+            selected_schema_type = position_to_schema.get(player_main_position)
+          
             # Initialize combined_data
             combined_data = pd.DataFrame()
         
