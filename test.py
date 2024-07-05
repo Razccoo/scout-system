@@ -19,17 +19,6 @@ font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apa
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 crop_url = 'https://crop-circle.imageonline.co/'
 
-position_to_schema = {
-    'LCMF3': 'attacking', 'RCMF3': 'attacking', 'LAMF': 'attacking', 'LW': 'attacking',
-    'RB': 'defensive', 'LB': 'defensive', 'LCMF': 'attacking', 'DMF': 'attacking',
-    'RDMF': 'attacking', 'RWF': 'attacking', 'AMF': 'attacking', 'LCB': 'cb',
-    'RWB': 'defensive', 'CF': 'attacking', 'LWB': 'defensive', 'GK': 'gk',
-    'LDMF': 'attacking', 'RCMF': 'attacking', 'LWF': 'attacking', 'RW': 'attacking',
-    'RAMF': 'attacking', 'RCB': 'cb', 'CB': 'cb', 'RCB3': 'cb',
-    'LCB3': 'cb', 'RB5': 'defensive', 'RWB5': 'defensive', 'LB5': 'defensive',
-    'LWB5': 'defensive'
-}
-
 def rename_columns(df, mapping):
     return df.rename(columns=mapping)
 
@@ -407,7 +396,7 @@ def main():
             player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
     
             # Determine schema based on player's main position
-            selected_schema_type = position_to_schema.get(player_main_position)
+            selected_schema_type = schemas.position_to_schema().get(player_main_position)
           
             # Initialize combined_data
             combined_data = pd.DataFrame()
