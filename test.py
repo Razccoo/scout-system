@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mplsoccer import FontManager
 from PIL import Image
-from scipy import stats
 import textwrap
 from highlight_text import fig_text
 from scripts import schemas, utils

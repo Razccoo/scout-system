@@ -1,6 +1,7 @@
 # utils.py
 import pandas as pd
 from scripts import schemas
+from scipy import stats
 
 def filter_by_position(df, position):
     fw = ["CF", "RW", "LW", "AMF"]
