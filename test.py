@@ -137,7 +137,7 @@ def scout_report(df):
     def wrap_labels(labels, width):
         wrapped = []
         for label in labels:
-            if label not in schemas.label_mapping().values():
+            if label not in schemas.label_mapping.values():
                 wrapped.append('\n'.join(textwrap.wrap(label, width)))
             else:
                 wrapped.append(label)
