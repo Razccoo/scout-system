@@ -400,7 +400,7 @@ def main():
 
             # Add option to compare player's metrics
             comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
-            selected_comparison = st.sidebar.selectbox("Karşılaştırma", comparison_options)
+            selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
       
             player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
     
