@@ -378,7 +378,20 @@ def main():
         if "custom_schemas" in st.session_state:
             schema_options += list(st.session_state.custom_schemas.keys())
         selected_schema = st.selectbox("Şablon Seçin", schema_options)
-        
+
+        # Add option to compare player's metrics
+        comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
+        selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
+        # Load the top 5 leagues data if needed
+        if selected_comparison == "Top 5 Ligi":
+            top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
+            comparison_data = top_5_league_data[
+                (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
+                (top_5_league_data['Yaş'] <= max_age)
+            ].reset_index(drop=True)
+        else:
+            comparison_data = filtered_data
+              
         # Image uploader for player's image
         st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
         player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
@@ -387,19 +400,6 @@ def main():
                 (filtered_data['Oyuncu'] == player_name) &
                 (filtered_data['Yaş'] == player_age)
             ]
-
-            # Add option to compare player's metrics
-            comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
-            selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
-            # Load the top 5 leagues data if needed
-            if selected_comparison == "Top 5 Ligi":
-                top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
-                comparison_data = top_5_league_data[
-                    (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
-                    (top_5_league_data['Yaş'] <= max_age)
-                ].reset_index(drop=True)
-            else:
-                comparison_data = filtered_data
               
             player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
     
