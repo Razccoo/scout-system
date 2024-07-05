@@ -338,10 +338,6 @@ def main():
         
         # Max Age slider
         max_age = st.sidebar.slider("Max Yaş", min_value=16, max_value=45, value=30)
-        
-        # Add option to compare player's metrics
-        comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
-        selected_comparison = st.sidebar.selectbox("Karşılaştırma", comparison_options)
 
         # Show custom schema inputs only if "Create Custom Schema" is selected
         if schema_type:
@@ -401,6 +397,11 @@ def main():
                 (filtered_data['Oyuncu'] == player_name) &
                 (filtered_data['Yaş'] == player_age)
             ]
+
+            # Add option to compare player's metrics
+            comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
+            selected_comparison = st.sidebar.selectbox("Karşılaştırma", comparison_options)
+      
             player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
     
             # Determine schema based on player's main position
