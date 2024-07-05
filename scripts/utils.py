@@ -1,4 +1,5 @@
 # utils.py
+import pandas as pd
 
 def filter_by_position(df, position):
     fw = ["CF", "RW", "LW", "AMF"]
