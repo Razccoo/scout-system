@@ -364,16 +364,6 @@ def main():
             (filtered_data['Oynadığı dakikalar'] >= min_minutes_played) &
             (filtered_data['Yaş'] <= max_age)
         ].reset_index(drop=True)
-        
-        # Load the top 5 leagues data if needed
-        if selected_comparison == "Top 5 Ligi":
-            top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
-            comparison_data = top_5_league_data[
-                (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
-                (top_5_league_data['Yaş'] <= max_age)
-            ].reset_index(drop=True)
-        else:
-            comparison_data = filtered_data
 
         st.subheader(f"Data for {selected_league} - {selected_season}")
         st.write(filtered_data)
@@ -401,7 +391,16 @@ def main():
             # Add option to compare player's metrics
             comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
             selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
-      
+            # Load the top 5 leagues data if needed
+            if selected_comparison == "Top 5 Ligi":
+                top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
+                comparison_data = top_5_league_data[
+                    (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
+                    (top_5_league_data['Yaş'] <= max_age)
+                ].reset_index(drop=True)
+            else:
+                comparison_data = filtered_data
+              
             player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
     
             # Determine schema based on player's main position
