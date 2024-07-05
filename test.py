@@ -217,7 +217,7 @@ def main():
         min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
         
         # Max Age slider
-        max_age = st.sidebar.slider("Max Yaş", min_value=16, max_value=45, value=30)
+        max_age = st.sidebar.slider("Max Yaş", min_value=16, max_value=45, value=45)
 
         # Show custom schema inputs only if "Create Custom Schema" is selected
         if schema_type:
@@ -332,7 +332,7 @@ def main():
                 
                 # Use selected schema
                 if selected_schema == "Default Schema":
-                    schema_to_use = schemas.schema_params[selected_schema_type]
+                    schema_to_use = schemas.schema_params()[selected_schema_type]
                 else:
                     schema_to_use = st.session_state.custom_schemas[selected_schema]
                 
