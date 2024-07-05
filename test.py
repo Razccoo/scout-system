@@ -337,11 +337,7 @@ def main():
         min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
         
         # Max Age slider
-        max_age = st.sidebar.slider("Max Age", min_value=16, max_value=45, value=25)
-        
-        # Add option to compare player's metrics
-        comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
-        selected_comparison = st.sidebar.selectbox("Karşılaştırma", comparison_options)
+        max_age = st.sidebar.slider("Max Yaş", min_value=16, max_value=45, value=30)
 
         # Show custom schema inputs only if "Create Custom Schema" is selected
         if schema_type:
@@ -368,16 +364,6 @@ def main():
             (filtered_data['Oynadığı dakikalar'] >= min_minutes_played) &
             (filtered_data['Yaş'] <= max_age)
         ].reset_index(drop=True)
-        
-        # Load the top 5 leagues data if needed
-        if selected_comparison == "Top 5 Ligi":
-            top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
-            comparison_data = top_5_league_data[
-                (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
-                (top_5_league_data['Yaş'] <= max_age)
-            ].reset_index(drop=True)
-        else:
-            comparison_data = filtered_data
 
         st.subheader(f"Data for {selected_league} - {selected_season}")
         st.write(filtered_data)
@@ -387,27 +373,42 @@ def main():
         player_name = st.text_input("Futbolcu Adı")
         player_age = st.number_input("Futbolcu Yaşı", max_value=45, value=0)
 
-        player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
-
-        # Determine schema based on player's main position
-        selected_schema_type = position_to_schema.get(player_main_position)
-
         # Schema selector
-        schema_options = ["Default Schema"]
-        if "custom_schemas" in st.session_state:
-            schema_options += list(st.session_state.custom_schemas.keys())
-        selected_schema = st.selectbox("Şablon Seçin", schema_options)
-        
+        if schema_type:
+            schema_options = ["Default Schema"]
+            if "custom_schemas" in st.session_state:
+                schema_options += list(st.session_state.custom_schemas.keys())
+            selected_schema = st.selectbox("Şablon Seçin", schema_options)
+        else:
+            selected_schema = "Default Schema"
+
+        # Add option to compare player's metrics
+        comparison_options = ["Top 5 Ligi", "Kendi Ligi"]
+        selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
+        # Load the top 5 leagues data if needed
+        if selected_comparison == "Top 5 Ligi":
+            top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
+            comparison_data = top_5_league_data[
+                (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
+                (top_5_league_data['Yaş'] <= max_age)
+            ].reset_index(drop=True)
+        else:
+            comparison_data = filtered_data
+              
         # Image uploader for player's image
         st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
         player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
-        
         if st.button("Radar Oluştur"):
             player_data = filtered_data[
                 (filtered_data['Oyuncu'] == player_name) &
                 (filtered_data['Yaş'] == player_age)
             ]
-            
+              
+            player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
+    
+            # Determine schema based on player's main position
+            selected_schema_type = position_to_schema.get(player_main_position)
+          
             # Initialize combined_data
             combined_data = pd.DataFrame()
         
