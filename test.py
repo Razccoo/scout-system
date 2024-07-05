@@ -7,8 +7,7 @@ from PIL import Image
 from scipy import stats
 import textwrap
 from highlight_text import fig_text
-from scripts.schemas import *
-from scripts import utils
+from scripts import schemas, utils
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -51,7 +50,7 @@ def add_labels(angles, values, labels, offset, ax, text_colors):
         )
 
 def scout_report(df):
-    df["name"] = df["name"].replace(label_mapping)
+    df["name"] = df["name"].replace(schemas.label_mapping())
     RAW_VALUES = df["raw_value"].values
     VALUES = df["value"].values
     LABELS = df["name"].values
@@ -138,7 +137,7 @@ def scout_report(df):
     def wrap_labels(labels, width):
         wrapped = []
         for label in labels:
-            if label not in label_mapping.values():
+            if label not in schemas.label_mapping().values():
                 wrapped.append('\n'.join(textwrap.wrap(label, width)))
             else:
                 wrapped.append(label)
@@ -203,7 +202,7 @@ def main():
     # Load the league data from the constructed URL
     try:
         league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
-        league_season_data = league_season_data[list(column_mapping.values())]
+        league_season_data = league_season_data[list(schemas.column_mapping().values())]
         league_season_data['Lig'] = f'{selected_league}'
         # Primary Position selector
         position_options = [
@@ -226,7 +225,7 @@ def main():
             custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
             num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
             
-            available_metrics = param_list
+            available_metrics = schemas.params_list()
             custom_schema = {}
             
             for i in range(1, num_groups + 1):
@@ -333,7 +332,7 @@ def main():
                 
                 # Use selected schema
                 if selected_schema == "Default Schema":
-                    schema_to_use = schema_params[selected_schema_type]
+                    schema_to_use = schemas.schema_params[selected_schema_type]
                 else:
                     schema_to_use = st.session_state.custom_schemas[selected_schema]
                 

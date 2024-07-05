@@ -104,8 +104,5 @@ def read_csv2(link):
   
     return df
 
-def rename_columns(df, mapping):
-    return df.rename(columns=mapping)
-
 def rank_column(df, column_name):
     return stats.rankdata(df[column_name], "average") / len(df[column_name])
