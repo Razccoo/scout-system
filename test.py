@@ -7,8 +7,8 @@ from PIL import Image
 from scipy import stats
 import textwrap
 from highlight_text import fig_text
-from scripts import schemas as schemas
-from scripts import utils as utils
+from scripts.schemas import *
+from scripts import utils
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
