@@ -7,7 +7,7 @@ from PIL import Image
 from scipy import stats
 import textwrap
 from highlight_text import fig_text
-from scripts import schemas
+from scripts import schemas, utils
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -185,7 +185,7 @@ def main():
     schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
     
     # Load league information
-    league_data = read_csv(league_info_url)
+    league_data = utils.read_csv(league_info_url)
     leagues = league_data['League'].unique()
     
     # League selector
@@ -201,7 +201,7 @@ def main():
     
     # Load the league data from the constructed URL
     try:
-        league_season_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
+        league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
         league_season_data = league_season_data[list(schemas.column_mapping.values())]
         league_season_data['Lig'] = f'{selected_league}'
         # Primary Position selector
@@ -239,7 +239,7 @@ def main():
                 st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
 
         # Filter the data based on the selected filters
-        filtered_data = filter_by_position(league_season_data, selected_position)
+        filtered_data = utils.filter_by_position(league_season_data, selected_position)
         filtered_data = filtered_data[
             (filtered_data['Oynadığı dakikalar'] >= min_minutes_played) &
             (filtered_data['Yaş'] <= max_age)
@@ -267,7 +267,7 @@ def main():
         selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
         # Load the top 5 leagues data if needed
         if selected_comparison == "Top 5 Ligi":
-            top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
+            top_5_league_data = utils.filter_by_position(utils.load_top_5_leagues(), selected_position)
             comparison_data = top_5_league_data[
                 (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
                 (top_5_league_data['Yaş'] <= max_age)
@@ -346,7 +346,7 @@ def main():
                     for metric in metrics:
                         if metric in player_data.columns:
                             player_value = player_data.iloc[0][metric]
-                            ranked_values = rank_column(combined_data, metric)
+                            ranked_values = utils.rank_column(combined_data, metric)
                             player_ranked_value = ranked_values[combined_data.index[combined_data['Oyuncu'] == player_name].tolist()[0]]
                             radar_values.append(player_ranked_value)
                             radar_labels.append(metric)
