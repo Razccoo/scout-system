@@ -379,6 +379,8 @@ def main():
             if "custom_schemas" in st.session_state:
                 schema_options += list(st.session_state.custom_schemas.keys())
             selected_schema = st.selectbox("Şablon Seçin", schema_options)
+        else:
+            selected_schema = "Default Schema"
 
         # Add option to compare player's metrics
         comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
