@@ -7,8 +7,7 @@ from PIL import Image
 from scipy import stats
 import textwrap
 from highlight_text import fig_text
-import scripts.mappingdict as mappingdict
-import scripts.utils as utils
+from scripts import schemas
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -19,6 +18,64 @@ font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apa
 # URL for the league information CSV
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 crop_url = 'https://crop-circle.imageonline.co/'
+
+position_to_schema = {
+    'LCMF3': 'attacking', 'RCMF3': 'attacking', 'LAMF': 'attacking', 'LW': 'attacking',
+    'RB': 'defensive', 'LB': 'defensive', 'LCMF': 'attacking', 'DMF': 'attacking',
+    'RDMF': 'attacking', 'RWF': 'attacking', 'AMF': 'attacking', 'LCB': 'cb',
+    'RWB': 'defensive', 'CF': 'attacking', 'LWB': 'defensive', 'GK': 'gk',
+    'LDMF': 'attacking', 'RCMF': 'attacking', 'LWF': 'attacking', 'RW': 'attacking',
+    'RAMF': 'attacking', 'RCB': 'cb', 'CB': 'cb', 'RCB3': 'cb',
+    'LCB3': 'cb', 'RB5': 'defensive', 'RWB5': 'defensive', 'LB5': 'defensive',
+    'LWB5': 'defensive'
+}
+
+def rename_columns(df, mapping):
+    return df.rename(columns=mapping)
+
+def read_csv(link):
+    return pd.read_csv(link,encoding='utf-8-sig')
+
+def read_csv2(link):
+    df = pd.read_csv(link,encoding='utf-8-sig')
+    df['pAdj Tkl+Int per 90'] = df['PAdj Sliding tackles'] + df['PAdj Interceptions']
+    df['1st, 2nd, 3rd assists'] = df['Assists per 90'] + df['Second assists per 90'] + df['Third assists per 90']
+    df['xA per Shot Assist'] = df['xA per 90'] / df['Shot assists per 90']
+    df['xA per Shot Assist'] = [0 if df['Shot assists per 90'][i]==0 else df['xA per 90'][i] / df['Shot assists per 90'][i] for i in range(len(df))]
+    df['Aerial duels won per 90'] = df['Aerial duels per 90'] * (df['Aerial duels won, %']/100)
+    df['Cards per 90'] = df['Yellow cards per 90'] + df['Red cards per 90']
+    df['Clean sheets, %'] = df['Clean sheets'] / df['Matches played']
+    df['npxG'] = df['xG'] - (.76 * df['Penalties taken'])
+    df['npxG per 90'] = df['npxG'] / (df['Minutes played'] / 90)
+    df['npxG per shot'] = df['npxG'] / (df['Shots'] - df['Penalties taken'])
+    df['npxG per shot'] = [0 if df['Shots'][i]==0 else df['npxG'][i] / (df['Shots'][i] - df['Penalties taken'][i]) for i in range(len(df))]
+    df['Vertical Pass %'] = df['Vertical passes per 90'] / df['Passes per 90']
+    
+    df = df.dropna(subset=['Position', 'Team within selected timeframe', 'Age']).reset_index(drop=True)
+    df = df.dropna(subset=['Position']).reset_index(drop=True)
+    df['Ana Pozisyon'] = df['Position'].str.split().str[0].str.rstrip(',')
+    df = df.dropna(subset=['Ana Pozisyon']).reset_index(drop=True)
+    position_replacements = {
+        'LAMF': 'LW',
+        'RAMF': 'RW',
+        'LCB3': 'LCB',
+        'RCB3': 'RCB',
+        'LCB5': 'LCB',
+        'RCB5': 'RCB',
+        'LB5': 'LB',
+        'RB5': 'RB',
+        'RWB': 'RB',
+        'LWB': 'LB'
+    }
+    
+    df['Ana Pozisyon'] = df['Ana Pozisyon'].replace(position_replacements)
+    df.fillna(0,inplace=True)
+    df.rename(columns=schemas.column_mapping(), inplace=True)
+  
+    return df
+
+def rank_column(df, column_name):
+    return stats.rankdata(df[column_name], "average") / len(df[column_name])
 
 def get_label_rotation(angle, offset):
     rotation = np.rad2deg(angle + offset) + 90
@@ -51,7 +108,7 @@ def add_labels(angles, values, labels, offset, ax, text_colors):
         )
 
 def scout_report(df):
-    df["name"] = df["name"].replace(mappingdict.label_mapping())
+    df["name"] = df["name"].replace(schemas.label_mapping())
     RAW_VALUES = df["raw_value"].values
     VALUES = df["value"].values
     LABELS = df["name"].values
@@ -138,7 +195,7 @@ def scout_report(df):
     def wrap_labels(labels, width):
         wrapped = []
         for label in labels:
-            if label not in mappingdict.label_mapping().values():
+            if label not in schemas.label_mapping().values():
                 wrapped.append('\n'.join(textwrap.wrap(label, width)))
             else:
                 wrapped.append(label)
@@ -173,6 +230,68 @@ def scout_report(df):
     
     return fig, ax
 
+def filter_by_position(df, position):
+    fw = ["CF", "RW", "LW", "AMF"]
+    if position == "Forvetler (OOS, K, SF)":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(fw), na=False)]
+    
+    stw = ["CF", "RW", "LW", "LAMF", "RAMF"]
+    if position == "Forvetler ve Kanatlar":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(stw), na=False)]
+    
+    fwns = ["RW", "LW", "AMF"]
+    if position == "Santrforsuz Forvetler (OOS, K)":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(fwns), na=False)]
+    
+    wing = ["RW", "LW", "WF", "LAMF", "RAMF"]
+    if position == "Kanatlar":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(wing), na=False)]
+
+    mids = ["DMF", "CMF", "AMF"]
+    if position == "Orta Saha (DOS, OS, OOS)":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(mids), na=False)]
+
+    cms = ["CMF", "AMF"]
+    if position == "DOS Olmayan Orta Saha (OS, OOS)":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cms), na=False)]
+
+    dms = ["CMF", "DMF"]
+    if position == "OOS Olmayan Orta Saha (DOS, OS)":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(dms), na=False)]
+
+    fbs = ["LB", "RB", "WB"]
+    if position == "Bekler (FB/KB)":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(fbs), na=False)]
+
+    defs = ["LB", "RB", "WB", "CB", "DMF"]
+    if position == "Defansif Oyuncular (STP, FB/KB, DOS)":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(defs), na=False)]
+
+    cbdm = ["CB", "DMF"]
+    if position == "Stoper & Defansif Orta Saha":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cbdm), na=False)]
+
+    cf = ["CF"]
+    if position == "Santrforlar":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cf), na=False)]
+
+    cb = ["CB"]
+    if position == "Stoperler":
+        return df[df['Ana Pozisyon'].str.contains('|'.join(cb), na=False)]
+    else:
+        return df
+
+# Function to load data for the Top 5 Leagues
+def load_top_5_leagues():
+    top_5_leagues = ["La Liga 23-24", "Premier League 23-24", "Bundesliga 23-24", "Serie A 23-24", "Ligue 1 23-24"]
+    top_5_league_data = []
+    for league in top_5_leagues:
+        league_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
+        league_data = league_data[list(schemas.column_mapping().values())]
+        league_data['Lig'] = league
+        top_5_league_data.append(league_data)
+    return pd.concat(top_5_league_data, ignore_index=True)
+
 #####################################################################################################################################
 #####################################################################################################################################
 
@@ -186,7 +305,7 @@ def main():
     schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
     
     # Load league information
-    league_data = utils.read_csv(league_info_url)
+    league_data = read_csv(league_info_url)
     leagues = league_data['League'].unique()
     
     # League selector
@@ -202,8 +321,8 @@ def main():
     
     # Load the league data from the constructed URL
     try:
-        league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
-        league_season_data = league_season_data[list(mappingdict.column_mapping().values())]
+        league_season_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
+        league_season_data = league_season_data[list(schemas.column_mapping().values())]
         league_season_data['Lig'] = f'{selected_league}'
         # Primary Position selector
         position_options = [
@@ -226,7 +345,7 @@ def main():
             custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
             num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
             
-            available_metrics = mappingdict.params_list()
+            available_metrics = schemas.params_list()
             custom_schema = {}
             
             for i in range(1, num_groups + 1):
@@ -240,7 +359,7 @@ def main():
                 st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
 
         # Filter the data based on the selected filters
-        filtered_data = utils.filter_by_position(league_season_data, selected_position)
+        filtered_data = filter_by_position(league_season_data, selected_position)
         filtered_data = filtered_data[
             (filtered_data['Oynadığı dakikalar'] >= min_minutes_played) &
             (filtered_data['Yaş'] <= max_age)
@@ -268,7 +387,7 @@ def main():
         selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
         # Load the top 5 leagues data if needed
         if selected_comparison == "Top 5 Ligi":
-            top_5_league_data = utils.filter_by_position(utils.load_top_5_leagues(), selected_position)
+            top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
             comparison_data = top_5_league_data[
                 (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
                 (top_5_league_data['Yaş'] <= max_age)
@@ -333,7 +452,7 @@ def main():
                 
                 # Use selected schema
                 if selected_schema == "Default Schema":
-                    schema_to_use = mappingdict.schema_params()[selected_schema_type]
+                    schema_to_use = schemas.schema_params[selected_schema_type]
                 else:
                     schema_to_use = st.session_state.custom_schemas[selected_schema]
                 
@@ -347,7 +466,7 @@ def main():
                     for metric in metrics:
                         if metric in player_data.columns:
                             player_value = player_data.iloc[0][metric]
-                            ranked_values = utils.rank_column(combined_data, metric)
+                            ranked_values = rank_column(combined_data, metric)
                             player_ranked_value = ranked_values[combined_data.index[combined_data['Oyuncu'] == player_name].tolist()[0]]
                             radar_values.append(player_ranked_value)
                             radar_labels.append(metric)
