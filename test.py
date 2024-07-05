@@ -383,7 +383,7 @@ def main():
             selected_schema = "Default Schema"
 
         # Add option to compare player's metrics
-        comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
+        comparison_options = ["Top 5 Ligi", "Kendi Ligi"]
         selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
         # Load the top 5 leagues data if needed
         if selected_comparison == "Top 5 Ligi":
