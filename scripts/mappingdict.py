@@ -1,4 +1,4 @@
-# schemas.py
+# mappingdict.py
 
 
 def position_to_schema():
