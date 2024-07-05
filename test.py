@@ -374,10 +374,11 @@ def main():
         player_age = st.number_input("Futbolcu Yaşı", max_value=45, value=0)
 
         # Schema selector
-        schema_options = ["Default Schema"]
-        if "custom_schemas" in st.session_state:
-            schema_options += list(st.session_state.custom_schemas.keys())
-        selected_schema = st.selectbox("Şablon Seçin", schema_options)
+        if schema_type:
+            schema_options = ["Default Schema"]
+            if "custom_schemas" in st.session_state:
+                schema_options += list(st.session_state.custom_schemas.keys())
+            selected_schema = st.selectbox("Şablon Seçin", schema_options)
 
         # Add option to compare player's metrics
         comparison_options = ["Kendi Ligi", "Top 5 Ligi"]
