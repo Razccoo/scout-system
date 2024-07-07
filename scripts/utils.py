@@ -456,7 +456,11 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
             annotate_text = f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\nÖrneklem büyüklüğü: ({combined_data.shape[0]} oyuncu)"
 
         plt.suptitle(suptitle_text, **suptitle_common)
-        plt.annotate(annotate_text, **annotate_common)
+        # Plot the annotation on the figure
+        fig.text(0.1, 0.05, annotate_text,
+                 ha='left', va='center',
+                 fontsize=10, fontfamily="DejaVu Sans",
+                 color="#4A2E19", fontweight="regular", fontname="DejaVu Sans")
             
         fig.text(0.5175, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
     return st.pyplot(fig, dpi=400)
