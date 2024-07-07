@@ -191,7 +191,7 @@ def main():
     selected_league = st.sidebar.selectbox("Lig Seçiniz", leagues)
     
     # Filter seasons based on the selected league
-    filtered_seasons = league_data[league_data['League'] == selected_league]['Season'].unique()
+    filtered_seasons = league_data[league_data['League'] == selected_league]['Season'].sort_values(ascending=False).unique()
     
     # Season selector
     selected_season = st.sidebar.selectbox("Sezon Seçiniz", filtered_seasons)
