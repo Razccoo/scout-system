@@ -427,18 +427,6 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
             "y": 0.99
         }
 
-        annotate_common = {
-            "xy": (-0.05, -0.07),
-            "xycoords": "axes fraction",
-            "ha": "left",
-            "va": "center",
-            "fontsize": 10,
-            "fontfamily": "DejaVu Sans",
-            "color": "#4A2E19",
-            "fontweight": "regular",
-            "fontname": "DejaVu Sans"
-        }
-
         selected_position = "Forvetler (OOS, K, SF)"
         # Compare selected position with the values in the pos_mapping
         for position, schema in schemas.pos_mapping().items():
