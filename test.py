@@ -257,7 +257,7 @@ def main():
             schema_options = ["Default Schema"]
             if "custom_schemas" in st.session_state:
                 schema_options += list(st.session_state.custom_schemas.keys())
-            selected_schema = st.selectbox("Şablon Seçin", schema_options)
+                selected_schema = st.selectbox("Şablon Seçin", schema_options)
         else:
             selected_schema = "Default Schema"
 
@@ -320,6 +320,7 @@ def main():
                     (combined_data['Yaş'] == player_age)
                 ]
             
+            combined_data = utils.calculate_score(combined_data, schemas.att_winger_schema())
             player_pos = player_data['Ana Pozisyon'].iloc[0]
             player_min = player_data['Oynadığı dakikalar'].iloc[0]
             player_team = player_data['Kulüp'].iloc[0]
@@ -411,10 +412,11 @@ def main():
                     
                 fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
                 st.pyplot(fig, dpi=400)
-                radar_data
             else:
                 st.error(f"No data found for {player_name} with age {player_age}")
-    
+        
+        st.subheader("Test")
+        st.write(combined_data)
     except Exception as e:
         st.error(f"Could not load data for {selected_league} - {selected_season}. Error: {e}")
 
