@@ -59,7 +59,7 @@ def load_top_5_leagues():
     top_5_leagues = ["La Liga 23-24", "Premier League 23-24", "Bundesliga 23-24", "Serie A 23-24", "Ligue 1 23-24"]
     top_5_league_data = []
     for league in top_5_leagues:
-        league_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
+        league_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","a")}.csv'))
         league_data = league_data[list(schemas.column_mapping().values())]
         league_data['Lig'] = league
         top_5_league_data.append(league_data)
