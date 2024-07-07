@@ -158,7 +158,7 @@ def scout_report(df):
     fig = plt.gcf()
     fig.patch.set_facecolor('#fbf9f4')
     fig.set_size_inches(12, (12*.9)) #length, height
-    
+
     fig_text(
         0.88, 0.055, "Data WyScout\nHazırlayan @AlfieScouting\nTasarım @BeGriffis\n\n<Elit (En Üst 10%)>\n<Ortalama Üstü (11-35%)>\n<Ortalama (36-66%)>\n<Ortalama Altı (En Alt 35%)>", color="#4A2E19",
         highlight_textprops=[{"color": '#01349b'},
@@ -200,7 +200,7 @@ def main():
     
     # Load the league data from the constructed URL
     try:
-        league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
+        league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","%C3%A3")}.csv'))
         league_season_data = league_season_data[list(schemas.column_mapping().values())]
         league_season_data['Lig'] = f'{selected_league}'
         # Primary Position selector
@@ -368,23 +368,37 @@ def main():
                     newax.axis('off')
 
                 if selected_comparison == "Top 5 Ligi":
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} Premier League, La Liga, Bundesliga, Serie A, Ligue 1\n{selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}',
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.) | {selected_season} | {player_team} | {selected_league}\n Top 5 Lig (EPL, La Liga, Bundesliga, Serie A, L1) Oyuncularıyla Kıyasen\nYüzdelik Sıralama | Veriler{title_note}',
                                 fontsize=15,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
                                 fontweight="bold", fontname="DejaVu Sans",
                                 x=0.5,
                                 y=.99)
+                    
+                    plt.annotate(f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\n{max_age} yaş altı top 5 lig {str.lower(selected_position)} karşısında\nÖrneklem büyüklüğü: {combined_data.shape[0]} oyuncu",
+                                xy = (-.05, -.05), xycoords='axes fraction',
+                                ha='left', va='center',
+                                fontsize=10, fontfamily="DejaVu Sans",
+                                color="#4A2E19", fontweight="regular", fontname="DejaVu Sans",
+                                ) 
                 else:
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.), {player_team}\n{selected_season} {selected_league} {selected_position} Karşısında Yüzdelik Sıralamalar\nVeriler{title_note}',
+                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.) | {selected_season}\n{player_team} | {selected_league}\nVeriler{title_note}',
                                 fontsize=15,
                                 fontfamily="DejaVu Sans",
                                 color="#4A2E19", #4A2E19
                                 fontweight="bold", fontname="DejaVu Sans",
                                 x=0.5,
                                 y=.99)
-                
-                fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop,) 
+                    
+                    plt.annotate(f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\n{max_age} yaş altı kendi lig {str.lower(selected_position)} karşısında\nÖrneklem büyüklüğü: {combined_data.shape[0]} oyuncu",
+                                xy = (-.05, -.05), xycoords='axes fraction',
+                                ha='left', va='center',
+                                fontsize=10, fontfamily="DejaVu Sans",
+                                color="#4A2E19", fontweight="regular", fontname="DejaVu Sans",
+                                ) 
+                    
+                fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
                 st.pyplot(fig, dpi=400)
                 radar_data
             else:
