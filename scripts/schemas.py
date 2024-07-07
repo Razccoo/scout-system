@@ -168,3 +168,20 @@ def column_mapping():
         "Clean sheets, %": "Gol Yememe %", "npxG": "npxG", "npxG per 90": "npxG / 90", "npxG per shot": "Şut Başına npxG", "Vertical Pass %": "Dikey Pas %"
     }
     return column_mapping
+
+def pos_mapping(): 
+    pos_mapping = {
+    "Forvetler (OOS, K, SF)": "Forvet Oyuncularıyla",
+    "Forvetler ve Kanatlar": "Forvet ve Kanat Oyuncularıyla",
+    "Santrforsuz Forvetler (OOS, K)": "OOS ve Kanat Oyuncularıyla",
+    "Kanatlar": "Kanat Oyuncularıyla",
+    "Orta Saha (DOS, OS, OOS)": "Orta Saha Oyuncularıyla",
+    "DOS Olmayan Orta Saha (OS, OOS)": "OS & OOS Oyuncularıyla",
+    "OOS Olmayan Orta Saha (DOS, OS)": "DOS & OS Oyuncularıyla",
+    "Bekler (FB/KB)": "Bek Oyuncularıyla",
+    "Defansif Oyuncular (STP, FB/KB, DOS)": "Defansif Oyuncularıyla",
+    "Stoper & Defansif Orta Saha": "Stoper & DOS Oyuncularıyla",
+    "Santrforlar": "Santrafor Oyuncularıyla",
+    "Stoperler": "Stoper Oyuncularıyla"
+            }
+    return pos_mapping

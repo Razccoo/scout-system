@@ -367,36 +367,47 @@ def main():
                     newax.imshow(image)
                     newax.axis('off')
 
-                if selected_comparison == "Top 5 Ligi":
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.) | {selected_season} | {player_team} | {selected_league}\n Top 5 Lig (EPL, La Liga, Bundesliga, Serie A, L1) Oyuncularıyla Kıyasen\nYüzdelik Sıralama | Veriler{title_note}',
-                                fontsize=15,
-                                fontfamily="DejaVu Sans",
-                                color="#4A2E19", #4A2E19
-                                fontweight="bold", fontname="DejaVu Sans",
-                                x=0.5,
-                                y=.99)
-                    
-                    plt.annotate(f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\n{max_age} yaş altı top 5 lig {str.lower(selected_position)} karşısında\nÖrneklem büyüklüğü: {combined_data.shape[0]} oyuncu",
-                                xy = (-.05, -.05), xycoords='axes fraction',
-                                ha='left', va='center',
-                                fontsize=10, fontfamily="DejaVu Sans",
-                                color="#4A2E19", fontweight="regular", fontname="DejaVu Sans",
-                                ) 
+                # Common title and annotation settings
+                suptitle_common = {
+                    "fontsize": 15,
+                    "fontfamily": "DejaVu Sans",
+                    "color": "#4A2E19", 
+                    "fontweight": "bold",
+                    "fontname": "DejaVu Sans",
+                    "x": 0.5,
+                    "y": 0.99
+                }
+
+                annotate_common = {
+                    "xy": (-0.05, -0.05),
+                    "xycoords": "axes fraction",
+                    "ha": "left",
+                    "va": "center",
+                    "fontsize": 10,
+                    "fontfamily": "DejaVu Sans",
+                    "color": "#4A2E19",
+                    "fontweight": "regular",
+                    "fontname": "DejaVu Sans"
+                }
+
+                selected_position = "Forvetler (OOS, K, SF)"
+                # Compare selected position with the values in the pos_mapping
+                for position, schema in schemas.pos_mapping().items():
+                    if selected_position == position:
+                        compare_pos = schema
+                        break
                 else:
-                    plt.suptitle(f'{player_name} ({player_age}, {player_pos}, {player_min} mins.) | {selected_season}\n{player_team} | {selected_league}\nVeriler{title_note}',
-                                fontsize=15,
-                                fontfamily="DejaVu Sans",
-                                color="#4A2E19", #4A2E19
-                                fontweight="bold", fontname="DejaVu Sans",
-                                x=0.5,
-                                y=.99)
-                    
-                    plt.annotate(f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\n{max_age} yaş altı kendi lig {str.lower(selected_position)} karşısında\nÖrneklem büyüklüğü: {combined_data.shape[0]} oyuncu",
-                                xy = (-.05, -.05), xycoords='axes fraction',
-                                ha='left', va='center',
-                                fontsize=10, fontfamily="DejaVu Sans",
-                                color="#4A2E19", fontweight="regular", fontname="DejaVu Sans",
-                                ) 
+                    compare_pos = selected_position  # Handle case where position is not found
+
+                if selected_comparison == "Top 5 Ligi":
+                    suptitle_text = f'{player_name} ({player_age}, {player_pos}, {player_min} mins.) | {selected_season} | {player_team}\nTop 5 Lig | {max_age} Yaş Altı | {compare_pos} Karşılaştırarak\nYüzdelik Sıralama | Veriler{title_note}'
+                    annotate_text = f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\nTop 5 Ligler: Premier League, La Liga, Bundesliga, Serie A, Ligue 1\nÖrneklem büyüklüğü: ({combined_data.shape[0]} oyuncu)"
+                else:
+                    suptitle_text = f'{player_name} ({player_age}, {player_pos}, {player_min} mins.) | {selected_season} | {player_team}\n{selected_league} | {max_age} Yaş Altı | {compare_pos} Karşılaştırarak\nYüzdelik Sıralama | Veriler{title_note}'
+                    annotate_text = f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\nÖrneklem büyüklüğü: ({combined_data.shape[0]} oyuncu)"
+
+                plt.suptitle(suptitle_text, **suptitle_common)
+                plt.annotate(annotate_text, **annotate_common)
                     
                 fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
                 st.pyplot(fig, dpi=400)
