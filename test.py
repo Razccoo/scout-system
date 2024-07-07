@@ -200,7 +200,7 @@ def main():
     
     # Load the league data from the constructed URL
     try:
-        league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","a")}.csv'))
+        league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o")}.csv'))
         league_season_data = league_season_data[list(schemas.column_mapping().values())]
         league_season_data['Lig'] = f'{selected_league}'
         # Primary Position selector
