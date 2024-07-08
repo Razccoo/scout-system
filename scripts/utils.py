@@ -299,7 +299,7 @@ def scale_z_to_100(z):
 
 def load_lg_data(selected_league = None):
     league_data = read_csv(league_info_url)
-    leagues = list(league_data['League'].unique())
+    leagues = league_data['League'].unique()
     if selected_league != None:
         filtered_season = league_data[league_data['League'] == selected_league]['Season'].sort_values(ascending=False).unique()
         return filtered_season

@@ -19,7 +19,7 @@ st.title("Oyuncu Dağılım Grafiği Programı")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
 st.sidebar.header("Seçenekler")
 
-league_list = utils.load_lg_data()
+league_list = list(utils.load_lg_data())
 params = scatterplot.param_list
 params.sort()
 

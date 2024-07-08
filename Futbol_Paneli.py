@@ -15,7 +15,7 @@ st.sidebar.header("Seçenekler")
 
 schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
 
-league_list = utils.load_lg_data()
+league_list = list(utils.load_lg_data())
 selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(league_list.index("Süper Lig") if "Süper Lig" in league_list else 0))
 selected_season = st.sidebar.selectbox("Sezon Seçiniz", utils.load_lg_data(selected_league))
 
