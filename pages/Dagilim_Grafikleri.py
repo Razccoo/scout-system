@@ -74,5 +74,15 @@ fig.update_layout(
     )
 )
 
-# Show plot
+st.markdown("""
+<style>
+.custom-container {
+    width: 1920px
+    max-width: 80%;
+    margin: auto;
+}
+</style>
+<div class='custom-container'>
 st.plotly_chart(fig, theme=None, config=config)
+</div>
+""", unsafe_allow_html=True)
