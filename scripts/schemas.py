@@ -16,7 +16,7 @@ def position_to_schema():
 
 def params_list():
     param_list = [
-        'Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 'İkili Mücadeleler / 90', 'Kazanılan İkili Mücadeleler %', 'Savunma Eylemleri / 90', 'Başarılı Savunma Eylemleri / 90'
+        'Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 'İkili Mücadeleler / 90', 'Kazanılan İkili Mücadeleler %', 'Başarılı Savunma Eylemleri / 90',
                 'Savunma İkili Mücadeleleri / 90', 'Kazanılan Savunma İkili Mücadeleleri %', 'Hava Mücadeleleri / 90', 'Kazanılan Hava Mücadeleleri %', 'Top Çalma / 90',
                 'Top Çalma (pAdj)', 'Engellenen Şutlar / 90', 'Top Kesme / 90', 'Top Kesme (pAdj)', 'Fauller / 90', 'Sarı Kartlar', 'Sarı Kartlar / 90', 'Kırmızı Kartlar',
                 'Kırmızı Kartlar / 90', 'Başarılı Hücum Hareketleri / 90', 'Goller / 90', 'Penaltısız Goller', 'Penaltısız Goller / 90', 'Beklenen Gol (xG) / 90',
@@ -127,13 +127,13 @@ def label_mapping():
 
 def column_mapping():
     column_mapping = {
-        "Player": "Oyuncu", "Age": "Yaş", "Minutes played": "Oynadığı dakikalar", # "League": "Lig", "Position": "Pozisyon",
+        "Player": "Oyuncu", "Age": "Yaş", "Matches played": "Oynadığı maçlar", "Minutes played": "Oynadığı dakikalar", # "League": "Lig", "Position": "Pozisyon",
         "Ana Pozisyon": "Ana Pozisyon", "Team within selected timeframe": "Kulüp", "Goals": "Goller", "xG": "Beklenen Gol (xG)",
         "Assists": "Asistler", "xA": "Beklenen Asist (xA)", "Duels per 90": "İkili Mücadeleler / 90", "Duels won, %": "Kazanılan İkili Mücadeleler %",
         "Birth country": "Doğum Ülkesi", "Passport country": "Pasaport Ülkesi", "Foot": "Ayak", "Height": "Boy", "Weight": "Kilo",
         "On loan": "Kiralık", "Successful defensive actions per 90": "Başarılı Savunma Eylemleri / 90", "Defensive duels per 90": "Savunma İkili Mücadeleleri / 90",
         "Defensive duels won, %": "Kazanılan Savunma İkili Mücadeleleri %", "Aerial duels per 90": "Hava Mücadeleleri / 90", "Aerial duels won, %": "Kazanılan Hava Mücadeleleri %",
-        "Sliding tackles per 90": "Top Çalma  / 90", "PAdj Sliding tackles": "Top Çalma (pAdj)", "Shots blocked per 90": "Engellenen Şutlar / 90",
+        "Sliding tackles per 90": "Top Çalma / 90", "PAdj Sliding tackles": "Top Çalma (pAdj)", "Shots blocked per 90": "Engellenen Şutlar / 90",
         "Interceptions per 90": "Top Kesme / 90", "PAdj Interceptions": "Top Kesme (pAdj)", "Fouls per 90": "Fauller / 90",
         "Yellow cards": "Sarı Kartlar", "Yellow cards per 90": "Sarı Kartlar / 90", "Red cards": "Kırmızı Kartlar", "Red cards per 90": "Kırmızı Kartlar / 90",
         "Successful attacking actions per 90": "Başarılı Hücum Hareketleri / 90", "Goals per 90": "Goller / 90", "Non-penalty goals": "Penaltısız Goller",

@@ -299,7 +299,7 @@ def scale_z_to_100(z):
 
 def load_lg_data(selected_league = None):
     league_data = read_csv(league_info_url)
-    leagues = league_data['League'].unique()
+    leagues = list(league_data['League'].unique())
     if selected_league != None:
         filtered_season = league_data[league_data['League'] == selected_league]['Season'].sort_values(ascending=False).unique()
         return filtered_season
@@ -471,3 +471,9 @@ def load_all_csv_files():
             print(f"Failed to load {file_name.replace('%20', ' ')}. Error: {e}")
     
     return data_frames
+
+def pointcolor_selector():
+    options = schemas.params_list()
+    default_index = options.index("Yaş") if "Yaş" in options else 0
+    point_color = st.sidebar.selectbox("Nokta Rengi Değişkeni", options, index=default_index)
+    return point_color

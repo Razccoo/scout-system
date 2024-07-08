@@ -1,18 +1,22 @@
 import streamlit as st
 import pandas
 import numpy
-from scripts import schemas, utils
+from scripts import schemas, utils, scatterplot
+import warnings
+warnings.filterwarnings('ignore')
 
 crop_url = 'https://crop-circle.imageonline.co/'
 
+st.set_page_config(page_title="Futbol Paneli")
+
 st.title("Futbolcu Radar Oluşturma")
-st.subheader("Tüm veriler Wyscout'tan")
-st.subheader('Hazırlayan @AlfieScouting, konsept @BeGriffis')
+st.subheader("Hazırlayan @AlfieScouting, konsept @BeGriffis\nTüm veriler Wyscout'tan")
 st.sidebar.header("Seçenekler")
 
 schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
 
-selected_league = st.sidebar.selectbox("Lig Seçiniz", utils.load_lg_data())
+league_list = utils.load_lg_data()
+selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(league_list.index("Süper Lig") if "Süper Lig" in league_list else 0))
 selected_season = st.sidebar.selectbox("Sezon Seçiniz", utils.load_lg_data(selected_league))
 
 league_season_data = utils.load_player_data(selected_league, selected_season)
@@ -42,7 +46,7 @@ filtered_data, top_5_league_data = utils.filter_data(league_season_data, selecte
 st.subheader(f"Data for {selected_league} - {selected_season}")
 st.write(filtered_data)
 
-st.header("Futbolcu Radarı Oluşturma\nRadarı oluşturmak için aşağıya oyuncu adını girin (yukarıdaki tablodan kopyalayıp yapıştırabilirsiniz)")
+st.header("Radar Oluşturma\nRadarı oluşturmak için aşağıya oyuncu adını girin (yukarıdaki tablodan kopyalayıp yapıştırabilirsiniz)")
 player_name = st.text_input("Futbolcu Adı")
 player_age = st.number_input("Futbolcu Yaşı", max_value=45)
 # Schema selector
