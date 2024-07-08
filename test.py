@@ -5,8 +5,6 @@ from scripts import schemas, utils
 
 crop_url = 'https://crop-circle.imageonline.co/'
 
-st.set_page_config(page_title="Radar Chart", page_icon="📈")
-
 st.title("Futbolcu Radar Oluşturma")
 st.subheader("Tüm veriler Wyscout'tan")
 st.subheader('Hazırlayan @AlfieScouting, konsept @BeGriffis')
