@@ -53,7 +53,8 @@ custom_players = st.sidebar.multiselect("Ekstra Oyuncuları Seçin", df['Oyuncu'
 df_sorted = df.sort_values(by=[xx, yy], ascending=[False, False]).head(10)
 
 # Add a new column to identify custom selected players
-df['custom_color'] = df['Oyuncu'].apply(lambda x: 'Custom' if x in custom_players else 'Regular')
+df_custom = df[df["Oyuncu"].isin(custom_players)
+df = df[~df["Oyuncu"].isin(custom_players)
 
 # Function to determine the text for annotation
 def annotate_text(row):
@@ -69,8 +70,7 @@ fig = px.scatter(
     data_frame=df,
     x=xx,
     y=yy,
-    color='custom_color',
-    color_discrete_map={'Custom': 'red', 'Regular': point_color},
+    color=point_color,
     color_continuous_scale=point_colorscale,
     text = df.apply(annotate_text, axis=1),
     hover_data=['Kulüp', 'Yaş', 'Ana Pozisyon', 'Oynadığı dakikalar'],
@@ -110,15 +110,15 @@ config = {
 
 fig.update_traces(textposition='top right', marker=dict(size=10, line=dict(width=1, color='black')))
 
-#for player in custom_players:
-#    fig.add_scatter(
-#        x=df[df['Oyuncu'] == player][xx],
-#        y=df[df['Oyuncu'] == player][yy],
-#        mode='text',
-#        text=df[df['Oyuncu'] == player]['Oyuncu'],
-#        textposition='top right',
-#        marker=dict(size=10, line=dict(width=1, color='red'))
-#    )
+for player in custom_players:
+    fig.add_scatter(
+        x=df_custom[df_custom['Oyuncu'] == player][xx],
+        y=df_custom[df_custom['Oyuncu'] == player][yy],
+        mode='marker+text',
+        text=df_custom[df_custom['Oyuncu'] == player]['Oyuncu'],
+        textposition='top right',
+        marker=dict(size=10, line=dict(width=1, color='red'))
+    )
     
 fig.add_hline(y=df[yy].median(), name='Median', line_width=0.5)
 fig.add_vline(x=df[xx].median(), name='Median', line_width=0.5)
