@@ -106,15 +106,15 @@ config = {
 
 fig.update_traces(textposition='top right', marker=dict(size=10, line=dict(width=1, color='black')))
 
-for player in custom_players:
-    fig.add_scatter(
-        x=df[df['Oyuncu'] == player][xx],
-        y=df[df['Oyuncu'] == player][yy],
-        mode='text',
-        text=df[df['Oyuncu'] == player]['Oyuncu'],
-        textposition='top right',
-        marker=dict(size=10, line=dict(width=1, color='red'))
-    )
+#for player in custom_players:
+#    fig.add_scatter(
+#        x=df[df['Oyuncu'] == player][xx],
+#        y=df[df['Oyuncu'] == player][yy],
+#        mode='text',
+#        text=df[df['Oyuncu'] == player]['Oyuncu'],
+#        textposition='top right',
+#        marker=dict(size=10, line=dict(width=1, color='red'))
+#    )
     
 fig.add_hline(y=df[yy].median(), name='Median', line_width=0.5)
 fig.add_vline(x=df[xx].median(), name='Median', line_width=0.5)
