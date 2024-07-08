@@ -437,8 +437,8 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
             annotate_text = f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\nÖrneklem büyüklüğü: ({combined_data.shape[0]} oyuncu)"
 
         plt.suptitle(suptitle_text, **suptitle_common)
-        fig.text(x = 0.1, y = 0.05, s = annotate_text, ha='left', va='center',
-                    fontsize=9, color="#4A2E19")
+        fig.text(x = 0.1, y = 0.03, s = annotate_text, ha='left', va='center',
+                    fontsize=10, color="#4A2E19")
         
         if player_image is not None:
             image = Image.open(player_image)
