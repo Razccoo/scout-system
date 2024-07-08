@@ -71,6 +71,6 @@ else:
 
 if st.button("Radar Oluştur"):
     try:
-        utils.selected_player_data(filtered_data, comparison_data, player_name, player_age, max_age, selected_comparison, selected_schema, selected_league, selected_season, player_image)
+        utils.selected_player_data(filtered_data, comparison_data, player_name, player_age, max_age, selected_comparison, selected_schema, selected_league, selected_season, selected_position, player_image)
     except:
         st.error(f"No data found for {player_name} with age {player_age}")
