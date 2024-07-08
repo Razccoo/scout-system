@@ -327,7 +327,7 @@ def filter_data(league_season_data, selected_position, min_minutes_played, max_a
     ].reset_index(drop=True)
     return filtered_data, top_5_league_data
 
-def selected_player_data(filtered_data, comparison_data, player_name, player_age, max_age, selected_comparison, selected_schema, selected_league, selected_season, player_image = None):
+def selected_player_data(filtered_data, comparison_data, player_name, player_age, max_age, selected_comparison, selected_schema, selected_league, selected_season, selected_position, player_image = None):
     player_data = filtered_data[
         (filtered_data['Oyuncu'] == player_name) &
         (filtered_data['Yaş'] == player_age)]
@@ -410,12 +410,6 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
         
         fig, ax = scout_report(radar_data)
         
-        if player_image is not None:
-            image = Image.open(player_image)
-            newax = fig.add_axes([.425, .395, 0.18, 0.18], anchor='C', zorder=1)
-            newax.imshow(image)
-            newax.axis('off')
-
         # Common title and annotation settings
         suptitle_common = {
             "fontsize": 15,
@@ -427,7 +421,6 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
             "y": 0.99
         }
 
-        selected_position = "Forvetler (OOS, K, SF)"
         # Compare selected position with the values in the pos_mapping
         for position, schema in schemas.pos_mapping().items():
             if selected_position == position:
@@ -444,11 +437,14 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
             annotate_text = f"Çubuklar yüzdelik dilimlerdir\nGösterilen değerler 90 dk başına\nÖrneklem büyüklüğü: ({combined_data.shape[0]} oyuncu)"
 
         plt.suptitle(suptitle_text, **suptitle_common)
-        # Plot the annotation on the figure
-        fig.text(0.1, 0.05, annotate_text,
-                 ha='left', va='center',
-                 fontsize=10, fontfamily="DejaVu Sans",
-                 color="#4A2E19", fontweight="regular", fontname="DejaVu Sans")
+        fig.text(x = 0.1, y = 0.05, s = annotate_text, ha='left', va='center',
+                    fontsize=9, color="#4A2E19")
+        
+        if player_image is not None:
+            image = Image.open(player_image)
+            newax = fig.add_axes([.425, .395, 0.18, 0.18], anchor='C', zorder=1)
+            newax.imshow(image)
+            newax.axis('off')
             
         fig.text(0.5175, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
     return st.pyplot(fig, dpi=400)
