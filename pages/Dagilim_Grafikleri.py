@@ -52,6 +52,9 @@ custom_players = st.sidebar.multiselect("Ekstra Oyuncuları Seçin", df['Oyuncu'
 
 df_sorted = df.sort_values(by=[xx, yy], ascending=[False, False]).head(10)
 
+# Add a new column to identify custom selected players
+df['custom_color'] = df['Oyuncu'].apply(lambda x: 'Custom' if x in custom_players else 'Regular')
+
 # Function to determine the text for annotation
 def annotate_text(row):
     if row.name in df_sorted.index:
@@ -66,7 +69,8 @@ fig = px.scatter(
     data_frame=df,
     x=xx,
     y=yy,
-    color=point_color,
+    color='custom_color',
+    color_discrete_map={'Custom': 'red', 'Regular': point_color},
     color_continuous_scale=point_colorscale,
     text = df.apply(annotate_text, axis=1),
     hover_data=['Kulüp', 'Yaş', 'Ana Pozisyon', 'Oynadığı dakikalar'],
