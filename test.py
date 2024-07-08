@@ -361,12 +361,6 @@ def main():
                 }).sort_values('group')
                 
                 fig, ax = scout_report(radar_data)
-                
-                if player_image is not None:
-                    image = Image.open(player_image)
-                    newax = fig.add_axes([.425, .395, 0.18, 0.18], anchor='C', zorder=1)
-                    newax.imshow(image)
-                    newax.axis('off')
 
                 # Common title and annotation settings
                 suptitle_common = {
@@ -391,7 +385,6 @@ def main():
                     "fontname": "DejaVu Sans"
                 }
 
-                selected_position = "Forvetler (OOS, K, SF)"
                 # Compare selected position with the values in the pos_mapping
                 for position, schema in schemas.pos_mapping().items():
                     if selected_position == position:
@@ -409,6 +402,12 @@ def main():
 
                 plt.suptitle(suptitle_text, **suptitle_common)
                 plt.annotate(annotate_text, **annotate_common)
+                
+                if player_image is not None:
+                    image = Image.open(player_image)
+                    newax = fig.add_axes([.425, .395, 0.18, 0.18], anchor='C', zorder=1)
+                    newax.imshow(image)
+                    newax.axis('off')
                     
                 fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
                 st.pyplot(fig, dpi=400)
