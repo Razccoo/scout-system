@@ -10,12 +10,14 @@ from scipy import stats
 from statistics import mean
 from math import pi
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+
+st.set_page_config(page_title="Dagilim Grafikleri", layout="wide")
+
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
 
-st.set_page_config(page_title="Dagilim Grafikleri")
-
-st.title("Oyuncu Dağılım Grafiği Programı")
+st.title("Oyuncu Dağılım Grafiği")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
 st.sidebar.header("Seçenekler")
 
@@ -45,33 +47,80 @@ if st.session_state.swap_axes:
 
 df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_position, min_minutes_played)
 
+# Add multiselect for custom players to be annotated
+custom_players = st.sidebar.multiselect("Ekstra Oyuncuları Seçin", df['Oyuncu'].unique())
+
+df_sorted = df.sort_values(by=[xx, yy], ascending=[False, False]).head(10)
+
+# Function to determine the text for annotation
+def annotate_text(row):
+    if row.name in df_sorted.index:
+        return row['Oyuncu']
+    elif row['Oyuncu'] in custom_players:
+        return f"<b>{row['Oyuncu']}</b>"
+    else:
+        return ''
+    
 # Create scatterplot
 fig = px.scatter(
-    df,
+    data_frame=df,
     x=xx,
     y=yy,
     color=point_color,
     color_continuous_scale=point_colorscale,
-    text = 'Oyuncu',
+    text = df.apply(annotate_text, axis=1),
     hover_data=['Kulüp', 'Yaş', 'Ana Pozisyon', 'Oynadığı dakikalar'],
     hover_name="Oyuncu",
     title=f"{selected_league} - {selected_season} - {selected_position} Oyuncu Dağılımı",
-    width=900,
-    height=700
-)
+    # width=900,
+    # height=700
+    )
+
+draft_template = go.layout.Template()
+draft_template.layout.annotations = [
+    dict(
+        name="draft watermark",
+        text="@ALFIESCOUTING",
+        textangle=0,
+        opacity=1,
+        font=dict(color="black", size=20),
+        xref="paper",
+        yref="paper",
+        x=0.99,
+        y=0.005,
+        showarrow=False,
+    )
+]
+
+config = {
+  'toImageButtonOptions': {
+    'format': 'png', # one of png, svg, jpeg, webp
+    'filename': 'custom_image',
+    'height': 700,
+    'width': 900,
+    'scale': 1 # Multiply title/legend/axis/canvas sizes by this factor
+  },
+  'responsive': False,
+  'scrollZoom': False
+}
+
 fig.update_traces(textposition='top right', marker=dict(size=10, line=dict(width=1, color='black')))
 
+for player in custom_players:
+    fig.add_scatter(
+        x=df[df['Oyuncu'] == player][xx],
+        y=df[df['Oyuncu'] == player][yy],
+        mode='markers+text',
+        text=df[df['Oyuncu'] == player]['Oyuncu'],
+        textposition='top right',
+        marker=dict(size=10, color='red', line=dict(width=1, color='black'))
+    )
+    
 fig.add_hline(y=df[yy].median(), name='Median', line_width=0.5)
 fig.add_vline(x=df[xx].median(), name='Median', line_width=0.5)
 
-# Update layout
-fig.update_layout(
-    xaxis_title=xx,
-    yaxis_title=yy,
-    coloraxis_colorbar=dict(
-        title=point_color,
+fig.update_layout(height=700, width=900, coloraxis_colorbar=dict(
         orientation="h"
-    )
-)
-config = {'responsive': False}
-st.plotly_chart(fig, theme=None, config=config)
+    ), template=draft_template)
+
+st.plotly_chart(fig, config=config, use_container_width=False, theme=None, height=700, width=900, key="scatter")
