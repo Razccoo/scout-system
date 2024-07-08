@@ -15,6 +15,15 @@ if 'swap_axes' not in st.session_state:
 
 st.set_page_config(page_title="Dagilim Grafikleri")
 
+st.markdown("""
+<style>
+.custom-container {
+    width: 1920px
+    max-width: 80%;
+    margin: auto;
+}
+</style>
+<div class='custom-container'>
 st.title("Oyuncu Dağılım Grafiği Programı")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
 st.sidebar.header("Seçenekler")
@@ -73,16 +82,6 @@ fig.update_layout(
         title=point_color
     )
 )
-
-st.markdown("""
-<style>
-.custom-container {
-    width: 1920px
-    max-width: 80%;
-    margin: auto;
-}
-</style>
-<div class='custom-container'>
 st.plotly_chart(fig, theme=None, config=config)
 </div>
 """, unsafe_allow_html=True)
