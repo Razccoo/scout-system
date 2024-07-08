@@ -45,15 +45,6 @@ if st.session_state.swap_axes:
 
 df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_position, min_minutes_played)
 
-st.markdown("""
-<style>
-.custom-container {
-    width: 1920px
-    max-width: 80%;
-    margin: auto;
-}
-</style>
-<div class='custom-container'>
 config = {'responsive': False}
 # Create scatterplot
 fig = px.scatter(
@@ -83,5 +74,3 @@ fig.update_layout(
     )
 )
 st.plotly_chart(fig, theme=None, config=config)
-</div>
-""", unsafe_allow_html=True)
