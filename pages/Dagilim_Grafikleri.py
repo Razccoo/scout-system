@@ -77,4 +77,4 @@ fig.update_layout(
 fig.show(config=config)
 
 # Show plot
-st.plotly_chart(fig, theme=None)
+st.plotly_chart(fig, theme=None, config=config)
