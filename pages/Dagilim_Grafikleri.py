@@ -15,15 +15,6 @@ if 'swap_axes' not in st.session_state:
 
 st.set_page_config(page_title="Dagilim Grafikleri")
 
-st.markdown("""
-<style>
-.custom-container {
-    width: 1920px
-    max-width: 80%;
-    margin: auto;
-}
-</style>
-<div class='custom-container'>
 st.title("Oyuncu Dağılım Grafiği Programı")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
 st.sidebar.header("Seçenekler")
@@ -54,6 +45,15 @@ if st.session_state.swap_axes:
 
 df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_position, min_minutes_played)
 
+st.markdown("""
+<style>
+.custom-container {
+    width: 1920px
+    max-width: 80%;
+    margin: auto;
+}
+</style>
+<div class='custom-container'>
 config = {'responsive': False}
 # Create scatterplot
 fig = px.scatter(
