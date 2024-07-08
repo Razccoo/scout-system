@@ -45,6 +45,7 @@ if st.session_state.swap_axes:
 
 df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_position, min_minutes_played)
 
+config = {'responsive': False}
 # Create scatterplot
 fig = px.scatter(
     df,
@@ -72,6 +73,8 @@ fig.update_layout(
         title=point_color
     )
 )
+
+fig.show(config=config)
 
 # Show plot
 st.plotly_chart(fig, theme=None)
