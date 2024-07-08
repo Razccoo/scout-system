@@ -257,7 +257,7 @@ def main():
             schema_options = ["Default Schema"]
             if "custom_schemas" in st.session_state:
                 schema_options += list(st.session_state.custom_schemas.keys())
-            selected_schema = st.selectbox("Şablon Seçin", schema_options)
+                selected_schema = st.selectbox("Şablon Seçin", schema_options)
         else:
             selected_schema = "Default Schema"
 
@@ -320,6 +320,7 @@ def main():
                     (combined_data['Yaş'] == player_age)
                 ]
             
+            combined_data = utils.calculate_score(combined_data, schemas.att_winger_schema())
             player_pos = player_data['Ana Pozisyon'].iloc[0]
             player_min = player_data['Oynadığı dakikalar'].iloc[0]
             player_team = player_data['Kulüp'].iloc[0]
@@ -360,12 +361,6 @@ def main():
                 }).sort_values('group')
                 
                 fig, ax = scout_report(radar_data)
-                
-                if player_image is not None:
-                    image = Image.open(player_image)
-                    newax = fig.add_axes([.425, .395, 0.18, 0.18], anchor='C', zorder=1)
-                    newax.imshow(image)
-                    newax.axis('off')
 
                 # Common title and annotation settings
                 suptitle_common = {
@@ -390,7 +385,6 @@ def main():
                     "fontname": "DejaVu Sans"
                 }
 
-                selected_position = "Forvetler (OOS, K, SF)"
                 # Compare selected position with the values in the pos_mapping
                 for position, schema in schemas.pos_mapping().items():
                     if selected_position == position:
@@ -408,13 +402,20 @@ def main():
 
                 plt.suptitle(suptitle_text, **suptitle_common)
                 plt.annotate(annotate_text, **annotate_common)
+                
+                if player_image is not None:
+                    image = Image.open(player_image)
+                    newax = fig.add_axes([.425, .395, 0.18, 0.18], anchor='C', zorder=1)
+                    newax.imshow(image)
+                    newax.axis('off')
                     
                 fig.text(0.5, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
                 st.pyplot(fig, dpi=400)
-                radar_data
             else:
                 st.error(f"No data found for {player_name} with age {player_age}")
-    
+        
+        st.subheader("Test")
+        st.write(combined_data)
     except Exception as e:
         st.error(f"Could not load data for {selected_league} - {selected_season}. Error: {e}")
 

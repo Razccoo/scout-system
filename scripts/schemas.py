@@ -185,3 +185,73 @@ def pos_mapping():
     "Stoperler": "Stoper Oyuncularıyla"
             }
     return pos_mapping
+
+def att_winger_schema():
+    attacking_winger_schema = {
+        'Crossing': {
+            'weight': 0.05,
+            'measurements': {
+                'Ortalar / 90': 0.60,
+                'Başarılı Orta %': 0.40
+            }
+        },
+        'Dribbles': {
+            'weight': 0.20,
+            'measurements': {
+                'Dribblingler / 90': 0.65,
+                'Başarılı Dribbling %': 0.35
+            }
+        },
+        'Ball Progression': {
+            'weight': 0.15,
+            'measurements': {
+                'Kademeli Taşımalar / 90': 0.35,
+                'Topla Hizlanmalar / 90': 0.20,
+                'Gol/ Şut %': 0.30,
+                'Başarılı Kademeli Paslar %': 0.15
+            }
+        },
+        'Shooting': {
+            'weight': 0.25,
+            'measurements': {
+                'Şutlar / 90': 0.25,
+                'Hedefi Bulan Şutlar %': 0.40,
+                'Gol/ Şut %': 0.35
+            }
+        },
+        'Defending': {
+            'weight': 0.10,
+            'measurements': {
+                'Top Çalma & Kesmeler (pAdj) / 90': 0.25,
+                'Kazanılan Savunma İkili Mücadeleleri %': 0.45,
+                'Kazanılan Savunma İkili Mücadeleleri %': 0.30
+            }
+        },
+        'Passing': {
+            'weight': 0.10,
+            'measurements': {
+                'Başarılı Uzun Paslar %': 0.25,
+                'Başarılı Uzun Paslar %': 0.05,
+                'Başarılı Akıllı Pas %': 0.10,
+                'Anahtar Paslar / 90': 0.25,
+                'Beklenen Asist (xA) / 90': 0.15,
+                'Derin Tamamlamalar / 90': 0.20
+            }
+        },
+        'Penalty Area Entries': {
+            'weight': 0.15,
+            'measurements': {
+                'Ceza Sahasına Paslar / 90': 0.40,
+                'Ceza Sahasına Başarılı Paslar %': 0.25,
+                'Touches in box per 90': 0.35
+            }
+        }
+    }
+    return attacking_winger_schema
+
+position_options = [
+    "Forvetler (OOS, K, SF)", "Forvetler ve Kanatlar", "Santrforsuz Forvetler (OOS, K)", 
+    "Kanatlar", "Orta Saha (DOS, OS, OOS)", "DOS Olmayan Orta Saha (OS, OOS)",
+    "OOS Olmayan Orta Saha (DOS, OS)", "Bekler (FB/KB)", 
+    "Defansif Oyuncular (STP, FB/KB, DOS)", "Stoper & Defansif Orta Saha", "Santrforlar", "Stoperler"
+]
