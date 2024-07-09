@@ -25,10 +25,10 @@ st.set_page_config(page_title="Dagilim Grafikleri")
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
     
-def plot_scatter(df, xx, yy, selected_league, selected_position):
+def plot_scatter(data_frame, xx, yy, selected_league, selected_position):
     plt.clf()
-    df = utils.filter_by_position(df, selected_position)
-    df_plot = df[(df['Oynadığı dakikalar'] >= df['Oynadığı dakikalar'].median()) & (df[xx] >= df[yy].median())]
+    df1 = utils.filter_by_position(data_frame, selected_position)
+    df_plot = df1[(df1['Oynadığı dakikalar'] >= df1['Oynadığı dakikalar'].median()) & (df1[xx] >= df1[yy].median())]
 
     df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.4 + stats.zscore(df_plot[yy]) * 0.6
     df_plot['annotated'] = [True if x > df_plot['zscore'].quantile(0.8) else False for x in df_plot['zscore']]
