@@ -14,14 +14,9 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="Dagilim Grafikleri", layout="wide")
 
-import plotly.graph_objects as go
-
-st.set_page_config(page_title="Dagilim Grafikleri", layout="wide")
-
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
 
-st.title("Oyuncu Dağılım Grafiği")
 st.title("Oyuncu Dağılım Grafiği")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
 st.sidebar.header("Seçenekler")
@@ -136,7 +131,7 @@ fig.update_layout(
 config = {
   'toImageButtonOptions': {
     'format': 'png',  # one of png, svg, jpeg, webp
-    'filename': 'custom_image',
+    'filename': f'{xx}-{yy}-{selected_position}-{selected_league}-{selected_season}',
     'height': 700,
     'width': 900,
     'scale': 1  # Multiply title/legend/axis/canvas sizes by this factor
