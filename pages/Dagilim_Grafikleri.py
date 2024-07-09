@@ -115,7 +115,7 @@ for player in custom_players:
         x=df_custom[df_custom['Oyuncu'] == player][xx],
         y=df_custom[df_custom['Oyuncu'] == player][yy],
         mode='markers+text',
-        color='red',
+        fill='red',
         text=df_custom[df_custom['Oyuncu'] == player]['Oyuncu'],
         textposition='top right',
         marker=dict(size=10, line=dict(width=1, color='black'))
