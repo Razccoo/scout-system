@@ -53,8 +53,8 @@ custom_players = st.sidebar.multiselect("Ekstra Oyuncuları Seçin", df['Oyuncu'
 df_sorted = df.sort_values(by=[xx, yy], ascending=[False, False]).head(10)
 
 # Add a new column to identify custom selected players
-df_custom = df[df["Oyuncu"].isin(custom_players)
-df = df[~df["Oyuncu"].isin(custom_players)
+df_custom = df[df["Oyuncu"].isin(custom_players)]
+df = df[~df["Oyuncu"].isin(custom_players)]
 
 # Function to determine the text for annotation
 def annotate_text(row):
