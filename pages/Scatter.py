@@ -56,7 +56,7 @@ def plot_scatter(df, xx, yy, selected_league, selected_position):
         ]
 
     adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'},
-    arrowprops=dict(arrowstyle='->', color='black'))
+    arrowprops=dict(arrowstyle='->', connectionstyle="arc3,rad=.2", color='black'))
 
     ax.set_ylabel(f'{xx}')
     ax.set_xlabel(f'{yy}')
