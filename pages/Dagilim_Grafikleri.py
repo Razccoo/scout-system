@@ -41,7 +41,7 @@ df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_po
 custom_players = st.sidebar.multiselect("Oyuncuları göster:", df['Oyuncu'].unique())
 
 # Button to reverse X and Y axis variables
-if st.sidebar.button("Değişkenleri Ters Çevir"):
+if st.sidebar.button("Eksenleri Ters Çevir"):
     st.session_state.swap_axes = not st.session_state.swap_axes
 # Swap variables based on session state
 if st.session_state.swap_axes:
