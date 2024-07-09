@@ -477,3 +477,4 @@ def pointcolor_selector():
     default_index = options.index("Yaş") if "Yaş" in options else 0
     point_color = st.sidebar.selectbox("Nokta Rengi Değişkeni", options, index=default_index)
     return point_color
+
