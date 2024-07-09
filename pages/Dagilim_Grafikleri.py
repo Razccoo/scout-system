@@ -60,7 +60,6 @@ df['annotation'] = df['Oyuncu'].apply(lambda x: 'Custom' if x in custom_players 
 # Create scatterplot
 fig = px.scatter(
     data_frame=df,
-    data_frame=df,
     x=xx,
     y=yy,
     color=point_color,
