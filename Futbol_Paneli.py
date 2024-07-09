@@ -1,6 +1,6 @@
 import streamlit as st
-import pandas
-import numpy
+import pandas as pd
+import numpy as np
 from scripts import schemas, utils, scatterplot
 import warnings
 warnings.filterwarnings('ignore')
@@ -31,7 +31,7 @@ if schema_type:
     available_metrics = schemas.params_list()
     custom_schema = {}
 
-    for i in range(1, num_groups + 1):
+    for i in range(1, num_groups + 1): # type: ignore
         selected_metrics = st.sidebar.multiselect(f"Grup {i} için metrikleri seçin", available_metrics)
         custom_schema[f"Group {i}"] = selected_metrics
     
