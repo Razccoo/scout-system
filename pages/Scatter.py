@@ -37,25 +37,41 @@ def plot_scatter(df, xx, yy, selected_league, selected_position):
     ax = plt.subplot()
     ax.grid(visible=True, ls='--', color='lightgrey')
 
-    ax.scatter(
+    scatter = ax.scatter(
         df_plot[xx], df_plot[yy],
         c=df_plot['zscore'], cmap='inferno',
-        zorder=3, ec='grey', s=55, alpha=0.8)
+        zorder=3, ec='grey', s=55, alpha=0.8
+    )
 
     texts = []
     annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
     for index in range(annotated_df.shape[0]):
-        texts += [
-            ax.text(
-                x=annotated_df[xx].iloc[index], y=annotated_df[yy].iloc[index],
-                s=f"{annotated_df['Oyuncu'].iloc[index]}",
-                path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), path_effects.Normal()],
-                color='black',
-                family='DMSans', weight='regular'
-            )
-        ]
+        text = ax.text(
+            x=annotated_df[xx].iloc[index], y=annotated_df[yy].iloc[index],
+            s=f"{annotated_df['Oyuncu'].iloc[index]}",
+            path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), path_effects.Normal()],
+            color='black',
+            family='DMSans', weight='regular'
+        )
+        texts.append(text)
 
     adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'})
+
+    for text in texts:
+        x = text.get_position()[0]
+        y = text.get_position()[1]
+        original_x = annotated_df[xx].iloc[texts.index(text)]
+        original_y = annotated_df[yy].iloc[texts.index(text)]
+        ax.annotate(
+            '',
+            xy=(original_x, original_y),
+            xytext=(x, y),
+            arrowprops=dict(
+                arrowstyle="->",
+                connectionstyle="arc3,rad=.2",
+                color='black'
+            )
+        )
 
     ax.set_ylabel(f'{xx}')
     ax.set_xlabel(f'{yy}')
