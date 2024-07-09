@@ -14,9 +14,14 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="Dagilim Grafikleri", layout="wide")
 
+import plotly.graph_objects as go
+
+st.set_page_config(page_title="Dagilim Grafikleri", layout="wide")
+
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
 
+st.title("Oyuncu Dağılım Grafiği")
 st.title("Oyuncu Dağılım Grafiği")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
 st.sidebar.header("Seçenekler")
@@ -35,8 +40,10 @@ point_color = st.sidebar.selectbox("Nokta Renk Değişkeni", params, index=(para
 
 scale_options = scatterplot.colorscale()
 point_colorscale = st.sidebar.selectbox("Nokta Renk Skalası", scale_options, index=(scale_options.index("plasma") if "plasma" in scale_options else 0))
-
 xx, yy = x_axis, y_axis
+df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_position, min_minutes_played)
+# Add multiselect for custom players to be annotated
+custom_players = st.sidebar.multiselect("Oyuncuları göster:", df['Oyuncu'].unique())
 
 # Button to reverse X and Y axis variables
 if st.sidebar.button("Değişkenleri Ters Çevir"):
@@ -45,86 +52,98 @@ if st.sidebar.button("Değişkenleri Ters Çevir"):
 if st.session_state.swap_axes:
     xx, yy = yy, xx
 
-df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_position, min_minutes_played)
-
-# Add multiselect for custom players to be annotated
-custom_players = st.sidebar.multiselect("Ekstra Oyuncuları Seçin", df['Oyuncu'].unique())
-
 df_sorted = df.sort_values(by=[xx, yy], ascending=[False, False]).head(10)
 
-# Add a new column to identify custom selected players
-df_custom = df[df["Oyuncu"].isin(custom_players)]
-df = df[~df["Oyuncu"].isin(custom_players)]
+# Add a new column to identify custom selected players and top 10 players
+df['annotation'] = df['Oyuncu'].apply(lambda x: 'Custom' if x in custom_players else ('Top10' if x in df_sorted['Oyuncu'].values else ''))
 
-# Function to determine the text for annotation
-def annotate_text(row):
-    if row.name in df_sorted.index:
-        return row['Oyuncu']
-    elif row['Oyuncu'] in custom_players:
-        return f"<b>{row['Oyuncu']}</b>"
-    else:
-        return ''
-    
 # Create scatterplot
 fig = px.scatter(
+    data_frame=df,
     data_frame=df,
     x=xx,
     y=yy,
     color=point_color,
     color_continuous_scale=point_colorscale,
-    text = df.apply(annotate_text, axis=1),
+    text=df.apply(lambda row: (
+        '' if row['Oyuncu'] in custom_players else 
+        (row['Oyuncu'] if row['Oyuncu'] in df_sorted['Oyuncu'].values else '')), axis=1),
     hover_data=['Kulüp', 'Yaş', 'Ana Pozisyon', 'Oynadığı dakikalar'],
     hover_name="Oyuncu",
-    title=f"{selected_league} - {selected_season} - {selected_position} Oyuncu Dağılımı",
-    # width=900,
-    # height=700
-    )
+    title=f"<b>{selected_league} - {selected_season} - {selected_position} Oyuncu Dağılımı</b>",
+    width=900,
+    height=700
+)
 
-draft_template = go.layout.Template()
-draft_template.layout.annotations = [
-    dict(
-        name="draft watermark",
-        text="@ALFIESCOUTING",
-        textangle=0,
-        opacity=1,
-        font=dict(color="black", size=20),
-        xref="paper",
-        yref="paper",
-        x=0.99,
-        y=0.005,
-        showarrow=False,
-    )
-]
+# Add custom players annotations with bold text and red color
+for player in custom_players:
+    player_data = df[df['Oyuncu'] == player]
+    fig.add_trace(go.Scatter(
+        x=player_data[xx],
+        y=player_data[yy],
+        mode="markers+text",
+        name=player,
+        text=f"<b>{player_data['Oyuncu'].iloc[0]}</b>",
+        textposition="top right",
+        textfont=dict(
+            size=14,
+            color="#FF0400"
+        ),
+        marker=dict(size=10, color='green', line=dict(width=1, color='black')),
+        hoverinfo='text',
+        hovertext=player_data.apply(lambda row: (
+            f"<b>{row['Oyuncu']}</b><br><br>"
+            f"{xx}= {row[xx]}<br>"
+            f"{yy}= {row[yy]}<br>"
+            f"Kulüp= {row['Kulüp']}<br>"
+            f"Yaş= {row['Yaş']}<br>"
+            f"Ana Pozisyon= {row['Ana Pozisyon']}<br>"
+            f"Oynadığı dakikalar= {row['Oynadığı dakikalar']}<br>"
+        ), axis=1)
+    ))
 
+fig.update_traces(textposition='top right', marker=dict(size=10))
+fig.update_layout(
+    height=700, 
+    width=900,
+    xaxis_title=f"<b>{xx}</b>",
+    yaxis_title=f"<b>{yy}</b>",
+    coloraxis_colorbar=dict(orientation="h")
+)
+
+# Add horizontal and vertical median lines
+fig.add_hline(y=df[yy].median(), name='Median', line_width=0.5)
+fig.add_vline(x=df[xx].median(), name='Median', line_width=0.5)
+
+# Watermark annotation
+fig.update_layout(
+    annotations=[
+        dict(
+            name="draft watermark",
+            text="<b>@ALFIESCOUTING</b>",
+            textangle=0,
+            opacity=1,
+            font=dict(color="#FF0400", size=20),
+            xref="paper",
+            yref="paper",
+            x=0.99,
+            y=0.005,
+            showarrow=False,
+        )
+    ]
+)
+
+# Config for exporting the plot
 config = {
   'toImageButtonOptions': {
-    'format': 'png', # one of png, svg, jpeg, webp
+    'format': 'png',  # one of png, svg, jpeg, webp
     'filename': 'custom_image',
     'height': 700,
     'width': 900,
-    'scale': 1 # Multiply title/legend/axis/canvas sizes by this factor
+    'scale': 1  # Multiply title/legend/axis/canvas sizes by this factor
   },
   'responsive': False,
   'scrollZoom': False
 }
-
-fig.update_traces(textposition='top right', marker=dict(size=10, line=dict(width=1, color='black')))
-
-for player in custom_players:
-    fig.add_scatter(
-        x=df_custom[df_custom['Oyuncu'] == player][xx],
-        y=df_custom[df_custom['Oyuncu'] == player][yy],
-        mode='markers+text',
-        text=df_custom[df_custom['Oyuncu'] == player]['Oyuncu'],
-        textposition='top right',
-        marker=dict(size=10, color='red', line=dict(width=1, color='black'))
-    )
-    
-fig.add_hline(y=df[yy].median(), name='Median', line_width=0.5)
-fig.add_vline(x=df[xx].median(), name='Median', line_width=0.5)
-
-fig.update_layout(height=700, width=900, coloraxis_colorbar=dict(
-        orientation="h"
-    ), template=draft_template)
 
 st.plotly_chart(fig, config=config, use_container_width=False, theme=None, height=700, width=900, key="scatter")

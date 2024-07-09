@@ -5,9 +5,9 @@ from scripts import schemas, utils, scatterplot
 import warnings
 warnings.filterwarnings('ignore')
 
-crop_url = 'https://crop-circle.imageonline.co/'
+st.set_page_config(page_title="Futbol Paneli", layout="wide")
 
-st.set_page_config(page_title="Futbol Paneli")
+crop_url = 'https://crop-circle.imageonline.co/'
 
 st.title("Futbolcu Radar Oluşturma")
 st.subheader("Hazırlayan @AlfieScouting, konsept @BeGriffis\nTüm veriler Wyscout'tan")
