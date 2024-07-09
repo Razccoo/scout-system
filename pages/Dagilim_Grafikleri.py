@@ -9,8 +9,17 @@ from plotly.graph_objects import Layout
 from scipy import stats
 from statistics import mean
 from math import pi
+
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import matplotlib.patheffects as path_effects
+import matplotlib.font_manager as fm
+from highlight_text import fig_text, ax_text
+from adjustText import adjust_text
+from matplotlib.colors import LinearSegmentedColormap, Normalize
+from matplotlib import cm
 
 st.set_page_config(page_title="Dagilim Grafikleri", layout="wide")
 
@@ -141,3 +150,71 @@ config = {
 }
 
 st.plotly_chart(fig, config=config, use_container_width=False, theme=None, height=700, width=900, key="scatter")
+
+################################################################################################################
+################################################################################################################
+
+fig = plt.figure(figsize=(8,8), dpi=100)
+ax = plt.subplot()
+ax.grid(visible=True, ls='--', color='lightgrey')
+
+ax.scatter(
+    df_plot['per_90'], df_plot['succ_rate'], 
+    c=df_plot['zscore'], cmap='inferno', 
+    zorder=3, ec='grey', s=55, alpha=0.8)
+    
+texts = []
+annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
+for index in range(annotated_df.shape[0]):
+    texts += [
+        ax.text(
+            x=annotated_df['per_90'].iloc[index], y=annotated_df['succ_rate'].iloc[index],
+            s=f"{annotated_df['player_first_name'].iloc[index][0]}. {annotated_df['player_last_name'].iloc[index]}",
+            path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), 
+            path_effects.Normal()], color='black',
+            family='DM Sans', weight='bold'
+        )
+    ]
+
+adjust_text(texts, only_move={'points':'y', 'text':'xy', 'objects':'xy'})
+
+ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
+ax.yaxis.set_major_locator(ticker.MultipleLocator(.1))
+ax.yaxis.set_major_formatter(ticker.StrMethodFormatter('{x:.0%}'))
+ax.set_xlim(0)
+ax.set_ylim(0,1)
+
+ax.set_ylabel('Long ball success rate (%)')
+ax.set_xlabel('Long balls per 90')
+
+fig_text(
+    x = 0.09, y = .99, 
+    s = "The Premier League's Quarter Backs",
+    va = "bottom", ha = "left",
+    fontsize = 20, color = "black", font = "DM Sans", weight = "bold"
+)
+
+fig_text(
+    x = 0.09, y = 0.91, 
+    s = "Long balls per 90 and success rate.\nOnly players with above median minutes & median total long balls are shown.\nViz by @sonofacorner | Season 2022/2023",
+    va = "bottom", ha = "left",
+    fontsize = 12, color = "#5A5A5A", font = "Karla"
+)
+
+plt.savefig(
+	"figures/11072022_long_balls.png",
+	dpi = 600,
+	facecolor = "#EFE9E6",
+	bbox_inches="tight",
+    edgecolor="none",
+	transparent = False
+)
+
+plt.savefig(
+	"figures/11072022_long_balls_tr.png",
+	dpi = 600,
+	facecolor = "none",
+	bbox_inches="tight",
+    edgecolor="none",
+	transparent = True
+)
