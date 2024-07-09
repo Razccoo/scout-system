@@ -471,3 +471,9 @@ def load_all_csv_files():
             print(f"Failed to load {file_name.replace('%20', ' ')}. Error: {e}")
     
     return data_frames
+
+def pointcolor_selector():
+    options = schemas.params_list()
+    default_index = options.index("Yaş") if "Yaş" in options else 0
+    point_color = st.sidebar.selectbox("Nokta Rengi Değişkeni", options, index=default_index)
+    return point_color
