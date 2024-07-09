@@ -115,9 +115,10 @@ for player in custom_players:
         x=df_custom[df_custom['Oyuncu'] == player][xx],
         y=df_custom[df_custom['Oyuncu'] == player][yy],
         mode='markers+text',
+        color='red',
         text=df_custom[df_custom['Oyuncu'] == player]['Oyuncu'],
         textposition='top right',
-        marker=dict(size=10, line=dict(width=1, color='red'))
+        marker=dict(size=10, line=dict(width=1, color='black'))
     )
     
 fig.add_hline(y=df[yy].median(), name='Median', line_width=0.5)
