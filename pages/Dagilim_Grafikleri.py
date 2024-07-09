@@ -114,7 +114,7 @@ for player in custom_players:
     fig.add_scatter(
         x=df_custom[df_custom['Oyuncu'] == player][xx],
         y=df_custom[df_custom['Oyuncu'] == player][yy],
-        mode='marker+text',
+        mode='markers+text',
         text=df_custom[df_custom['Oyuncu'] == player]['Oyuncu'],
         textposition='top right',
         marker=dict(size=10, line=dict(width=1, color='red'))
