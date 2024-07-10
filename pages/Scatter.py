@@ -33,8 +33,8 @@ def plot_scatter(data_frame, xx, yy, selected_league, selected_position):
     df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.4 + stats.zscore(df_plot[yy]) * 0.6
     df_plot['annotated'] = [True if x > df_plot['zscore'].quantile(0.8) else False for x in df_plot['zscore']]
 
-    fig = plt.figure(figsize=(8, 8), dpi=100)
-    ax = plt.subplot()
+    fig = plt.figure(figsize=(16, 8), dpi=100)
+    ax = plt.subplot(1, 3, 2)
     ax.grid(visible=True, ls='--', color='lightgrey')
 
     ax.scatter(
@@ -74,6 +74,22 @@ def plot_scatter(data_frame, xx, yy, selected_league, selected_position):
         va="bottom", ha="left",
         fontsize=12, color="#5A5A5A", font="Karla"
     )
+    
+    ax1 = plt.subplot(1, 3, 1)
+    # Add the left image
+    left_img = plt.imread(image_path_left)
+    imagebox_left = OffsetImage(left_img, zoom=0.3)
+    ab_left = AnnotationBbox(imagebox_left, (0, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
+    ax1.add_artist(ab_left)
+    ax1.axis("off")
+
+    ax2 = plt.subplot(1, 3, 3)
+    # Add the right image
+    right_img = plt.imread(image_path_right)
+    imagebox_right = OffsetImage(right_img, zoom=0.3)
+    ab_right = AnnotationBbox(imagebox_right, (1, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
+    ax2.add_artist(ab_right)
+    ax2.axis("off")
 
     return fig
 
