@@ -77,7 +77,7 @@ def plot_scatter(data_frame, xx, yy, selected_league, selected_position):
     
     ax1 = plt.subplot(1, 3, 1)
     # Add the left image
-    left_img = plt.imread(image_path_left)
+    left_img = plt.imread("https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5349.png")
     imagebox_left = OffsetImage(left_img, zoom=0.3)
     ab_left = AnnotationBbox(imagebox_left, (0, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
     ax1.add_artist(ab_left)
@@ -85,7 +85,7 @@ def plot_scatter(data_frame, xx, yy, selected_league, selected_position):
 
     ax2 = plt.subplot(1, 3, 3)
     # Add the right image
-    right_img = plt.imread(image_path_right)
+    right_img = plt.imread("https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5348.png")
     imagebox_right = OffsetImage(right_img, zoom=0.3)
     ab_right = AnnotationBbox(imagebox_right, (1, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
     ax2.add_artist(ab_right)
