@@ -86,14 +86,14 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
 
     
     # Add the left image
-    image_path_left = "/workspaces/scout-system/assets/IMG_5349 2024-07-10 18_37_12.PNG"
+    image_path_left = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/IMG_5349.png"
     left_img = plt.imread(image_path_left)
     imagebox_left = OffsetImage(left_img, zoom=0.3)
     ab_left = AnnotationBbox(imagebox_left, (0, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
     ax.add_artist(ab_left)
 
     # Add the right image
-    image_path_right = "/workspaces/scout-system/assets/IMG_5348 2024-07-10 18_37_11.PNG"
+    image_path_right = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/IMG_5348.png"
     right_img = plt.imread(image_path_right)
     imagebox_right = OffsetImage(right_img, zoom=0.3)
     ab_right = AnnotationBbox(imagebox_right, (1, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
