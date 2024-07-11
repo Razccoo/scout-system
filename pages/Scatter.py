@@ -12,6 +12,8 @@ import scipy.stats as stats
 import streamlit as st
 import requests
 from scripts import utils, schemas, scatterplot
+import matplotlib.gridspec as gridspec
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 
 from mplsoccer import Pitch
