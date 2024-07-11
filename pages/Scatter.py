@@ -175,4 +175,4 @@ if st.session_state.swap_axes:
 
 if st.sidebar.button("Radar Oluştur"):
     df = utils.load_player_data(selected_league, selected_season)
-    st.pyplot(plot_scatter(df, xx, yy, selected_league, selected_position))
+    st.pyplot(plot_scatter(df, xx, yy, selected_league, selected_position, selected_season), dpi=400)
