@@ -25,22 +25,30 @@ st.set_page_config(page_title="Dagilim Grafikleri")
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
     
-def plot_scatter(data_frame, xx, yy, selected_league, selected_position):
+def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season):
     plt.clf()
-    df1 = utils.filter_by_position(data_frame, selected_position)
-    df_plot = df1[(df1['Oynadığı dakikalar'] >= df1['Oynadığı dakikalar'].median()) & (df1[xx] >= df1[yy].median())]
+    df = utils.filter_by_position(df, selected_position)
+    df_plot = df[(df['Oynadığı dakikalar'] >= df['Oynadığı dakikalar'].median()) & (df[xx] >= df[xx].median())]
 
-    df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.4 + stats.zscore(df_plot[yy]) * 0.6
+    df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.6 + stats.zscore(df_plot[yy]) * 0.4
     df_plot['annotated'] = [True if x > df_plot['zscore'].quantile(0.8) else False for x in df_plot['zscore']]
 
     fig = plt.figure(figsize=(16, 8), dpi=100)
-    ax = plt.subplot(1, 3, 2)
+    gs = gridspec.GridSpec(1, 3, width_ratios=[1, 2, 1], wspace=0.05)
+    ax = plt.subplot(gs[1])
     ax.grid(visible=True, ls='--', color='lightgrey')
 
     ax.scatter(
         df_plot[xx], df_plot[yy],
         c=df_plot['zscore'], cmap='inferno',
         zorder=3, ec='grey', s=55, alpha=0.8)
+    
+    # Function to clean up variable names
+    def clean_variable_name(name):
+        return name.replace(" / 90", "")
+
+    xx_cleaned = clean_variable_name(xx)
+    yy_cleaned = clean_variable_name(yy)
 
     texts = []
     annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
@@ -51,48 +59,46 @@ def plot_scatter(data_frame, xx, yy, selected_league, selected_position):
                 s=f"{annotated_df['Oyuncu'].iloc[index]}",
                 path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), path_effects.Normal()],
                 color='black',
-                family='DMSans', weight='regular'
+                family='DMSans', weight='bold'
             )
         ]
 
-    adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'},
-    arrowprops=dict(arrowstyle='->', connectionstyle="arc3,rad=.2", color='black'))
+    adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'})
 
-    ax.set_ylabel(f'{xx}')
-    ax.set_xlabel(f'{yy}')
+    ax.set_ylabel(f'{yy}')
+    ax.set_xlabel(f'{xx}')
 
     fig_text(
-        x=0.09, y=0.99,
+        x=0.33, y=0.99,
         s=f"{selected_league} {selected_position}",
         va="bottom", ha="left",
-        fontsize=20, color="black", font="DM Sans", weight="bold"
+        fontsize=20, color="black", font="DMSans", weight="bold"
     )
 
     fig_text(
-        x=0.09, y=0.91,
-        s=f"{xx} ve {yy}\nYalnızca medyanın üzerinde süre alan ve medyan toplam uzun topa sahip oyuncular gösterilmiştir.\nViz by @sonofacorner | Season 2022/2023",
+        x=0.33, y=0.91,
+        s=f"{xx_cleaned} ve {yy_cleaned}\nYalnızca ortanca üzerinde süre alan ve {xx_cleaned.lower()} yapan oyuncular gösterilmiştir.\nHazırlayan @alfiescouting | {selected_season} sezonu",
         va="bottom", ha="left",
         fontsize=12, color="#5A5A5A", font="Karla"
     )
+
     
-    ax1 = plt.subplot(1, 3, 1)
     # Add the left image
-    left_img = plt.imread("https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5349.png")
+    image_path_left = "/workspaces/scout-system/assets/IMG_5349 2024-07-10 18_37_12.PNG"
+    left_img = plt.imread(image_path_left)
     imagebox_left = OffsetImage(left_img, zoom=0.3)
     ab_left = AnnotationBbox(imagebox_left, (0, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
-    ax1.add_artist(ab_left)
-    ax1.axis("off")
+    ax.add_artist(ab_left)
 
-    ax2 = plt.subplot(1, 3, 3)
     # Add the right image
-    right_img = plt.imread("https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5348.png")
+    image_path_right = "/workspaces/scout-system/assets/IMG_5348 2024-07-10 18_37_11.PNG"
+    right_img = plt.imread(image_path_right)
     imagebox_right = OffsetImage(right_img, zoom=0.3)
     ab_right = AnnotationBbox(imagebox_right, (1, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
-    ax2.add_artist(ab_right)
-    ax2.axis("off")
+    ax.add_artist(ab_right)
 
     return fig
-
+    
     # plt.savefig(
     #     "figures/11072022_long_balls.png",
     #     dpi=600,
