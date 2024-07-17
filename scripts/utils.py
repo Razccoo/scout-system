@@ -9,6 +9,7 @@ import textwrap
 import matplotlib.pyplot as plt
 from highlight_text import fig_text
 import streamlit as st
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -584,12 +585,21 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
                           fontproperties=robotto_bold.prop, ha=ha,
                           va='center', color=color)
         axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 1 * (i // 2), f'{team}', fontsize=20,
-                          fontproperties=robotto_thin.prop, ha=ha,
+                          fontproperties=robotto_bold.prop, ha=ha,
                           va='center', color=color)
         
-    axs['title'].text(0.50, 0.25, '@ALFIESCOUT', fontsize=35,
-                                    fontproperties=font_bold.prop,
-                                    ha='center', va='center', color='#FFFFFF')
+    # Add the Twitter icon and handle
+    twitter_icon_url = 'https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png'
+    twitter_icon = Image.open(twitter_icon_url)
+
+    imagebox = OffsetImage(twitter_icon, zoom=0.05)
+    ab = AnnotationBbox(imagebox, (0.45, 0.05), frameon=False)
+    axs['title'].add_artist(ab)
+
+    axs['title'].text(0.55, 0.05, '@ALFIESCOUT', fontsize=35,
+                      fontproperties=robotto_bold.prop,
+                      ha='center', va='center', color='#FFFFFF')
+    
     fig.set_facecolor('#070707')
     st.pyplot(fig, dpi=400)
     
