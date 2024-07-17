@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from highlight_text import fig_text
 import streamlit as st
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+from urllib.request import urlopen
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -590,7 +591,7 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
         
     # Add the Twitter icon and handle
     twitter_icon_url = 'https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png'
-    twitter_icon = Image.open(twitter_icon_url)
+    twitter_icon = Image.open(urlopen(twitter_icon_url))
 
     imagebox = OffsetImage(twitter_icon, zoom=0.05)
     ab = AnnotationBbox(imagebox, (0.45, 0.05), frameon=False)
