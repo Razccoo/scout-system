@@ -54,7 +54,8 @@ def schema_params():
                     'Attacking': ['Accurate long passes, %', '1st, 2nd, 3rd assists', 'Progressive passes per 90', 'Progressive runs per 90', 'Successful dribbles, %', 'Accelerations per 90', 'xA per 90'],
                     'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
                     },
-                'general': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']}
+                'general': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']},
+                'strikers': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'Goal conversion, %', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90', 'Duels per 90', 'Aerial duels won, %']}
                 }
     return schema_params
 
