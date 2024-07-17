@@ -594,7 +594,7 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
     twitter_icon = Image.open(urlopen(twitter_icon_url))
 
     imagebox = OffsetImage(twitter_icon, zoom=0.03)
-    ab = AnnotationBbox(imagebox, (0.40, 0.65), frameon=False)
+    ab = AnnotationBbox(imagebox, (0.41, 0.67), frameon=False)
     axs['title'].add_artist(ab)
 
     axs['title'].text(0.55, 0.65, 'ALFIESCOUT', fontsize=35,
