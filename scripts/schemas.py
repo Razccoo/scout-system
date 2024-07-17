@@ -55,7 +55,7 @@ def schema_params():
                     'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
                     },
                 'general': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']},
-                'strikers': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'Goal conversion, %', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90', 'Duels per 90', 'Aerial duels won, %']}
+                'strikers': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'Goal conversion, %', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90', 'Duels won, %', 'Aerial duels won, %']}
                 }
     return schema_params
 
@@ -107,7 +107,8 @@ def label_mapping():
                 "Top Çalma (pAdj)": "Top Çalma\n(pAdj)",
                 "Kartlar / 90": "Kartlar",
                 "Ortalar / 90": "Ortalar",
-                "1., 2., 3. Asistler": "1., 2., 3.\nAsistler"
+                "1., 2., 3. Asistler": "1., 2., 3.\nAsistler",
+                "Kazanılan İkili Mücadeleler %": "Kazanılan\nİkili Müc. %"
     }
     return label_mapping
 
