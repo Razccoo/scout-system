@@ -586,6 +586,10 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
         axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 1 * (i // 2), f'{team}', fontsize=20,
                           fontproperties=robotto_thin.prop, ha=ha,
                           va='center', color=color)
+        
+    axs['title'].text(0.50, 0.25, '@ALFIESCOUT', fontsize=35,
+                                    fontproperties=font_bold.prop,
+                                    ha='center', va='center', color='#FFFFFF')
     fig.set_facecolor('#070707')
     st.pyplot(fig, dpi=400)
     
