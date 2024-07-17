@@ -55,7 +55,7 @@ def schema_params():
                     'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
                     },
                 'general': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']},
-                'strikers': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'Goal conversion, %', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90', 'Duels won, %', 'Aerial duels won, %']}
+                'strikers': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'Goal conversion, %', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Dribbles per 90', 'Touches in box per 90', 'Duels won, %', 'Aerial duels won, %', 'Received passes per 90']}
                 }
     return schema_params
 
@@ -111,7 +111,8 @@ def label_mapping():
                 "Kazanılan İkili Mücadeleler %": "Kazanılan\nİkili Müc. %",
                 "Dribblingler / 90": "Dribblingler",
                 "Ara Paslar / 90": "Ara Paslar",
-                "Anahtar Paslar / 90": "Anahtar\nPaslar"
+                "Anahtar Paslar / 90": "Anahtar\nPaslar",
+                "Aldığı paslar / 90": "Aldığı\npaslar"
                 
     }
     return label_mapping
@@ -135,7 +136,7 @@ def column_mapping():
         "Crosses from right flank per 90": "Sağ Kanattan Ortalar / 90", "Accurate crosses from right flank, %": "Sağ Kanattan Başarılı Ortalar %",
         "Crosses to goalie box per 90": "Kaleci Kutusuna Ortalar / 90", "Dribbles per 90": "Dribblingler / 90", "Successful dribbles, %": "Başarılı Dribbling %",
         "Offensive duels per 90": "Hücum İkili Mücadeleleri / 90", "Offensive duels won, %": "Kazanılan Hücum İkili Mücadeleleri %", "Touches in box per 90": "Ceza Sahasında Dokunuşlar / 90",
-        "Progressive runs per 90": "Kademeli Taşımalar / 90", "Accelerations per 90": "Topla Hizlanmalar / 90", "Received passes per 90": "Alınan Paslar / 90",   "Received long passes per 90": "Alınan Uzun Paslar / 90",
+        "Progressive runs per 90": "Kademeli Taşımalar / 90", "Accelerations per 90": "Topla Hizlanmalar / 90", "Received passes per 90": "Aldığı paslar / 90",   "Received long passes per 90": "Alınan Uzun Paslar / 90",
         "Fouls suffered per 90": "Kazanılan Fauller / 90", "Passes per 90": "Paslar / 90", "Accurate passes, %": "Başarılı Pas %", "Forward passes per 90": "İleri Paslar / 90",
         "Accurate forward passes, %": "Başarılı İleri Paslar %", "Back passes per 90": "Geri Paslar / 90", "Accurate back passes, %": "Başarılı Geri Paslar %",
         "Short / medium passes per 90": "Kısa / Orta Paslar / 90", "Accurate short / medium passes, %": "Başarılı Kısa / Orta Paslar %",
