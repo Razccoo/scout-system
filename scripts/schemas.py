@@ -108,7 +108,11 @@ def label_mapping():
                 "Kartlar / 90": "Kartlar",
                 "Ortalar / 90": "Ortalar",
                 "1., 2., 3. Asistler": "1., 2., 3.\nAsistler",
-                "Kazanılan İkili Mücadeleler %": "Kazanılan\nİkili Müc. %"
+                "Kazanılan İkili Mücadeleler %": "Kazanılan\nİkili Müc. %",
+                "Dribblingler / 90": "Dribblingler",
+                "Ara Paslar / 90": "Ara Paslar",
+                "Anahtar Paslar / 90": "Anahtar\nPaslar"
+                
     }
     return label_mapping
 
