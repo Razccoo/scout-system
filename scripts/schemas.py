@@ -37,45 +37,30 @@ def params_list():
     return param_list
 
 def schema_params():
-    schema_params = {
-                "attacking": {
-                    "Defending": ["Kazanılan Hava Mücadeleleri %", "Top Çalma & Kesmeler (pAdj) / 90", "Başarılı Savunma Eylemleri / 90"],
-                    "Ball Progression": ["Kademeli Taşımalar / 90", "Kademeli Paslar / 90", "Topla Hizlanmalar / 90", "Başarılı Dribbling %"],
-                    "Attacking": ["Ceza Sahasında Dokunuşlar / 90", "Şutlar / 90", "Şut Başına npxG", "Gol/ Şut %", "Penaltısız Goller / 90", "npxG / 90"],
-                    "Chance Creation": ["Akıllı Paslar / 90", "İkinci Asist / 90", "Asist / 90", "xA başına Şut Asisti", "Beklenen Asist (xA) / 90", "Şut Asistleri / 90"],
-                    "Accuracy": ["Başarılı Orta %", "Başarılı Akıllı Pas %", "Başarılı Uzun Paslar %", "Başarılı Kısa / Orta Paslar %"]
-                },
-                "defensive": {
-                    "Defending": [
-                        "Başarılı Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
-                        "Engellenen Şutlar / 90", "Top Kesme (pAdj)", "Kazanılan Hava Mücadeleleri / 90", 
-                        "Kazanılan Hava Mücadeleleri %"
-                    ],
-                    "Attacking": [
-                        "Başarılı Uzun Paslar %", "Ortalar / 90", "Başarılı Orta %", 
-                        "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
-                        "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
-                    ],
-                    "Fouling": [
-                        "Fauller / 90", "Kartlar / 90", "Kazanılan Fauller / 90"
-                    ]
-                },
-                "cb": {
-                    "Defending": [
-                        "Başarılı Savunma Eylemleri / 90", "Top Çalma (pAdj)", "Kazanılan Savunma İkili Mücadeleleri %", 
-                        "Engellenen Şutlar / 90", "Top Kesme (pAdj)", "Kazanılan Hava Mücadeleleri / 90", 
-                        "Kazanılan Hava Mücadeleleri %"
-                    ],
-                    "Attacking": [
-                        "Başarılı Uzun Paslar %", "1., 2., 3. Asistler", "Kademeli Paslar / 90", "Kademeli Taşımalar / 90", 
-                        "Başarılı Dribbling %", "Topla Hizlanmalar / 90", "Beklenen Asist (xA) / 90"
-                    ],
-                    "Fouling": [
-                        "Fauller / 90", "Kartlar / 90", "Kazanılan Fauller / 90"
-                    ]
+    schema_params = {'attacking': {
+                    'Defending': ['Aerial duels won, %', 'pAdj Tkl+Int per 90', 'Successful defensive actions per 90'],
+                    'Ball Progression': ['Progressive runs per 90', 'Progressive passes per 90', 'Accelerations per 90', 'Successful dribbles, %'],
+                    'Attacking': ['Touches in box per 90', 'Shots per 90', 'npxG per shot', 'Goal conversion, %', 'Non-penalty goals per 90', 'npxG per 90'],
+                    'Chance Creation': ['Smart passes per 90', 'Second assists per 90', 'Assists per 90', 'xA per Shot Assist', 'xA per 90', 'Shot assists per 90'],
+                    'Accuracy': ['Accurate crosses, %', 'Accurate smart passes, %', 'Accurate long passes, %', 'Accurate short / medium passes, %']
+                    },
+                'defensive': {
+                    'Defending': ['Successful defensive actions per 90', 'PAdj Sliding tackles', 'Defensive duels won, %', 'Shots blocked per 90', 'PAdj Interceptions', 'Aerial duels won per 90', 'Aerial duels won, %'],
+                    'Attacking': ['Accurate long passes, %', 'Crosses per 90', 'Accurate crosses, %', '1st, 2nd, 3rd assists', 'Progressive passes per 90', 'Progressive runs per 90', 'Successful dribbles, %', 'Accelerations per 90', 'xA per 90'],
+                    'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
+                    },
+                'cb': {
+                    'Defending': ['Successful defensive actions per 90', 'PAdj Sliding tackles', 'Defensive duels won, %', 'Shots blocked per 90', 'PAdj Interceptions', 'Aerial duels won per 90', 'Aerial duels won, %'],
+                    'Attacking': ['Accurate long passes, %', '1st, 2nd, 3rd assists', 'Progressive passes per 90', 'Progressive runs per 90', 'Successful dribbles, %', 'Accelerations per 90', 'xA per 90'],
+                    'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
+                    },
+                'general': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']}
                 }
-    }
     return schema_params
+
+def comparison_schemas():
+    comparison_schemas = {'attacking': {'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']}}
+    return comparison_schemas
 
 def wingers_params():
     wingers_params = {
@@ -127,8 +112,8 @@ def label_mapping():
 
 def column_mapping():
     column_mapping = {
-        "Player": "Oyuncu", "Age": "Yaş", "Matches played": "Oynadığı maçlar", "Minutes played": "Oynadığı dakikalar", # "League": "Lig", "Position": "Pozisyon",
-        "Ana Pozisyon": "Ana Pozisyon", "Team within selected timeframe": "Kulüp", "Goals": "Goller", "xG": "Beklenen Gol (xG)",
+        "Player": "Oyuncu", "Age": "Yaş", "Matches played": "Oynadığı maçlar", "Minutes played": "Oynadığı dakikalar", "League": "Lig", "Season": "Sezon", "Position": "Pozisyon",
+        "Main Position": "Ana Pozisyon", "Team within selected timeframe": "Kulüp", "Goals": "Goller", "xG": "Beklenen Gol (xG)",
         "Assists": "Asistler", "xA": "Beklenen Asist (xA)", "Duels per 90": "İkili Mücadeleler / 90", "Duels won, %": "Kazanılan İkili Mücadeleler %",
         "Birth country": "Doğum Ülkesi", "Passport country": "Pasaport Ülkesi", "Foot": "Ayak", "Height": "Boy", "Weight": "Kilo",
         "On loan": "Kiralık", "Successful defensive actions per 90": "Başarılı Savunma Eylemleri / 90", "Defensive duels per 90": "Savunma İkili Mücadeleleri / 90",

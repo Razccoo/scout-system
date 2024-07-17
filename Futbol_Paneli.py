@@ -28,7 +28,7 @@ if schema_type:
     st.sidebar.header("Özel Şablon Oluşturma")
     custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
     num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
-    available_metrics = schemas.params_list()
+    available_metrics = schemas.params_list
     custom_schema = {}
 
     for i in range(1, num_groups + 1): # type: ignore
@@ -41,10 +41,14 @@ if schema_type:
         st.session_state.custom_schemas[custom_schema_name] = custom_schema
         st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
 
+
 filtered_data, top_5_league_data = utils.filter_data(league_season_data, selected_position, min_minutes_played, max_age)
+top_5_league_data = top_5_league_data[top_5_league_data['League'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"])]
+top_5_league_data = top_5_league_data[top_5_league_data['Season'] == f'{selected_season}']
+renamed_data = filtered_data.rename(columns=schemas.column_mapping)
 
 st.subheader(f"Data for {selected_league} - {selected_season}")
-st.write(filtered_data)
+st.write(renamed_data)
 
 st.header("Radar Oluşturma\nRadarı oluşturmak için aşağıya oyuncu adını girin (yukarıdaki tablodan kopyalayıp yapıştırabilirsiniz)")
 player_name = st.text_input("Futbolcu Adı")

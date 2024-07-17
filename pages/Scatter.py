@@ -14,7 +14,7 @@ import requests
 from scripts import utils, schemas, scatterplot
 import matplotlib.gridspec as gridspec
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-
+from io import BytesIO
 
 from mplsoccer import Pitch
 
@@ -27,24 +27,79 @@ st.set_page_config(page_title="Dagilim Grafikleri")
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
     
-def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season):
+def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=True, dpi=400):
     plt.clf()
+    plt.style.use('fivethirtyeight')
+
+    # Function to download image from URL
+    def download_image(url):
+        response = requests.get(url)
+        img = Image.open(BytesIO(response.content))
+        return img
+
+    # Function to resize images to fit within the figure
+    def resize_image_to_fit(image, fig_width, fig_height, dpi):
+        total_width = image.size[0]
+        max_height = image.size[1]
+
+        # Calculate the scaling factor to fit the images within the figure
+        scale = min(fig_width * dpi / total_width, fig_height * dpi / max_height)
+
+        # Resize images
+        resized_image = image.resize((int(image.size[0] * scale), int(image.size[1] * scale)), Image.LANCZOS)
+
+        return resized_image
+
+    fig_width, fig_height = 14, 8
+
     df = utils.filter_by_position(df, selected_position)
+    df.rename(columns=schemas.column_mapping(), inplace=True)
     df_plot = df[(df['Oynadığı dakikalar'] >= df['Oynadığı dakikalar'].median()) & (df[xx] >= df[xx].median())]
 
     df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.6 + stats.zscore(df_plot[yy]) * 0.4
     df_plot['annotated'] = [True if x > df_plot['zscore'].quantile(0.8) else False for x in df_plot['zscore']]
+    
+    if use_images:
+        # Load images using PIL
+        url1 = 'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5349.png'
+        url2 = 'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5348.png'
 
-    fig = plt.figure(figsize=(16, 8), dpi=100)
-    gs = gridspec.GridSpec(1, 3, width_ratios=[1, 2, 1], wspace=0.05)
-    ax = plt.subplot(gs[1])
-    ax.grid(visible=True, ls='--', color='lightgrey')
+        # Download the images
+        image1 = download_image(url1)
+        image2 = download_image(url2)
 
-    ax.scatter(
+        # Resize images to fit the figure size
+        resized_image1 = resize_image_to_fit(image1, fig_width, fig_height, dpi)
+        resized_image2 = resize_image_to_fit(image2, fig_width, fig_height, dpi)
+
+        # Convert images to numpy arrays
+        image1_array = np.array(resized_image1)
+        image2_array = np.array(resized_image2)
+
+        # Create a figure
+        fig = plt.figure(figsize=(fig_width, fig_height))
+
+        ax = fig.add_axes([0, 0, 1, 1], zorder=1, frameon=False)
+        ax.axis('off')
+        ax2 = fig.add_axes([0.28, 0, 0.45, 0.9], zorder=0)
+
+        # Add the first image on the figure
+        fig.figimage(image1_array, xo=-600, yo=-100, alpha=1, zorder=1)
+
+        # Add the second image on the figure
+        fig.figimage(image2_array, xo=image1_array.shape[1] + 2300, yo=-100, alpha=1, zorder=1)
+    else:
+        fig = plt.figure(figsize=(8, 8))
+        ax2 = fig.add_axes([0, 0, 1, 0.9], zorder=0)
+
+    ax2.grid(visible=True, ls='--', color='lightgrey')
+
+    ax2.scatter(
         df_plot[xx], df_plot[yy],
         c=df_plot['zscore'], cmap='inferno',
-        zorder=3, ec='grey', s=55, alpha=0.8)
-    
+        zorder=3, ec='grey', s=55, alpha=0.8
+    )
+
     # Function to clean up variable names
     def clean_variable_name(name):
         return name.replace(" / 90", "")
@@ -56,7 +111,7 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
     for index in range(annotated_df.shape[0]):
         texts += [
-            ax.text(
+            ax2.text(
                 x=annotated_df[xx].iloc[index], y=annotated_df[yy].iloc[index],
                 s=f"{annotated_df['Oyuncu'].iloc[index]}",
                 path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), path_effects.Normal()],
@@ -67,57 +122,39 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
 
     adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'})
 
-    ax.set_ylabel(f'{yy}')
-    ax.set_xlabel(f'{xx}')
-
-    fig_text(
-        x=0.33, y=0.99,
-        s=f"{selected_league} {selected_position}",
-        va="bottom", ha="left",
-        fontsize=20, color="black", font="DMSans", weight="bold"
-    )
-
-    fig_text(
-        x=0.33, y=0.91,
-        s=f"{xx_cleaned} ve {yy_cleaned}\nYalnızca ortanca üzerinde süre alan ve {xx_cleaned.lower()} yapan oyuncular gösterilmiştir.\nHazırlayan @alfiescouting | {selected_season} sezonu",
-        va="bottom", ha="left",
-        fontsize=12, color="#5A5A5A", font="Karla"
-    )
-
+    ax2.set_ylabel(ylabel=f'{yy}', weight='bold')
+    ax2.set_xlabel(xlabel=f'{xx}', weight='bold')
     
-    # Add the left image
-    image_path_left = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/IMG_5349.png"
-    left_img = plt.imread(image_path_left)
-    imagebox_left = OffsetImage(left_img, zoom=0.3)
-    ab_left = AnnotationBbox(imagebox_left, (0, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
-    ax.add_artist(ab_left)
+    if use_images:
+        fig_text(
+            x=0.25, y=0.99,
+            s=f"{selected_league} {selected_position}",
+            va="bottom", ha="left",
+            fontsize=20, color="black", font="DMSans", weight="bold"
+        )
 
-    # Add the right image
-    image_path_right = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/IMG_5348.png"
-    right_img = plt.imread(image_path_right)
-    imagebox_right = OffsetImage(right_img, zoom=0.3)
-    ab_right = AnnotationBbox(imagebox_right, (1, 0.5), frameon=False, xycoords='axes fraction', boxcoords="axes fraction", box_alignment=(0.5, 0.5))
-    ax.add_artist(ab_right)
+        fig_text(
+            x=0.25, y=0.91,
+            s=f"{xx_cleaned} ve {yy_cleaned}\nYalnızca ortanca üzerinde süre alan ve {xx_cleaned.lower()} yapan oyuncular gösterilmiştir.\nHazırlayan @alfiescouting | {selected_season} sezonu",
+            va="bottom", ha="left",
+            fontsize=12, color="#5A5A5A", font="Karla"
+        )
+    else:
+        fig_text(
+            x=0.0, y=0.99,
+            s=f"{selected_league} {selected_position}",
+            va="bottom", ha="left",
+            fontsize=20, color="black", font="DMSans", weight="bold"
+        )
 
+        fig_text(
+            x=0.0, y=0.91,
+            s=f"{xx_cleaned} ve {yy_cleaned}\nYalnızca ortanca üzerinde süre alan ve {xx_cleaned.lower()} yapan oyuncular gösterilmiştir.\nHazırlayan @alfiescouting | {selected_season} sezonu",
+            va="bottom", ha="left",
+            fontsize=12, color="#5A5A5A", font="Karla"
+        )
+        
     return fig
-    
-    # plt.savefig(
-    #     "figures/11072022_long_balls.png",
-    #     dpi=600,
-    #     facecolor="#EFE9E6",
-    #     bbox_inches="tight",
-    #     edgecolor="none",
-    #     transparent=False
-    # )
-
-    # plt.savefig(
-    #     "figures/11072022_long_balls_tr.png",
-    #     dpi=600,
-    #     facecolor="none",
-    #     bbox_inches="tight",
-    #     edgecolor="none",
-    #     transparent=True
-    # )
 
 # Base URL to the GitHub repository containing the font files
 github_base_url = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/fonts"
@@ -177,4 +214,4 @@ if st.session_state.swap_axes:
 
 if st.sidebar.button("Radar Oluştur"):
     df = utils.load_player_data(selected_league, selected_season)
-    st.pyplot(plot_scatter(df, xx, yy, selected_league, selected_position, selected_season), dpi=400)
+    st.pyplot(plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=False), dpi=400)

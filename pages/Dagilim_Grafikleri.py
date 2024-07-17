@@ -40,12 +40,15 @@ selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", schemas.position_o
 min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
 x_axis = st.sidebar.selectbox(f"Yatay (X) Ekseni", params)
 y_axis = st.sidebar.selectbox(f"Dikey (Y) Ekseni", params)
-point_color = st.sidebar.selectbox("Nokta Renk Değişkeni", params, index=(params.index("Yaş") if "Yaş" in params else 0))
 
 scale_options = scatterplot.colorscale()
 point_colorscale = st.sidebar.selectbox("Nokta Renk Skalası", scale_options, index=(scale_options.index("plasma") if "plasma" in scale_options else 0))
 xx, yy = x_axis, y_axis
 df, top5 = scatterplot.filter_data(selected_league, selected_season, selected_position, min_minutes_played)
+
+df.rename(columns=schemas.column_mapping, inplace=True)
+top5.rename(columns=schemas.column_mapping, inplace=True)
+
 # Add multiselect for custom players to be annotated
 custom_players = st.sidebar.multiselect("Oyuncuları göster:", df['Oyuncu'].unique())
 
@@ -58,6 +61,11 @@ if st.session_state.swap_axes:
 
 df_sorted = df.sort_values(by=[xx, yy], ascending=[False, False]).head(10)
 
+df = df[(df['Oynadığı dakikalar'] >= df['Oynadığı dakikalar'].median()) & (df[xx] >= df[xx].median())]
+
+df['zscore'] = stats.zscore(df[xx]) * 0.6 + stats.zscore(df[yy]) * 0.4
+# df_plot['annotated'] = [True if x > df_plot['zscore'].quantile(0.8) else False for x in df_plot['zscore']]
+    
 # Add a new column to identify custom selected players and top 10 players
 df['annotation'] = df['Oyuncu'].apply(lambda x: 'Custom' if x in custom_players else ('Top10' if x in df_sorted['Oyuncu'].values else ''))
 
@@ -66,7 +74,7 @@ fig = px.scatter(
     data_frame=df,
     x=xx,
     y=yy,
-    color=point_color,
+    color=df['zscore'],
     color_continuous_scale=point_colorscale,
     text=df.apply(lambda row: (
         '' if row['Oyuncu'] in custom_players else 

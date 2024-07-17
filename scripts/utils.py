@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from scripts import schemas
 from scipy import stats
-from mplsoccer import FontManager
+from mplsoccer import Radar, FontManager, grid
 from PIL import Image
 import textwrap
 import matplotlib.pyplot as plt
@@ -19,6 +19,7 @@ font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apa
 
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 def scout_report(df):
+    df["name"] = df["name"].replace(schemas.column_mapping())
     df["name"] = df["name"].replace(schemas.label_mapping())
     RAW_VALUES = df["raw_value"].values
     VALUES = df["value"].values
@@ -174,64 +175,90 @@ def add_labels(angles, values, labels, offset, ax, text_colors):
 def filter_by_position(df, position):
     fw = ["CF", "RW", "LW", "AMF"]
     if position == "Forvetler (OOS, K, SF)":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(fw), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(fw), na=False)]
     
     stw = ["CF", "RW", "LW", "LAMF", "RAMF"]
     if position == "Forvetler ve Kanatlar":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(stw), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(stw), na=False)]
     
     fwns = ["RW", "LW", "AMF"]
     if position == "Santrforsuz Forvetler (OOS, K)":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(fwns), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(fwns), na=False)]
     
     wing = ["RW", "LW", "WF", "LAMF", "RAMF"]
     if position == "Kanatlar":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(wing), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(wing), na=False)]
 
     mids = ["DMF", "CMF", "AMF"]
     if position == "Orta Saha (DOS, OS, OOS)":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(mids), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(mids), na=False)]
 
     cms = ["CMF", "AMF"]
     if position == "DOS Olmayan Orta Saha (OS, OOS)":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(cms), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(cms), na=False)]
 
     dms = ["CMF", "DMF"]
     if position == "OOS Olmayan Orta Saha (DOS, OS)":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(dms), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(dms), na=False)]
 
     fbs = ["LB", "RB", "WB"]
     if position == "Bekler (FB/KB)":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(fbs), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(fbs), na=False)]
 
     defs = ["LB", "RB", "WB", "CB", "DMF"]
     if position == "Defansif Oyuncular (STP, FB/KB, DOS)":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(defs), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(defs), na=False)]
 
     cbdm = ["CB", "DMF"]
     if position == "Stoper & Defansif Orta Saha":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(cbdm), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(cbdm), na=False)]
 
     cf = ["CF"]
     if position == "Santrforlar":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(cf), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(cf), na=False)]
 
     cb = ["CB"]
     if position == "Stoperler":
-        return df[df['Ana Pozisyon'].str.contains('|'.join(cb), na=False)]
+        return df[df['Main Position'].str.contains('|'.join(cb), na=False)]
     else:
         return df
 
-# Function to load data for the Top 5 Leagues
-def load_top_5_leagues():
-    top_5_leagues = ["La Liga 23-24", "Premier League 23-24", "Bundesliga 23-24", "Serie A 23-24", "Ligue 1 23-24"]
-    top_5_league_data = []
+@st.cache_data(ttl=6*60*60)
+def load_top_5_leagues(season_selection=None):
+    top_5_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]
+    if season_selection is None:
+        season_selection = ["22-23", "23-24"]  # Default seasons if none are provided
+    
+
+    top_5_league_data = pd.DataFrame()
     for league in top_5_leagues:
-        league_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","a")}.csv'))
-        league_data = league_data[list(schemas.column_mapping().values())]
-        league_data['Lig'] = league
-        top_5_league_data.append(league_data)
-    return pd.concat(top_5_league_data, ignore_index=True)
+        for season in season_selection:
+            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o").replace("ã", "a")
+            league_data = read_csv2(f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league_file}')
+            league_data['League'] = league
+            league_data['Season'] = season
+            league_data = league_data[list(schemas.column_mapping().keys())]
+            top_5_league_data = pd.concat([top_5_league_data, league_data], ignore_index=True)
+    return top_5_league_data
+
+@st.cache_data(ttl=6*60*60)
+# Function to load data for the Top 9 Leagues
+def load_top_9_leagues(season_selection=None):
+    top_9_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1", "Süper Lig", "Eredivisie", "Primeira Liga", "Belgian Pro League", "Saudi Pro League"]
+    if season_selection is None:
+        season_selection = ["22-23", "23-24"]
+        
+    top_9_league_data = pd.DataFrame()
+    for league in top_9_leagues:
+        for season in season_selection:
+            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o").replace("ã", "a")
+            league_data = read_csv2(f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league_file}')
+            league_data['League'] = league
+            league_data['Season'] = season
+            league_data = league_data[list(schemas.column_mapping().keys())]
+            top_9_league_data = pd.concat([top_9_league_data, league_data], ignore_index=True)
+    return top_9_league_data
+
 
 def read_csv(link):
     return pd.read_csv(link,encoding='utf-8-sig')
@@ -253,8 +280,8 @@ def read_csv2(link):
     
     df = df.dropna(subset=['Position', 'Team within selected timeframe', 'Age']).reset_index(drop=True)
     df = df.dropna(subset=['Position']).reset_index(drop=True)
-    df['Ana Pozisyon'] = df['Position'].str.split().str[0].str.rstrip(',')
-    df = df.dropna(subset=['Ana Pozisyon']).reset_index(drop=True)
+    df['Main Position'] = df['Position'].str.split().str[0].str.rstrip(',')
+    df = df.dropna(subset=['Main Position']).reset_index(drop=True)
     position_replacements = {
         'LAMF': 'LW',
         'RAMF': 'RW',
@@ -268,9 +295,9 @@ def read_csv2(link):
         'LWB': 'LB'
     }
     
-    df['Ana Pozisyon'] = df['Ana Pozisyon'].replace(position_replacements)
+    df['Main Position'] = df['Main Position'].replace(position_replacements)
     df.fillna(0,inplace=True)
-    df.rename(columns=schemas.column_mapping(), inplace=True)
+    # df.rename(columns=schemas.column_mapping(), inplace=True)
   
     return df
 
@@ -297,6 +324,7 @@ def scale_z_to_100(z):
     max_z = z.max()
     return ((z - min_z) / (max_z - min_z)) * 100
 
+@st.cache_data(ttl=6*60*60)
 def load_lg_data(selected_league = None):
     league_data = read_csv(league_info_url)
     leagues = league_data['League'].unique()
@@ -305,33 +333,35 @@ def load_lg_data(selected_league = None):
         return filtered_season
     else:      
         return leagues
-    
+
+@st.cache_data(ttl=6*60*60)    
 def load_player_data(selected_league, selected_season):
     full_league_name = f"{selected_league} {selected_season}"
     league_season_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","%C3%A3")}.csv'))
-    league_season_data = league_season_data[list(schemas.column_mapping().values())]
-    league_season_data['Lig'] = f'{selected_league}'
+    league_season_data['League'] = f'{selected_league}'
+    league_season_data['Season'] = f'{selected_season}'
+    league_season_data = league_season_data[list(schemas.column_mapping().keys())]
     return league_season_data
 
 def filter_data(league_season_data, selected_position, min_minutes_played, max_age):
     top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
     top_5_league_data = top_5_league_data[
-        (top_5_league_data['Oynadığı dakikalar'] >= min_minutes_played) &
-        (top_5_league_data['Yaş'] <= max_age)
+        (top_5_league_data['Minutes played'] >= min_minutes_played) &
+        (top_5_league_data['Age'] <= max_age)
     ].reset_index(drop=True)
 
     filtered_data = filter_by_position(league_season_data, selected_position)
     filtered_data = filtered_data[
-        (filtered_data['Oynadığı dakikalar'] >= min_minutes_played) &
-        (filtered_data['Yaş'] <= max_age)
+        (filtered_data['Minutes played'] >= min_minutes_played) &
+        (filtered_data['Age'] <= max_age)
     ].reset_index(drop=True)
     return filtered_data, top_5_league_data
 
 def selected_player_data(filtered_data, comparison_data, player_name, player_age, max_age, selected_comparison, selected_schema, selected_league, selected_season, selected_position, player_image = None):
     player_data = filtered_data[
-        (filtered_data['Oyuncu'] == player_name) &
-        (filtered_data['Yaş'] == player_age)]
-    player_main_position = filtered_data.loc[filtered_data['Oyuncu'] == player_name, 'Ana Pozisyon'].values[0]
+        (filtered_data['Player'] == player_name) &
+        (filtered_data['Age'] == player_age)]
+    player_main_position = filtered_data.loc[filtered_data['Player'] == player_name, 'Main Position'].values[0]
 
     # Determine schema based on player's main position
     selected_schema_type = schemas.position_to_schema().get(player_main_position)
@@ -340,38 +370,38 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
     combined_data = pd.DataFrame()
 
     # Check if the player is already playing in the top 5 leagues
-    player_in_top_5 = any(player_data['Lig'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]))
+    player_in_top_5 = any(player_data['League'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]))
 
     if selected_comparison == "Top 5 Ligi":
         if player_in_top_5:
             # Player is already in the top 5 leagues, use filtered data
             combined_data = comparison_data
             player_data = combined_data[
-                (combined_data['Oyuncu'] == player_name) &
-                (combined_data['Yaş'] == player_age)
+                (combined_data['Player'] == player_name) &
+                (combined_data['Age'] == player_age)
             ]
         else:
             # Player is not in the top 5 leagues, combine data
             player_data_temp = filtered_data[
-                (filtered_data['Oyuncu'] == player_name) &
-                (filtered_data['Yaş'] == player_age)
+                (filtered_data['Player'] == player_name) &
+                (filtered_data['Age'] == player_age)
             ]
             combined_data = pd.concat([comparison_data, player_data_temp]).reset_index(drop=True)
             player_data = combined_data[
-                (combined_data['Oyuncu'] == player_name) &
-                (combined_data['Yaş'] == player_age)
+                (combined_data['Player'] == player_name) &
+                (combined_data['Age'] == player_age)
             ]
     else:
         combined_data = comparison_data
         player_data = combined_data[
-            (combined_data['Oyuncu'] == player_name) &
-            (combined_data['Yaş'] == player_age)
+            (combined_data['Player'] == player_name) &
+            (combined_data['Age'] == player_age)
         ]
     
-    combined_data = calculate_score(combined_data, schemas.att_winger_schema())
-    player_pos = player_data['Ana Pozisyon'].iloc[0]
-    player_min = player_data['Oynadığı dakikalar'].iloc[0]
-    player_team = player_data['Kulüp'].iloc[0]
+    # combined_data = calculate_score(combined_data, schemas.att_winger_schema())
+    player_pos = player_data['Main Position'].iloc[0]
+    player_min = player_data['Minutes played'].iloc[0]
+    player_team = player_data['Team within selected timeframe'].iloc[0]
     title_note = " 90 Dakika Başına"
     
     if not player_data.empty:
@@ -395,7 +425,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
                 if metric in player_data.columns:
                     player_value = player_data.iloc[0][metric]
                     ranked_values = rank_column(combined_data, metric)
-                    player_ranked_value = ranked_values[combined_data.index[combined_data['Oyuncu'] == player_name].tolist()[0]]
+                    player_ranked_value = ranked_values[combined_data.index[combined_data['Player'] == player_name].tolist()[0]]
                     radar_values.append(player_ranked_value)
                     radar_labels.append(metric)
                     radar_groups.append(group)
@@ -449,6 +479,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
         fig.text(0.5175, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
     return st.pyplot(fig, dpi=400)
 
+@st.cache_data(ttl=6*60*60)
 def load_all_csv_files():
     base_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/'
     # Load the league info
@@ -478,3 +509,93 @@ def pointcolor_selector():
     point_color = st.sidebar.selectbox("Nokta Rengi Değişkeni", options, index=default_index)
     return point_color
 
+def player_comparison_radar(df, players, params, low, high, lower_is_better=None):
+    URL1 = ('https://raw.githubusercontent.com/googlefonts/SourceSerifProGFVersion/main/fonts/'
+            'SourceSerifPro-Regular.ttf')
+    serif_regular = FontManager(URL1)
+    URL2 = ('https://raw.githubusercontent.com/googlefonts/SourceSerifProGFVersion/main/fonts/'
+            'SourceSerifPro-ExtraLight.ttf')
+    serif_extra_light = FontManager(URL2)
+    URL3 = ('https://raw.githubusercontent.com/google/fonts/main/ofl/rubikmonoone/'
+            'RubikMonoOne-Regular.ttf')
+    rubik_regular = FontManager(URL3)
+    URL4 = 'https://raw.githubusercontent.com/googlefonts/roboto/main/src/hinted/Roboto-Thin.ttf'
+    robotto_thin = FontManager(URL4)
+    URL5 = ('https://raw.githubusercontent.com/google/fonts/main/apache/robotoslab/'
+            'RobotoSlab%5Bwght%5D.ttf')
+    robotto_bold = FontManager(URL5)
+    
+    if lower_is_better is None:
+        lower_is_better = []
+        
+    # Normalize lower_is_better parameters
+    for param in lower_is_better:
+        if param in params:
+            idx = params.index(param)
+            df[param] = df[param].apply(lambda x: -x)
+            low[idx] = -high[idx]
+            high[idx] = -low[idx]
+
+    player_values = []
+    player_teams = []
+    for player in players:
+        player_values.append(df[df['Oyuncu'] == player][params].iloc[0].tolist())
+        player_teams.append(df[df['Oyuncu'] == player]['Kulüp'].iloc[0])
+    
+    radar = Radar(params, low, high, lower_is_better=lower_is_better,
+                  round_int=[False]*len(params), num_rings=4,
+                  ring_width=1, center_circle_radius=1)
+        
+    ###################################################
+    # creating the figure using the grid function from mplsoccer:
+    fig, axs = grid(figheight=14, grid_height=0.915, title_height=0.06, endnote_height=0.025,
+                    title_space=0, endnote_space=0, grid_key='radar', axis=False)
+    
+    # Create the radar chart
+    radar.setup_axis(ax=axs['radar'], facecolor='None')  # format axis as a radar
+    rings_inner = radar.draw_circles(ax=axs['radar'], facecolor='#28252c', edgecolor='#39353f')
+
+    # Colors for the players
+    edgecolor = ['#FFBF36', '#00E025', '#0020F2', '#DB36FC', '#FF0000']
+    colors = ['#FFB464', '#20FF20', '#2C6BFF', '#C962FD', '#FF3859']
+
+    # Plot radar for each player
+    for i, player_value in enumerate(player_values):
+        radar_output = radar.draw_radar_solid(player_value, ax=axs['radar'],
+                                              kwargs={'facecolor': colors[i % len(colors)],
+                                                      'alpha': 0.3,
+                                                      'edgecolor': edgecolor[i % len(edgecolor)],
+                                                      'lw': 5})
+        radar_poly, vertices = radar_output
+        axs['radar'].scatter(vertices[:, 0], vertices[:, 1],
+                             c=colors[i % len(colors)], edgecolors=edgecolor[i % len(edgecolor)],
+                             marker='o', s=150, zorder=2, alpha=1.0)  # Ensure alpha=1 for edges
+
+    range_labels = radar.draw_range_labels(ax=axs['radar'], fontsize=20, fontproperties=robotto_bold.prop, color='#FFFFFF')
+    param_labels = radar.draw_param_labels(ax=axs['radar'], wrap=10, fontsize=20, fontproperties=robotto_bold.prop, color='#FFFFFF')
+
+    # Display the players alternately on the left and right
+    title_coords = [(0.01, 0.65), (0.99, 0.65)]
+    team_coords = [(0.01, 0.25), (0.99, 0.25)]
+    for i, (player, team) in enumerate(zip(players, player_teams)):
+        ha = 'left' if i % 2 == 0 else 'right'
+        color = colors[i % len(colors)]
+        axs['title'].text(title_coords[i % 2][0], title_coords[i % 2][1] - 1 * (i // 2), f'{player}', fontsize=25,
+                          fontproperties=robotto_bold.prop, ha=ha,
+                          va='center', color=color)
+        axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 1 * (i // 2), f'{team}', fontsize=20,
+                          fontproperties=robotto_thin.prop, ha=ha,
+                          va='center', color=color)
+    fig.set_facecolor('#070707')
+    st.pyplot(fig, dpi=400)
+    
+    
+# Function to wrap labels
+def wrap_labels(labels, width):
+    wrapped = []
+    for label in labels:
+        if label not in schemas.label_mapping().values():
+            wrapped.append('\n'.join(textwrap.wrap(label, width)))
+        else:
+            wrapped.append(label)
+    return wrapped
