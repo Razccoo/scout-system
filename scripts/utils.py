@@ -243,7 +243,7 @@ def load_top_9_leagues(season_selection=None):
     top_9_league_data = pd.DataFrame()
     for league in top_9_leagues:
         for season in season_selection:
-            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o")
+            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o").replace("ã", "a")
             league_data = read_csv2(f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league_file}')
             league_data['League'] = league
             league_data['Season'] = season
