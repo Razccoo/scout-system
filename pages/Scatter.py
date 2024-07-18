@@ -54,7 +54,7 @@ def download_file(url, save_path):
         file.write(response.content)
 
 # Plot scatter function
-def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=True, dpi=400):
+def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=False, dpi=400):
     plt.clf()
     plt.style.use('fivethirtyeight')
     
@@ -109,15 +109,20 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     ax2.set_ylabel(ylabel=f'{yy}', weight='bold')
     ax2.set_xlabel(xlabel=f'{xx}', weight='bold')
     
+    if use_images:
+        text_x = 0.25
+    else:
+        text_x = 0.0
+        
     fig_text(
-        x=(0.25 if use_images else 0.0), y=0.99,
+        x=text_x, y=0.99,
         s=f"{selected_league} {selected_position}",
         va="bottom", ha="left",
         fontsize=20, color="black", font="DMSans", weight="bold"
     )
     
     fig_text(
-        x=(0.25 if use_images else 0.0), y=0.91,
+        x=text_x, y=0.91,
         s=f"{xx_cleaned} ve {yy_cleaned}\nYalnızca ortanca üzerinde süre alan ve {xx_cleaned.lower()} yapan oyuncular gösterilmiştir.\nHazırlayan @alfiescouting | {selected_season} sezonu",
         va="bottom", ha="left",
         fontsize=12, color="#5A5A5A", font="Karla"
