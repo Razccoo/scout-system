@@ -236,14 +236,14 @@ def load_top_5_leagues(season_selection=None):
 @st.cache_data(ttl=6*60*60)
 # Function to load data for the Top 9 Leagues
 def load_top_9_leagues(season_selection=None):
-    top_9_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1", "Süper Lig", "Eredivisie", "Primeira Liga", "Belgian Pro League", "Saudi Pro League", "Brasileirao"]
+    top_9_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1", "Süper Lig", "Eredivisie", "Primeira Liga", "Belgian Pro League", "Saudi Pro League", "Brasileirão"]
     if season_selection is None:
         season_selection = ["22-23", "23-24", "2024"]
         
     top_9_league_data = pd.DataFrame()
     for league in top_9_leagues:
         for season in season_selection:
-            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o").replace("ã", "a")
+            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o")
             league_data = read_csv2(f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league_file}')
             league_data['League'] = league
             league_data['Season'] = season
