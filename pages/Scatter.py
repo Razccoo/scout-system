@@ -54,7 +54,7 @@ def download_file(url, save_path):
         file.write(response.content)
 
 # Plot scatter function
-def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=True, dpi=400):
+def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=False, dpi=400):
     plt.clf()
     plt.style.use('fivethirtyeight')
     
