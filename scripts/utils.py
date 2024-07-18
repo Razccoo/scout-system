@@ -588,8 +588,6 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
         axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 1 * (i // 2), f'{team}', fontsize=20,
                           fontproperties=robotto_bold.prop, ha=ha,
                           va='center', color=color)
-        
-    fig.set_facecolor('#070707')
     
     # Add the Twitter icon and handle
     twitter_icon_url = 'https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png'
@@ -603,7 +601,9 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
                       fontproperties=robotto_bold.prop,
                       ha='center', va='center', color='#FFFFFF')
     
-    st.pyplot(fig, dpi=400)
+    fig.set_facecolor('#070707')
+    
+    st.pyplot(fig, clear_figure=False, dpi=400)
     
     
 # Function to wrap labels
