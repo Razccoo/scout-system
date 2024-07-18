@@ -83,7 +83,7 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
         fig.figimage(image_arrays[1], xo=image_arrays[0].shape[1] + 2300, yo=-100, alpha=1, zorder=1)
 
     ax2.grid(visible=True, ls='--', color='lightgrey')
-    ax2.scatter(
+    scatter = ax2.scatter(
         df_plot[xx], df_plot[yy],
         c=df_plot['zscore'], cmap='inferno',
         zorder=3, ec='grey', s=55, alpha=0.8
@@ -93,21 +93,36 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     yy_cleaned = clean_variable_name(yy)
     
     texts = []
+    target_x = []
+    target_y = []
     annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
     for index in range(annotated_df.shape[0]):
+        player_name = annotated_df['Oyuncu'].iloc[index]
+        x_val = annotated_df[xx].iloc[index]
+        y_val = annotated_df[yy].iloc[index]
         texts.append(
             ax2.text(
-                x=annotated_df[xx].iloc[index], y=annotated_df[yy].iloc[index],
-                s=f"{annotated_df['Oyuncu'].iloc[index]}",
+                x=x_val, y=y_val,
+                s=player_name,
                 path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), path_effects.Normal()],
-                color='black', family='DMSans', weight='bold'
+                color='black',
+                family='DMSans', weight='bold'
             )
         )
+        target_x.append(x_val)
+        target_y.append(y_val)
+
+    # Determine arrow angles based on text position
+    arrowprops = []
+    for text, tx, ty in zip(texts, target_x, target_y):
+        bbox = text.get_window_extent(renderer=fig.canvas.get_renderer())
+        x, y = text.get_position()
+        if y < ty:
+            arrowprops.append(dict(arrowstyle="->", color='black', lw=0.5, connectionstyle="angle3,angleA=90,angleB=0"))
+        else:
+            arrowprops.append(dict(arrowstyle="->", color='black', lw=0.5, connectionstyle="angle3,angleA=0,angleB=90"))
     
-    adjust_text(texts, 
-                x=df_plot[xx], 
-                y=df_plot[yy], 
-                arrowprops=dict(arrowstyle="->", color='black', lw=0.5))
+    adjust_text(texts, x=target_x, y=target_y, arrowprops=arrowprops)
     
     ax2.set_ylabel(ylabel=f'{yy}', weight='bold')
     ax2.set_xlabel(xlabel=f'{xx}', weight='bold')
