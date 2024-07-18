@@ -112,17 +112,17 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
         target_x.append(x_val)
         target_y.append(y_val)
 
-    # Determine arrow angles based on text position
-    arrowprops = []
-    for text, tx, ty in zip(texts, target_x, target_y):
-        bbox = text.get_window_extent(renderer=fig.canvas.get_renderer())
-        x, y = text.get_position()
-        if y < ty:
-            arrowprops.append(dict(arrowstyle="->", color='black', lw=0.5, connectionstyle="angle3,angleA=90,angleB=0"))
-        else:
-            arrowprops.append(dict(arrowstyle="->", color='black', lw=0.5, connectionstyle="angle3,angleA=0,angleB=90"))
-    
-    adjust_text(texts, x=target_x, y=target_y, arrowprops=arrowprops)
+    adjust_text(
+        texts,
+        x=target_x,
+        y=target_y,
+        arrowprops=dict(
+            arrowstyle="->",
+            color='black',
+            lw=0.5,
+            connectionstyle="angle3,angleA=90,angleB=0"
+        )
+    )
     
     ax2.set_ylabel(ylabel=f'{yy}', weight='bold')
     ax2.set_xlabel(xlabel=f'{xx}', weight='bold')
