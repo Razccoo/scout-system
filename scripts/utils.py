@@ -554,7 +554,7 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
                     title_space=0, endnote_space=0, grid_key='radar', axis=False)
     
     # Create the radar chart
-    radar.setup_axis(ax=axs['radar'], facecolor='#28252C')  # format axis as a radar
+    radar.setup_axis(ax=axs['radar'], facecolor='None')  # format axis as a radar
     rings_inner = radar.draw_circles(ax=axs['radar'], facecolor='#28252C', edgecolor='#39353f')
 
     # Colors for the players
@@ -595,11 +595,11 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
 
     imagebox = OffsetImage(twitter_icon, zoom=0.03)
     ab = AnnotationBbox(imagebox, (0.36, 0.67), frameon=False)
-    axs['title'].add_artist(ab)
+    # axs['title'].add_artist(ab)
 
-    axs['title'].text(0.50, 0.65, 'ALFIESCOUT', fontsize=35,
-                      fontproperties=robotto_bold.prop,
-                      ha='center', va='center', color='#FFFFFF')
+    # axs['title'].text(0.50, 0.65, 'ALFIESCOUT', fontsize=35,
+    #                   fontproperties=robotto_bold.prop,
+    #                   ha='center', va='center', color='#FFFFFF')
     
     fig.set_facecolor('#070707')
     st.pyplot(fig, dpi=400)
