@@ -23,7 +23,7 @@ st.set_page_config(page_title="Dagilim Grafikleri")
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
 
-# Define utility functions
+# Utility functions
 def download_image(url):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
@@ -53,7 +53,6 @@ def download_file(url, save_path):
     with open(save_path, 'wb') as file:
         file.write(response.content)
 
-# Plot scatter function
 def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=False, dpi=400):
     plt.clf()
     plt.style.use('fivethirtyeight')
@@ -65,27 +64,24 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.6 + stats.zscore(df_plot[yy]) * 0.4
     df_plot['annotated'] = [x > df_plot['zscore'].quantile(0.8) for x in df_plot['zscore']]
 
+    fig_width, fig_height = (14, 8) if use_images else (8, 8)
+    fig = plt.figure(figsize=(fig_width, fig_height))
+    ax2 = fig.add_axes([0.28, 0, 0.45, 0.9] if use_images else [0.0, 0, 1, 0.9], zorder=0)
+
     if use_images:
-        fig_width, fig_height = 14, 8
-        fig = plt.figure(figsize=(fig_width, fig_height))
-        url1 = 'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5349.png'
-        url2 = 'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5348.png'
-        image1 = download_image(url1)
-        image2 = download_image(url2)
-        resized_image1 = resize_image_to_fit(image1, fig_width, fig_height, dpi)
-        resized_image2 = resize_image_to_fit(image2, fig_width, fig_height, dpi)
-        image1_array = np.array(resized_image1)
-        image2_array = np.array(resized_image2)
+        image_urls = [
+            'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5349.png',
+            'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5348.png'
+        ]
+        images = [download_image(url) for url in image_urls]
+        resized_images = [resize_image_to_fit(img, fig_width, fig_height, dpi) for img in images]
+        image_arrays = [np.array(img) for img in resized_images]
+
         ax = fig.add_axes([0, 0, 1, 1], zorder=1, frameon=False)
         ax.axis('off')
-        fig.figimage(image1_array, xo=-600, yo=-100, alpha=1, zorder=1)
-        fig.figimage(image2_array, xo=image1_array.shape[1] + 2300, yo=-100, alpha=1, zorder=1)
-        ax2 = fig.add_axes([0.28, 0, 0.45, 0.9], zorder=0)
-    else:
-        fig_width, fig_height = 8, 8
-        fig = plt.figure(figsize=(fig_width, fig_height))
-        ax2 = fig.add_axes([0.0, 0, 1, 0.9], zorder=0)
-        
+        fig.figimage(image_arrays[0], xo=-600, yo=-100, alpha=1, zorder=1)
+        fig.figimage(image_arrays[1], xo=image_arrays[0].shape[1] + 2300, yo=-100, alpha=1, zorder=1)
+
     ax2.grid(visible=True, ls='--', color='lightgrey')
     ax2.scatter(
         df_plot[xx], df_plot[yy],
@@ -111,21 +107,16 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'})
     ax2.set_ylabel(ylabel=f'{yy}', weight='bold')
     ax2.set_xlabel(xlabel=f'{xx}', weight='bold')
-    
-    # if use_images:
-    #     text_x = 0.25
-    # else:
-    #     text_x = 0.0
         
     fig_text(
-        x=(0.25 if use_images else 0.0), y=0.99,  
+        x=0.25 if use_images else 0.0, y=0.99,  
         s=f"{selected_league} {selected_position}",
         va="bottom", ha="left",
         fontsize=20, color="black", font="DMSans", weight="bold"
     )
     
     fig_text(
-        x=(0.25 if use_images else 0.0), y=0.91,
+        x=0.25 if use_images else 0.0, y=0.91,
         s=f"{xx_cleaned} ve {yy_cleaned}\nYalnızca ortanca üzerinde süre alan ve {xx_cleaned.lower()} yapan oyuncular gösterilmiştir.\nHazırlayan @alfiescouting | {selected_season} sezonu",
         va="bottom", ha="left",
         fontsize=12, color="#5A5A5A", font="Karla"
@@ -133,7 +124,7 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     
     return fig
 
-# Download fonts
+# Download and load fonts
 github_base_url = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/fonts"
 temp_dir = "/tmp/fonts"
 font_files = ["Karla.ttf", "DMSans.ttf"]
