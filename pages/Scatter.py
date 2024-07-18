@@ -111,6 +111,7 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
             family='DMSans', weight='bold'
         )
 
+    adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'})
     ax2.set_ylabel(ylabel=f'{yy}', weight='bold')
     ax2.set_xlabel(xlabel=f'{xx}', weight='bold')
         
