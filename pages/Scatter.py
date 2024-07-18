@@ -95,23 +95,20 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     texts = []
     annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
     for index in range(annotated_df.shape[0]):
-        player_name = annotated_df['Oyuncu'].iloc[index]
-        x_val = annotated_df[xx].iloc[index]
-        y_val = annotated_df[yy].iloc[index]
-        ax2.annotate(
-            player_name,
-            xy=(x_val, y_val),
-            xycoords='data',
-            xytext=(5, 5),
-            textcoords='offset points',
-            arrowprops=dict(arrowstyle='->', color='black'),
-            fontsize=10,
-            path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), path_effects.Normal()],
-            color='black',
-            family='DMSans', weight='bold'
+        texts.append(
+            ax2.text(
+                x=annotated_df[xx].iloc[index], y=annotated_df[yy].iloc[index],
+                s=f"{annotated_df['Oyuncu'].iloc[index]}",
+                path_effects=[path_effects.Stroke(linewidth=2, foreground=fig.get_facecolor()), path_effects.Normal()],
+                color='black', family='DMSans', weight='bold'
+            )
         )
-
-    adjust_text(texts, only_move={'points': 'y', 'text': 'xy', 'objects': 'xy'})
+    
+    adjust_text(texts, 
+                x=df_plot[xx], 
+                y=df_plot[yy], 
+                arrowprops=dict(arrowstyle="->", color='black', lw=0.5))
+    
     ax2.set_ylabel(ylabel=f'{yy}', weight='bold')
     ax2.set_xlabel(xlabel=f'{xx}', weight='bold')
         
