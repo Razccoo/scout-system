@@ -104,16 +104,6 @@ def scout_report(df):
                     ha='center', va='center', size=10, xytext=(0, 8),
                     textcoords='offset points', color=color,
                     bbox=dict(boxstyle="round", fc=face, ec="black", lw=1))
-        
-    # Function to wrap labels
-    def wrap_labels(labels, width):
-        wrapped = []
-        for label in labels:
-            if label not in schemas.label_mapping().values():
-                wrapped.append('\n'.join(textwrap.wrap(label, width)))
-            else:
-                wrapped.append(label)
-        return wrapped
     
     wrapped_labels = wrap_labels(LABELS, 10)
     
