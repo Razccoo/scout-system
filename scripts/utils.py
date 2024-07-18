@@ -589,19 +589,20 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
                           fontproperties=robotto_bold.prop, ha=ha,
                           va='center', color=color)
         
+    fig.set_facecolor('#070707')
+    
     # Add the Twitter icon and handle
     twitter_icon_url = 'https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png'
     twitter_icon = Image.open(urlopen(twitter_icon_url))
 
     imagebox = OffsetImage(twitter_icon, zoom=0.03)
     ab = AnnotationBbox(imagebox, (0.36, 0.67), frameon=False)
-    # axs['title'].add_artist(ab)
+    axs['title'].add_artist(ab)
 
-    # axs['title'].text(0.50, 0.65, 'ALFIESCOUT', fontsize=35,
-    #                   fontproperties=robotto_bold.prop,
-    #                   ha='center', va='center', color='#FFFFFF')
+    axs['title'].text(0.50, 0.65, 'ALFIESCOUT', fontsize=35,
+                      fontproperties=robotto_bold.prop,
+                      ha='center', va='center', color='#FFFFFF')
     
-    fig.set_facecolor('#070707')
     st.pyplot(fig, dpi=400)
     
     
