@@ -67,7 +67,6 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     df_plot['annotated'] = [x > df_plot['zscore'].quantile(0.8) for x in df_plot['zscore']]
     
     fig = plt.figure(figsize=(fig_width, fig_height))
-    ax2 = fig.add_axes([0.28, 0, 0.45, 0.9], zorder=0)
 
     if use_images:
         url1 = 'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5349.png'
@@ -82,7 +81,10 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
         ax.axis('off')
         fig.figimage(image1_array, xo=-600, yo=-100, alpha=1, zorder=1)
         fig.figimage(image2_array, xo=image1_array.shape[1] + 2300, yo=-100, alpha=1, zorder=1)
-    
+        ax2 = fig.add_axes([0.28, 0, 0.45, 0.9], zorder=0)
+    else:
+        ax2 = fig.add_axes([0.0, 0, 1, 0.9], zorder=0)
+        
     ax2.grid(visible=True, ls='--', color='lightgrey')
     ax2.scatter(
         df_plot[xx], df_plot[yy],
