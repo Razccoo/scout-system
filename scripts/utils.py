@@ -554,8 +554,8 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
                     title_space=0, endnote_space=0, grid_key='radar', axis=False)
     
     # Create the radar chart
-    radar.setup_axis(ax=axs['radar'], facecolor='None')  # format axis as a radar
-    rings_inner = radar.draw_circles(ax=axs['radar'], facecolor='#28252c', edgecolor='#39353f')
+    radar.setup_axis(ax=axs['radar'], facecolor='#28252C')  # format axis as a radar
+    rings_inner = radar.draw_circles(ax=axs['radar'], facecolor='#28252C', edgecolor='#39353f')
 
     # Colors for the players
     edgecolor = ['#FFBF36', '#00E025', '#0020F2', '#DB36FC', '#FF0000']
