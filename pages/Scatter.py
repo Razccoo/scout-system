@@ -58,17 +58,16 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     plt.clf()
     plt.style.use('fivethirtyeight')
     
-    fig_width, fig_height = 14, 8
     df = utils.filter_by_position(df, selected_position)
     df.rename(columns=schemas.column_mapping(), inplace=True)
     df_plot = df[(df['Oynadığı dakikalar'] >= df['Oynadığı dakikalar'].median()) & (df[xx] >= df[xx].median())]
     
     df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.6 + stats.zscore(df_plot[yy]) * 0.4
     df_plot['annotated'] = [x > df_plot['zscore'].quantile(0.8) for x in df_plot['zscore']]
-    
-    fig = plt.figure(figsize=(fig_width, fig_height))
 
     if use_images:
+        fig_width, fig_height = 14, 8
+        fig = plt.figure(figsize=(fig_width, fig_height))
         url1 = 'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5349.png'
         url2 = 'https://raw.githubusercontent.com/Razccoo/scout-system/Testing/IMG_5348.png'
         image1 = download_image(url1)
@@ -83,6 +82,8 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
         fig.figimage(image2_array, xo=image1_array.shape[1] + 2300, yo=-100, alpha=1, zorder=1)
         ax2 = fig.add_axes([0.28, 0, 0.45, 0.9], zorder=0)
     else:
+        fig_width, fig_height = 8, 8
+        fig = plt.figure(figsize=(fig_width, fig_height))
         ax2 = fig.add_axes([0.0, 0, 1, 0.9], zorder=0)
         
     ax2.grid(visible=True, ls='--', color='lightgrey')
