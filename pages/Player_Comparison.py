@@ -83,7 +83,7 @@ if st.sidebar.button("Generate Radar Chart"):
         params.extend(group)
 
     # Select columns dynamically based on the original params
-    cols = ['Player', 'Team within selected timeframe'] + original_params
+    cols = ['Player', 'Team within selected timeframe', 'Season'] + original_params
     
     currentseason = currentseason[cols].rename(columns=schemas.column_mapping()).rename(columns=schemas.label_mapping())
     combined_df = combined_df[cols].rename(columns=schemas.column_mapping()).rename(columns=schemas.label_mapping())
