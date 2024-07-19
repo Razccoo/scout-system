@@ -556,7 +556,7 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
     for i, player_value in enumerate(player_values):
         radar_output = radar.draw_radar_solid(player_value, ax=axs['radar'],
                                               kwargs={'facecolor': colors[i % len(colors)],
-                                                      'alpha': 0.3,
+                                                      'alpha': 0.6,
                                                       'edgecolor': edgecolor[i % len(edgecolor)],
                                                       'lw': 5})
         radar_poly, vertices = radar_output
