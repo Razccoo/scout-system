@@ -236,7 +236,7 @@ def load_top_5_leagues(season_selection=None):
 @st.cache_data(ttl=6*60*60)
 # Function to load data for the Top 9 Leagues
 def load_top_9_leagues(season_selection=None):
-    top_9_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1", "Süper Lig", "Eredivisie", "Primeira Liga", "Belgian Pro League", "Saudi Pro League", "Brasileirão"]
+    top_9_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1", "Süper Lig", "Eredivisie", "Primeira Liga", "Belgian Pro League", "Saudi Pro League"]
     if season_selection is None:
         season_selection = ["22-23", "23-24", "2024"]
         
