@@ -587,7 +587,7 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
     ab = AnnotationBbox(imagebox, (0.36, 0.67), frameon=False)
     axs['title'].add_artist(ab)
 
-    axs['title'].text(0.50, 0.65, 'ALFIESCOUT', fontsize=35,
+    axs['title'].text(0.50, 0.65, 'ALFIESCOUTING', fontsize=35,
                       fontproperties=robotto_bold.prop,
                       ha='center', va='center', color='#FFFFFF')
     
