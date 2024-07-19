@@ -266,6 +266,7 @@ def read_csv2(link):
     df['Clean sheets, %'] = df['Clean sheets'] / df['Matches played']
     df['npxG'] = df['xG'] - (.76 * df['Penalties taken'])
     df['npxG per 90'] = df['npxG'] / (df['Minutes played'] / 90)
+    df['npxGA per 90'] = df['xA per 90'] + df['npxG per 90']
     df['npxG per shot'] = df['npxG'] / (df['Shots'] - df['Penalties taken'])
     df['npxG per shot'] = [0 if df['Shots'][i]==0 else df['npxG'][i] / (df['Shots'][i] - df['Penalties taken'][i]) for i in range(len(df))]
     df['Vertical Pass %'] = df['Vertical passes per 90'] / df['Passes per 90']
