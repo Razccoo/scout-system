@@ -570,15 +570,19 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
     # Display the players alternately on the left and right
     title_coords = [(0.01, 0.65), (0.99, 0.65)]
     team_coords = [(0.01, 0.25), (0.99, 0.25)]
-    for i, (player, team) in enumerate(zip(players, player_teams)):
+    player_seasons = {player: df[df['Player'] == player]['Season'].values[0] for player in players}
+
+    for i, (player, season, team) in enumerate(zip(players, player_seasons.values(), player_teams)):
         ha = 'left' if i % 2 == 0 else 'right'
         color = colors[i % len(colors)]
-        axs['title'].text(title_coords[i % 2][0], title_coords[i % 2][1] - 1 * (i // 2), f'{player}', fontsize=25,
-                          fontproperties=robotto_bold.prop, ha=ha,
-                          va='center', color=color)
-        axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 1 * (i // 2), f'{team}', fontsize=20,
-                          fontproperties=robotto_bold.prop, ha=ha,
-                          va='center', color=color)
+        title_text = axs['title'].text(title_coords[i % 2][0], title_coords[i % 2][1] - 0.1 * (i // 2), 
+                                    f'{player} | {season}', fontsize=25,
+                                    fontproperties=robotto_bold.prop, ha=ha,
+                                    va='center', color=color)
+        team_text = axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 0.1 * (i // 2), 
+                                    f'{team}', fontsize=20,
+                                    fontproperties=robotto_thin.prop, ha=ha,
+                                    va='center', color=color)
     
     # Add the Twitter icon and handle
     twitter_icon_url = 'https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png'
