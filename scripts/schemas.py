@@ -158,7 +158,7 @@ def column_mapping():
         "Direct free kicks on target, %": "Direkt Serbest Vuruşlar Hedef %", "Corners per 90": "Kornerler / 90", "Penalties taken": "Kullanılan Penaltılar",
         "Penalty conversion, %": "Penaltı Dönüşümü %", "pAdj Tkl+Int per 90": "Top Çalma & Kesmeler (pAdj) / 90", "1st, 2nd, 3rd assists": "1., 2., 3. Asistler",
         "xA per Shot Assist": "xA başına Şut Asisti", "Aerial duels won per 90": "Kazanılan Hava Mücadeleleri / 90", "Cards per 90": "Kartlar / 90",
-        "Clean sheets, %": "Gol Yememe %", "npxG": "npxG", "npxG per 90": "npxG / 90", "npxG per shot": "Şut Başına npxG", "Vertical Pass %": "Dikey Pas %"
+        "Clean sheets, %": "Gol Yememe %", "npxG": "npxG", "npxG per 90": "npxG / 90", "npxG per shot": "Şut Başına npxG", "npxGA per 90":"Penaltısız xGA", "Vertical Pass %": "Dikey Pas %"
     }
     return column_mapping
 
