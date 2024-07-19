@@ -596,7 +596,7 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
                       fontproperties=robotto_bold.prop,
                       ha='center', va='center', color='#FFFFFF')
     
-    endnote_text = axs['endnote'].text(0.01, 0.5, 'Tüm değerler 90 başına.\nVeriler 2023-2024 sezonuna aittir.', fontsize=20,
+    endnote_text = axs['endnote'].text(0.01, 0.5, 'Tüm değerler 90 başına.', fontsize=20,
                                     fontproperties=robotto_bold.prop, ha='left',
                                     va='center', color='#f0f6f6')
     
