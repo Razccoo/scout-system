@@ -118,9 +118,7 @@ def label_mapping():
                 "İkili Mücadeleler / 90": "İkili Müc.",
                 "Üçüncü Bölgeye Paslar / 90": "Üçüncü\nBölgeye Paslar",
                 "Başarılı İleri Paslar %": "Baş.\nİleri Paslar %",
-                "İleri Paslar": "İleri\nPaslar"
-                
-                
+                "İleri Paslar / 90": "İleri\nPaslar"                
     }
     return label_mapping
 
