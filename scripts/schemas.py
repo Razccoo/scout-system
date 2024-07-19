@@ -26,7 +26,7 @@ def params_list():
                 'Topla Hizlanmalar / 90', 'Alınan Paslar / 90', 'Alınan Uzun Paslar / 90', 'Kazanılan Fauller / 90', 'Paslar / 90', 'Başarılı Pas %', 'İleri Paslar / 90', 'Başarılı İleri Paslar %',
                 'Geri Paslar / 90', 'Başarılı Geri Paslar %', 'Kısa / Orta Paslar / 90', 'Başarılı Kısa / Orta Paslar %', 'Uzun Paslar / 90', 'Başarılı Uzun Paslar %', 'Ortalama Pas Uzunluğu, m',
                 'Ortalama Uzun Pas Uzunluğu, m', 'Beklenen Asist (xA) / 90', 'Şut Asistleri / 90', 'İkinci Asist / 90', 'Üçüncü Asist / 90', 'Akıllı Paslar / 90',
-                'Başarılı Akıllı Pas %', 'Anahtar Paslar / 90', 'Son Üçüncüye Paslar / 90', 'Son Üçüncüye Başarılı Paslar %', 'Ceza Sahasına Paslar / 90',
+                'Başarılı Akıllı Pas %', 'Anahtar Paslar / 90', 'Üçüncü Bölgeye Paslar / 90', 'Üçüncü Bölgeye Başarılı Paslar %', 'Ceza Sahasına Paslar / 90',
                 'Ceza Sahasına Başarılı Paslar %', 'Ara Paslar / 90', 'Başarılı Ara Paslar %', 'Derin Tamamlamalar / 90', 'Derin Tamamlanan Ortalar / 90',
                 'Kademeli Paslar / 90', 'Başarılı Kademeli Paslar %', 'Başarılı Dikey Paslar %', 'Dikey Paslar / 90', 'Yenilen Goller', 'Yenilen Goller / 90',
                 'Karşı Şutlar', 'Karşı Şutlar / 90', 'Gol Yememe', 'Kurtarış Oranı %', 'Karşı Beklenen Gol (xG)', 'Karşı Beklenen Gol (xG) / 90', 'Engellenen Goller',
@@ -114,7 +114,12 @@ def label_mapping():
                 "Ara Paslar / 90": "Ara Paslar",
                 "Anahtar Paslar / 90": "Anahtar\nPaslar",
                 "Aldığı paslar / 90": "Aldığı\npaslar",
-                "Penaltısız xGA / 90": "Penaltısız\nxGA"
+                "Penaltısız xGA / 90": "Penaltısız\nxGA",
+                "İkili Mücadeleler / 90": "İkili Müc.",
+                "Üçüncü Bölgeye Paslar / 90": "Üçüncü\nBölgeye Paslar",
+                "Başarılı İleri Paslar %": "Baş.\nİleri Paslar %",
+                "İleri Paslar": "İleri\nPaslar"
+                
                 
     }
     return label_mapping
@@ -145,8 +150,8 @@ def column_mapping():
         "Long passes per 90": "Uzun Paslar / 90", "Accurate long passes, %": "Başarılı Uzun Paslar %", "Average pass length, m": "Ortalama Pas Uzunluğu, m",
         "Average long pass length, m": "Ortalama Uzun Pas Uzunluğu, m", "xA per 90": "Beklenen Asist (xA) / 90", "Shot assists per 90": "Şut Asistleri / 90",
         "Second assists per 90": "İkinci Asist / 90", "Third assists per 90": "Üçüncü Asist / 90", "Smart passes per 90": "Akıllı Paslar / 90",
-        "Accurate smart passes, %": "Başarılı Akıllı Pas %", "Key passes per 90": "Anahtar Paslar / 90", "Passes to final third per 90": "Son Üçüncüye Paslar / 90",
-        "Accurate passes to final third, %": "Son Üçüncüye Başarılı Paslar %", "Passes to penalty area per 90": "Ceza Sahasına Paslar / 90",
+        "Accurate smart passes, %": "Başarılı Akıllı Pas %", "Key passes per 90": "Anahtar Paslar / 90", "Passes to final third per 90": "Üçüncü Bölgeye Paslar / 90",
+        "Accurate passes to final third, %": "Üçüncü Bölgeye Başarılı Paslar %", "Passes to penalty area per 90": "Ceza Sahasına Paslar / 90",
         "Accurate passes to penalty area, %": "Ceza Sahasına Başarılı Paslar %", "Through passes per 90": "Ara Paslar / 90",
         "Accurate through passes, %": "Başarılı Ara Paslar %", "Deep completions per 90": "Derin Tamamlamalar / 90",
         "Deep completed crosses per 90": "Derin Tamamlanan Ortalar / 90", "Progressive passes per 90": "Kademeli Paslar / 90",
