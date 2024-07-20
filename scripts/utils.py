@@ -575,11 +575,11 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
     for i, (player, season, team) in enumerate(zip(players, player_seasons.values(), player_teams)):
         ha = 'left' if i % 2 == 0 else 'right'
         color = colors[i % len(colors)]
-        title_text = axs['title'].text(title_coords[i % 2][0], title_coords[i % 2][1] - 0.3 * (i // 2), 
+        title_text = axs['title'].text(title_coords[i % 2][0], title_coords[i % 2][1] - 0.5 * (i // 2), 
                                     f'{player} | {season}', fontsize=25,
                                     fontproperties=robotto_bold.prop, ha=ha,
                                     va='center', color=color)
-        team_text = axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 0.3 * (i // 2), 
+        team_text = axs['title'].text(team_coords[i % 2][0], team_coords[i % 2][1] - 0.5 * (i // 2), 
                                     f'{team}', fontsize=20,
                                     fontproperties=robotto_thin.prop, ha=ha,
                                     va='center', color=color)
