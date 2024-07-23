@@ -45,7 +45,7 @@ if schema_type:
 filtered_data, top_5_league_data = utils.filter_data(league_season_data, selected_position, min_minutes_played, max_age)
 top_5_league_data = top_5_league_data[top_5_league_data['League'].isin(["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"])]
 top_5_league_data = top_5_league_data[top_5_league_data['Season'] == f'{selected_season}']
-renamed_data = filtered_data.rename(columns=schemas.column_mapping)
+renamed_data = filtered_data.rename(columns=schemas.column_mapping())
 
 st.subheader(f"Data for {selected_league} - {selected_season}")
 st.write(renamed_data)

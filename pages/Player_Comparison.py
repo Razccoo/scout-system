@@ -64,7 +64,7 @@ if st.sidebar.button("Generate Radar Chart"):
     selected_schema_type = schemas.position_to_schema().get(player_main_position)
     
     # Replace schema parameters with labels
-    schema = replace_params_with_labels(schemas.schema_params, schemas.column_mapping, schemas.label_mapping)
+    schema = replace_params_with_labels(schemas.schema_params(), schemas.column_mapping(), schemas.label_mapping())
 
     # Use selected schema
     if selected_schema == "Default Schema":
