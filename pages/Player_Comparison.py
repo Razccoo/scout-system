@@ -34,8 +34,8 @@ st.sidebar.header("Player Selection")
 base_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/'
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 
+# Load and filter data
 all_leagues_df = utils.load_top_9_leagues()
-
 selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", schemas.position_options)
 df = utils.filter_by_position(all_leagues_df, selected_position)
 df = df[df['Minutes played'] >= 900]
