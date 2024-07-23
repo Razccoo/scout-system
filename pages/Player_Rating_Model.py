@@ -87,47 +87,48 @@ if selected_leagues and selected_seasons:
         categories = st.session_state.categories
 
     # Display and update categories from the loaded template
-    category_weights = []
-    for category_name, category_info in st.session_state.categories.items():
-        st.sidebar.subheader(f"{category_name}")
-        category_info["weight"] = st.sidebar.slider(f"Weight for {category_name}", min_value=0.0, max_value=1.0, value=category_info["weight"], step=0.01)
-        category_weights.append(category_info["weight"])
-        for param in category_info["params"]:
-            category_info["params"][param] = st.sidebar.slider(f"Weight for {param} in {category_name}", min_value=0.0, max_value=1.0, value=category_info["params"][param], step=0.01)
+    if st.session_state.categories:
+        category_weights = []
+        for category_name, category_info in st.session_state.categories.items():
+            st.sidebar.subheader(f"{category_name}")
+            category_info["weight"] = st.sidebar.slider(f"Weight for {category_name}", min_value=0.0, max_value=1.0, value=category_info["weight"], step=0.01)
+            category_weights.append(category_info["weight"])
+            for param in category_info["params"]:
+                category_info["params"][param] = st.sidebar.slider(f"Weight for {param} in {category_name}", min_value=0.0, max_value=1.0, value=category_info["params"][param], step=0.01)
 
     # Add new categories or parameters
     st.sidebar.subheader("Add New Category")
-    st.session_state.new_category_name = st.sidebar.text_input("New Category Name", st.session_state.new_category_name)
-    st.session_state.new_category_weight = st.sidebar.slider("Weight for New Category", min_value=0.0, max_value=1.0, value=st.session_state.new_category_weight, step=0.01)
-    st.session_state.new_params = st.sidebar.multiselect("Select Parameters for New Category", params, st.session_state.new_params)
+    new_category_name = st.sidebar.text_input("New Category Name")
+    new_category_weight = st.sidebar.slider("Weight for New Category", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+    new_params = st.sidebar.multiselect("Select Parameters for New Category", params)
 
     if st.sidebar.button("Add New Category"):
-        if st.session_state.new_category_name and st.session_state.new_params:
+        if new_category_name and new_params:
             param_weight_dict = {}
             param_weights = []
-            for param in st.session_state.new_params:
-                weight = st.sidebar.slider(f"Weight for {param} in {st.session_state.new_category_name}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+            for param in new_params:
+                weight = st.sidebar.slider(f"Weight for {param} in {new_category_name}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
                 param_weights.append(weight)
                 param_weight_dict[param] = weight
 
-            st.session_state.categories[st.session_state.new_category_name] = {
-                "weight": st.session_state.new_category_weight,
+            st.session_state.categories[new_category_name] = {
+                "weight": new_category_weight,
                 "params": param_weight_dict,
                 "param_weights": param_weights
             }
-            st.session_state.new_category_name = ""
-            st.session_state.new_category_weight = 0.5
-            st.session_state.new_params = []
+            st.experimental_rerun()  # Refresh the sidebar to show the new category
 
-    st.sidebar.subheader("Add New Parameter to Existing Category")
-    selected_category = st.sidebar.selectbox("Select Category to Add Parameter", list(st.session_state.categories.keys()))
-    new_params = st.sidebar.multiselect(f"Select Parameters for {selected_category}", params)
-    
-    if st.sidebar.button("Add New Parameter to Existing Category"):
-        for param in new_params:
-            weight = st.sidebar.slider(f"Weight for {param} in {selected_category}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-            st.session_state.categories[selected_category]["params"][param] = weight
-            st.session_state.categories[selected_category]["param_weights"].append(weight)
+    if st.session_state.categories:
+        st.sidebar.subheader("Add New Parameter to Existing Category")
+        selected_category = st.sidebar.selectbox("Select Category to Add Parameter", list(st.session_state.categories.keys()))
+        new_params = st.sidebar.multiselect(f"Select Parameters for {selected_category}", params)
+        
+        if st.sidebar.button("Add New Parameter to Existing Category"):
+            for param in new_params:
+                weight = st.sidebar.slider(f"Weight for {param} in {selected_category}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+                st.session_state.categories[selected_category]["params"][param] = weight
+                st.session_state.categories[selected_category]["param_weights"].append(weight)
+            st.experimental_rerun()  # Refresh the sidebar to show the new parameters
 
     if st.sidebar.button("Calculate Ratings"):
         category_weights = [category_info["weight"] for category_info in st.session_state.categories.values()]
@@ -153,9 +154,10 @@ if selected_leagues and selected_seasons:
             st.sidebar.error("The weights for all categories and all parameters in each category must sum up to 1.")
     
     # Option to save the current configuration as a template
-    template_name = st.sidebar.text_input("Template Name")
-    if st.sidebar.button("Save Template"):
-        if template_name:
-            save_template(template_name, st.session_state.categories)
-        else:
-            st.sidebar.error("Please enter a template name.")
+    if st.session_state.categories:
+        template_name = st.sidebar.text_input("Template Name")
+        if st.sidebar.button("Save Template"):
+            if template_name:
+                save_template(template_name, st.session_state.categories)
+            else:
+                st.sidebar.error("Please enter a template name.")
