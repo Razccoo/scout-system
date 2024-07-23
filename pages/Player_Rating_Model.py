@@ -74,41 +74,49 @@ if selected_leagues and selected_seasons:
         categories = load_template(template_option)
         st.sidebar.success(f"Template '{template_option}' loaded successfully.")
     else:
-        category_count = st.sidebar.number_input("Number of Categories", min_value=1, max_value=10, value=1, step=1)
         categories = {}
-        category_weights = []
-        
-        for i in range(category_count):
-            st.sidebar.subheader(f"Category {i+1}")
-            category_name = st.sidebar.text_input(f"Category {i+1} Name", f"Category {i+1}")
-            category_weight = st.sidebar.slider(f"Weight for {category_name}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-            category_weights.append(category_weight)
-            selected_params = st.sidebar.multiselect(f"Select Parameters for {category_name}", params)
-            
-            if selected_params:
-                param_weights = []
-                param_weight_dict = {}
-                for param in selected_params:
-                    weight = st.sidebar.slider(f"Weight for {param} in {category_name}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-                    param_weights.append(weight)
-                    param_weight_dict[param] = weight
-                
-                categories[category_name] = {
-                    "weight": category_weight,
-                    "params": param_weight_dict,
-                    "param_weights": param_weights
-                }
 
-    # Update the sidebar with the loaded categories and parameters for editing
-    if template_option != "None":
-        for category_name, category_info in categories.items():
-            st.sidebar.subheader(f"{category_name}")
-            category_info["weight"] = st.sidebar.slider(f"Weight for {category_name}", min_value=0.0, max_value=1.0, value=category_info["weight"], step=0.01)
-            for param in category_info["params"]:
-                category_info["params"][param] = st.sidebar.slider(f"Weight for {param} in {category_name}", min_value=0.0, max_value=1.0, value=category_info["params"][param], step=0.01)
+    # Display and update categories from the loaded template
+    category_weights = []
+    for category_name, category_info in categories.items():
+        st.sidebar.subheader(f"{category_name}")
+        category_info["weight"] = st.sidebar.slider(f"Weight for {category_name}", min_value=0.0, max_value=1.0, value=category_info["weight"], step=0.01)
+        category_weights.append(category_info["weight"])
+        for param in category_info["params"]:
+            category_info["params"][param] = st.sidebar.slider(f"Weight for {param} in {category_name}", min_value=0.0, max_value=1.0, value=category_info["params"][param], step=0.01)
+
+    # Add new categories or parameters
+    if st.sidebar.button("Add New Category"):
+        new_category_name = st.sidebar.text_input("New Category Name", "")
+        new_category_weight = st.sidebar.slider(f"Weight for {new_category_name}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+        selected_params = st.sidebar.multiselect(f"Select Parameters for {new_category_name}", params)
+        
+        if selected_params:
+            param_weights = []
+            param_weight_dict = {}
+            for param in selected_params:
+                weight = st.sidebar.slider(f"Weight for {param} in {new_category_name}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+                param_weights.append(weight)
+                param_weight_dict[param] = weight
+
+            categories[new_category_name] = {
+                "weight": new_category_weight,
+                "params": param_weight_dict,
+                "param_weights": param_weights
+            }
+            category_weights.append(new_category_weight)
+    
+    if st.sidebar.button("Add New Parameter to Existing Category"):
+        selected_category = st.sidebar.selectbox("Select Category to Add Parameter", list(categories.keys()))
+        selected_params = st.sidebar.multiselect(f"Select Parameters for {selected_category}", params)
+        
+        if selected_params:
+            for param in selected_params:
+                weight = st.sidebar.slider(f"Weight for {param} in {selected_category}", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+                categories[selected_category]["params"][param] = weight
+                categories[selected_category]["param_weights"].append(weight)
 
     if st.sidebar.button("Calculate Ratings"):
-        category_weights = [category_info["weight"] for category_info in categories.values()]
         if np.isclose(sum(category_weights), 1.0) and all(np.isclose(sum(values["param_weights"]), 1.0) for values in categories.values()):
             # Calculate z-scores and player ratings
             df_zscore = df.copy()
