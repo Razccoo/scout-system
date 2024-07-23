@@ -233,7 +233,7 @@ def load_top_5_leagues(season_selection=None):
             top_5_league_data = pd.concat([top_5_league_data, league_data], ignore_index=True)
     return top_5_league_data
 
-@st.cache_data(ttl=6*60*60)
+@st.cache_data
 # Function to load data for the Top 9 Leagues
 def load_top_9_leagues(season_selection=None):
     top_9_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1", "Süper Lig", "Eredivisie", "Primeira Liga", "Belgian Pro League", "Saudi Pro League"]
@@ -255,6 +255,7 @@ def load_top_9_leagues(season_selection=None):
 def read_csv(link):
     return pd.read_csv(link,encoding='utf-8-sig')
 
+@st.cache_data
 def read_csv2(link):
     df = pd.read_csv(link,encoding='utf-8-sig')
     df['pAdj Tkl+Int per 90'] = df['PAdj Sliding tackles'] + df['PAdj Interceptions']
@@ -317,7 +318,7 @@ def scale_z_to_100(z):
     max_z = z.max()
     return ((z - min_z) / (max_z - min_z)) * 100
 
-@st.cache_data(ttl=6*60*60)
+@st.cache_data
 def load_lg_data(selected_league = None):
     league_data = read_csv(league_info_url)
     leagues = league_data['League'].unique()
@@ -327,7 +328,7 @@ def load_lg_data(selected_league = None):
     else:      
         return leagues
 
-@st.cache_data(ttl=6*60*60)    
+@st.cache_data  
 def load_player_data(selected_league, selected_season):
     full_league_name = f"{selected_league} {selected_season}"
     league_season_data = read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","%C3%A3")}.csv'))
@@ -472,7 +473,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
         fig.text(0.5175, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
     return st.pyplot(fig, dpi=400)
 
-@st.cache_data(ttl=6*60*60)
+@st.cache_data
 def load_all_csv_files():
     base_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/'
     # Load the league info
