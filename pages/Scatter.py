@@ -91,8 +91,8 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
     for index in range(annotated_df.shape[0]):
         player_name = annotated_df['Oyuncu'].iloc[index]
-        x_val = annotated_df[xx].iloc(index)
-        y_val = annotated_df[yy].iloc(index)
+        x_val = annotated_df[xx].iloc[index]
+        y_val = annotated_df[yy].iloc[index]
         texts.append(
             ax2.text(
                 x=x_val, y=y_val,
@@ -135,6 +135,7 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     )
     
     return fig
+
 
 st.title("Oyuncu Dağılım Grafiği Programı")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
