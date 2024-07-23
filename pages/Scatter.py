@@ -15,6 +15,17 @@ import streamlit as st
 from scripts import utils, scatterplot
 from scripts.config import get_params_list, get_column_mapping, position_options
 
+# Function to download and register fonts
+def setup_fonts():
+    github_base_url = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/fonts"
+    temp_dir = "/tmp/fonts"
+    font_files = ["Karla.ttf", "DMSans.ttf"]
+    utils.download_fonts(font_files, github_base_url, temp_dir)
+    plt.rcParams['font.family'] = 'DMSans'
+    plt.rcParams['font.sans-serif'] = 'DMSans'
+
+setup_fonts()
+
 st.set_page_config(page_title="Dagilim Grafikleri")
 
 if 'swap_axes' not in st.session_state:
@@ -34,20 +45,6 @@ def resize_image_to_fit(image, fig_width, fig_height, dpi):
 
 def clean_variable_name(name):
     return name.replace(" / 90", "")
-
-def download_fonts(font_files, github_base_url, temp_dir):
-    os.makedirs(temp_dir, exist_ok=True)
-    for font_file in font_files:
-        font_url = f"{github_base_url}/{font_file}"
-        local_font_path = os.path.join(temp_dir, os.path.basename(font_file))
-        download_file(font_url, local_font_path)
-        fm.fontManager.addfont(local_font_path)
-
-def download_file(url, save_path):
-    response = requests.get(url)
-    response.raise_for_status()
-    with open(save_path, 'wb') as file:
-        file.write(response.content)
 
 def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=False, dpi=400):
     plt.clf()
@@ -94,8 +91,8 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     annotated_df = df_plot[df_plot['annotated']].reset_index(drop=True)
     for index in range(annotated_df.shape[0]):
         player_name = annotated_df['Oyuncu'].iloc[index]
-        x_val = annotated_df[xx].iloc[index]
-        y_val = annotated_df[yy].iloc[index]
+        x_val = annotated_df[xx].iloc(index)
+        y_val = annotated_df[yy].iloc(index)
         texts.append(
             ax2.text(
                 x=x_val, y=y_val,
@@ -138,15 +135,6 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     )
     
     return fig
-
-# Download and load fonts
-github_base_url = "https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/fonts"
-temp_dir = "/tmp/fonts"
-font_files = ["Karla.ttf", "DMSans.ttf"]
-download_fonts(font_files, github_base_url, temp_dir)
-
-plt.style.use("https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/stylesheets/soc_base.mplstyle")
-plt.rcParams['font.family'] = 'Karla'
 
 st.title("Oyuncu Dağılım Grafiği Programı")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
