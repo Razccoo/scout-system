@@ -15,7 +15,7 @@ import matplotlib.patheffects as path_effects
 import matplotlib.font_manager as fm
 from highlight_text import fig_text
 from adjustText import adjust_text
-from config import get_params_list, get_column_mapping, position_options
+from scripts.config import get_params_list, get_column_mapping, position_options
 
 st.set_page_config(page_title="Dagilim Grafikleri", layout="wide")
 
