@@ -7,19 +7,8 @@ from matplotlib.font_manager import FontProperties
 st.title("Player Comparison Radar Chart")
 st.sidebar.header("Player Selection")
 
-<<<<<<< HEAD
-=======
-base_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/'
-league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
-
-# Load and filter data
->>>>>>> f7936bcfe89ce73a33f6fc883c72850574130c2d
 all_leagues_df = utils.load_top_9_leagues()
-<<<<<<< HEAD
 selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
-=======
-selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", schemas.position_options)
->>>>>>> f7936bcfe89ce73a33f6fc883c72850574130c2d
 df = utils.filter_by_position(all_leagues_df, selected_position)
 df = df[df['Minutes played'] >= 900]
 currentseason = df[df['Season'] == '23-24']
