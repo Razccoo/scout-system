@@ -12,8 +12,8 @@ st.title("Potential Player Finder")
 st.sidebar.header("Options")
 
 # GitHub directory for templates
-templates_dir = "templates"
-templates_url = "https://github.com/Razccoo/scout-system/tree/Testing/templates"
+templates_dir = "assets"
+templates_url = "https://github.com/Razccoo/scout-system/tree/Testing/assets"
 
 # Function to save template
 def save_template(template_name, categories):
