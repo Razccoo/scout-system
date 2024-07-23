@@ -1,7 +1,6 @@
 import os
 import requests
 from io import BytesIO
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,17 +12,14 @@ from adjustText import adjust_text
 from mplsoccer import Pitch
 import scipy.stats as stats
 import streamlit as st
+from scripts import utils, scatterplot
+from scripts.config import get_params_list, get_column_mapping, position_options
 
-from scripts import utils, schemas, scatterplot
-
-# Configure the Streamlit page
 st.set_page_config(page_title="Dagilim Grafikleri")
 
-# Initialize session state for swapping axes
 if 'swap_axes' not in st.session_state:
     st.session_state.swap_axes = False
 
-# Utility functions
 def download_image(url):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
@@ -58,7 +54,7 @@ def plot_scatter(df, xx, yy, selected_league, selected_position, selected_season
     plt.style.use('fivethirtyeight')
     
     df = utils.filter_by_position(df, selected_position)
-    df.rename(columns=schemas.column_mapping(), inplace=True)
+    df.rename(columns=get_column_mapping(), inplace=True)
     df_plot = df[(df['Oynadığı dakikalar'] >= df['Oynadığı dakikalar'].median()) & (df[xx] >= df[xx].median())]
     
     df_plot['zscore'] = stats.zscore(df_plot[xx]) * 0.6 + stats.zscore(df_plot[yy]) * 0.4
@@ -152,31 +148,27 @@ download_fonts(font_files, github_base_url, temp_dir)
 plt.style.use("https://raw.githubusercontent.com/Razccoo/scout-system/Testing/assets/stylesheets/soc_base.mplstyle")
 plt.rcParams['font.family'] = 'Karla'
 
-# Streamlit UI
 st.title("Oyuncu Dağılım Grafiği Programı")
 st.subheader("Hazırlayan Alfie (Twitter: @AlfieScouting)")
 st.sidebar.header("Seçenekler")
 
 league_list = list(utils.load_lg_data())
-params = scatterplot.param_list
+params = get_params_list()
 params.sort()
 
 selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(league_list.index("Süper Lig") if "Süper Lig" in league_list else 0))
 selected_season = st.sidebar.selectbox("Sezon Seçiniz", utils.load_lg_data(selected_league))
-selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", schemas.position_options)
+selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
 x_axis = st.sidebar.selectbox("Yatay (X) Ekseni", params)
 y_axis = st.sidebar.selectbox("Dikey (Y) Ekseni", params)
 xx, yy = x_axis, y_axis
 
-# Button to reverse X and Y axis variables
 if st.sidebar.button("Eksenleri Ters Çevir"):
     st.session_state.swap_axes = not st.session_state.swap_axes
 
-# Swap variables based on session state
 if st.session_state.swap_axes:
     xx, yy = yy, xx
 
-# Generate scatter plot
 if st.sidebar.button("Radar Oluştur"):
     df = utils.load_player_data(selected_league, selected_season)
     st.pyplot(plot_scatter(df, xx, yy, selected_league, selected_position, selected_season, use_images=False), dpi=400)
