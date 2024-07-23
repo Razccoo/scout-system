@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from scripts import utils
-from scripts.config import get_params_list, get_column_mapping, position_options
+from scripts.config import get_params_list, get_column_mapping, get_schema_params, position_options
 
 st.set_page_config(page_title="Player Rating Model")
 
@@ -29,18 +29,35 @@ if selected_leagues and selected_seasons:
     
     # Define custom rating model
     st.sidebar.header("Rating Model")
-    params = get_params_list()
-    selected_params = st.sidebar.multiselect("Select Parameters", params)
+    schema = get_schema_params()
+    selected_categories = st.sidebar.multiselect("Select Categories", list(schema.keys()))
     
-    if selected_params:
-        weights = {}
-        for param in selected_params:
-            weight = st.sidebar.slider(f"Weight for {param}", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
-            weights[param] = weight
+    if selected_categories:
+        category_weights = {}
+        parameter_weights = {}
+        for category in selected_categories:
+            category_weight = st.sidebar.slider(f"Weight for {category}", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
+            category_weights[category] = category_weight
+            
+            params = schema[category]
+            selected_params = st.sidebar.multiselect(f"Select Parameters for {category}", params)
+            if selected_params:
+                parameter_weights[category] = {}
+                for param in selected_params:
+                    weight = st.sidebar.slider(f"Weight for {param} in {category}", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
+                    parameter_weights[category][param] = weight
         
-        # Calculate player ratings
-        df['Rating'] = df[selected_params].apply(lambda row: sum(row[param] * weights[param] for param in selected_params), axis=1)
+        # Calculate z-scores and player ratings
+        df_zscore = df.copy()
+        for category, params in parameter_weights.items():
+            for param in params:
+                df_zscore[param] = (df_zscore[param] - df_zscore[param].mean()) / df_zscore[param].std()
+        
+        df['Rating'] = df_zscore.apply(lambda row: sum(row[param] * parameter_weights[category][param] * category_weights[category] for category in parameter_weights for param in parameter_weights[category]), axis=1)
+        
+        # Scale ratings to 100
+        df['Rating'] = (df['Rating'] - df['Rating'].min()) / (df['Rating'].max() - df['Rating'].min()) * 100
         df = df.sort_values(by='Rating', ascending=False)
         
         st.subheader("Filtered Players")
-        st.write(df[['Oyuncu', 'Kulüp', 'Rating'] + selected_params].head(10))
+        st.write(df[['Oyuncu', 'Kulüp', 'Rating'] + [param for category in parameter_weights for param in parameter_weights[category]]].head(10))
