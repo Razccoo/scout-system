@@ -25,7 +25,7 @@ if selected_leagues and selected_seasons:
     df = pd.concat(data)
 
     # Filter by minimum minutes played
-    df = df[df['Oynadığı dakikalar'] >= min_minutes_played]
+    df = df[df['Minutes played'] >= min_minutes_played]
 
     # Rename columns for display
     df.rename(columns=get_column_mapping(), inplace=True)
