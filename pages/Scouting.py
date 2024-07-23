@@ -1,13 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from scripts import schemas, utils, scatterplot
+from scripts import utils, scatterplot
+from scripts.config import get_position_to_schema, get_params_list, get_schema_params, get_label_mapping, get_column_mapping, position_options
 import warnings
 warnings.filterwarnings('ignore')
 
 st.set_page_config(page_title="Futbol Paneli")
-
-crop_url = 'https://crop-circle.imageonline.co/'
 
 st.title("Futbolcu Radar Oluşturma")
 st.subheader("Hazırlayan @AlfieScouting, konsept @BeGriffis\nTüm veriler Wyscout'tan")
@@ -20,7 +19,7 @@ selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(leagu
 selected_season = st.sidebar.selectbox("Sezon Seçiniz", utils.load_lg_data(selected_league))
 
 league_season_data = utils.load_player_data(selected_league, selected_season)
-selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", schemas.position_options)
+selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
 min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
 max_age = st.sidebar.slider("Max Yaş", min_value=16, max_value=45, value=45)
 
@@ -28,10 +27,10 @@ if schema_type:
     st.sidebar.header("Özel Şablon Oluşturma")
     custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
     num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
-    available_metrics = schemas.params_list()
+    available_metrics = get_params_list()
     custom_schema = {}
 
-    for i in range(1, num_groups + 1): # type: ignore
+    for i in range(1, num_groups + 1):
         selected_metrics = st.sidebar.multiselect(f"Grup {i} için metrikleri seçin", available_metrics)
         custom_schema[f"Group {i}"] = selected_metrics
     
@@ -42,8 +41,7 @@ if schema_type:
         st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
 
 filtered_data, top_5_league_data = utils.filter_data(league_season_data, selected_position, min_minutes_played, max_age)
-renamed_data = filtered_data
-renamed_data = renamed_data.rename(columns=schemas.column_mapping())
+renamed_data = filtered_data.rename(columns=get_column_mapping())
 
 st.subheader(f"Data for {selected_league} - {selected_season}")
 st.write(renamed_data)
@@ -51,7 +49,7 @@ st.write(renamed_data)
 st.header("Radar Oluşturma\nRadarı oluşturmak için aşağıya oyuncu adını girin (yukarıdaki tablodan kopyalayıp yapıştırabilirsiniz)")
 player_name = st.text_input("Futbolcu Adı")
 player_age = st.number_input("Futbolcu Yaşı", max_value=45)
-# Schema selector
+
 if schema_type:
     schema_options = ["Default Schema"]
     if "custom_schemas" in st.session_state:
@@ -60,14 +58,13 @@ if schema_type:
 else:
     selected_schema = "Default Schema"
 
-# Image uploader for player's image
+crop_url = 'https://crop-circle.imageonline.co/'
 st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
 player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
 
-# Add option to compare player's metrics
 comparison_options = ["Top 5 Ligi", "Kendi Ligi"]
 selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
-# Load the top 5 leagues data if needed
+
 if selected_comparison == "Top 5 Ligi":
     comparison_data = top_5_league_data
 else:
