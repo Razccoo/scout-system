@@ -12,13 +12,14 @@ st.title("Potential Player Finder")
 st.sidebar.header("Options")
 
 # GitHub directory for templates
-templates_dir = "assets"
-templates_url = "https://github.com/Razccoo/scout-system/tree/Testing/assets"
+templates_dir = "templates"
+templates_url = "https://github.com/Razccoo/scout-system/tree/Testing/templates"
 
 # Function to save template
 def save_template(template_name, categories):
     template = {"categories": categories}
     file_path = os.path.join(templates_dir, f"{template_name}.json")
+    os.makedirs(templates_dir, exist_ok=True)
     with open(file_path, "w") as file:
         json.dump(template, file)
     st.sidebar.success(f"Template '{template_name}' saved successfully.")
@@ -31,6 +32,13 @@ def load_templates():
             if file_name.endswith(".json"):
                 templates.append(file_name[:-5])  # Remove .json extension
     return templates
+
+# Function to load a template
+def load_template(template_name):
+    file_path = os.path.join(templates_dir, f"{template_name}.json")
+    with open(file_path, "r") as file:
+        template = json.load(file)
+    return template["categories"]
 
 # Load Leagues and Seasons
 league_list = list(utils.load_lg_data())
@@ -63,10 +71,8 @@ if selected_leagues and selected_seasons:
     # Option to load a template
     template_option = st.sidebar.selectbox("Load Template", ["None"] + load_templates())
     if template_option != "None":
-        with open(os.path.join(templates_dir, f"{template_option}.json"), "r") as file:
-            template = json.load(file)
-            st.sidebar.success(f"Template '{template_option}' loaded successfully.")
-            categories = template["categories"]
+        categories = load_template(template_option)
+        st.sidebar.success(f"Template '{template_option}' loaded successfully.")
     else:
         category_count = st.sidebar.number_input("Number of Categories", min_value=1, max_value=10, value=1, step=1)
         categories = {}
@@ -92,8 +98,17 @@ if selected_leagues and selected_seasons:
                     "params": param_weight_dict,
                     "param_weights": param_weights
                 }
-    
+
+    # Update the sidebar with the loaded categories and parameters for editing
+    if template_option != "None":
+        for category_name, category_info in categories.items():
+            st.sidebar.subheader(f"{category_name}")
+            category_info["weight"] = st.sidebar.slider(f"Weight for {category_name}", min_value=0.0, max_value=1.0, value=category_info["weight"], step=0.01)
+            for param in category_info["params"]:
+                category_info["params"][param] = st.sidebar.slider(f"Weight for {param} in {category_name}", min_value=0.0, max_value=1.0, value=category_info["params"][param], step=0.01)
+
     if st.sidebar.button("Calculate Ratings"):
+        category_weights = [category_info["weight"] for category_info in categories.values()]
         if np.isclose(sum(category_weights), 1.0) and all(np.isclose(sum(values["param_weights"]), 1.0) for values in categories.values()):
             # Calculate z-scores and player ratings
             df_zscore = df.copy()
