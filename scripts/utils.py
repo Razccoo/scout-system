@@ -215,7 +215,7 @@ def filter_by_position(df, position):
     else:
         return df
 
-@st.cache_data(ttl=6*60*60)
+@st.cache_data
 def load_top_5_leagues(season_selection=None):
     top_5_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]
     if season_selection is None:
