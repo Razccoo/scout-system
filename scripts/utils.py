@@ -11,6 +11,9 @@ from highlight_text import fig_text
 import streamlit as st
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from urllib.request import urlopen
+import os
+import requests
+import matplotlib.font_manager as fm
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -20,6 +23,21 @@ font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apa
                         'RobotoSlab[wght].ttf')
 
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
+
+def download_fonts(font_files, github_base_url, temp_dir):
+    os.makedirs(temp_dir, exist_ok=True)
+    for font_file in font_files:
+        font_url = f"{github_base_url}/{font_file}"
+        local_font_path = os.path.join(temp_dir, os.path.basename(font_file))
+        download_file(font_url, local_font_path)
+        fm.fontManager.addfont(local_font_path)
+
+def download_file(url, save_path):
+    response = requests.get(url)
+    response.raise_for_status()
+    with open(save_path, 'wb') as file:
+        file.write(response.content)
+
 def scout_report(df):
     df["name"] = df["name"].replace(schemas.column_mapping())
     df["name"] = df["name"].replace(schemas.label_mapping())
