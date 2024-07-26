@@ -21,7 +21,7 @@ selected_season = st.sidebar.selectbox("Sezon Seçiniz", utils.load_lg_data(sele
 league_season_data = utils.load_player_data(selected_league, selected_season)
 selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
 min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
-max_age = st.sidebar.slider("Max Yaş", min_value=16, max_value=45, value=45)
+max_age = st.sidebar.slider("Max Yaş", min_value=15, max_value=40, value=36)
 
 if schema_type:
     st.sidebar.header("Özel Şablon Oluşturma")
