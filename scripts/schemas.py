@@ -32,7 +32,7 @@ def params_list():
                 'Karşı Şutlar', 'Karşı Şutlar / 90', 'Gol Yememe', 'Kurtarış Oranı %', 'Karşı Beklenen Gol (xG)', 'Karşı Beklenen Gol (xG) / 90', 'Engellenen Goller',
                 'Engellenen Goller / 90', 'Kaleciye Geri Paslar / 90', 'Çıkışlar / 90', 'Hava Mücadeleleri / 90.1', 'Serbest Vuruşlar / 90', 'Direkt Serbest Vuruşlar / 90',
                 'Direkt Serbest Vuruşlar Hedef %', 'Kornerler / 90', 'Kullanılan Penaltılar', 'Penaltı Dönüşümü %', 'Top Çalma & Kesmeler (pAdj) / 90', '1., 2., 3. Asistler',
-                'xA başına Şut Asisti', 'Kazanılan Hava Mücadeleleri / 90', 'Kartlar / 90', 'Gol Yememe %', 'npxG', 'npxG / 90', 'Şut Başına npxG', 'Penaltısız xGA / 90', 'Dikey Pas %'
+                'Şut Asisti başına xA', 'Kazanılan Hava Mücadeleleri / 90', 'Kartlar / 90', 'Gol Yememe %', 'npxG', 'npxG / 90', 'Şut Başına npxG', 'Penaltısız xGA / 90', 'Dikey Pas %'
                 ]
     return param_list
 
@@ -92,7 +92,7 @@ def label_mapping():
                 "Akıllı Paslar / 90": "Akıllı\nPaslar",
                 "İkinci Asist / 90": "İkinci\nAsist",
                 "Asist / 90": "Asist",
-                "xA başına Şut Asisti": "xA başına\nŞut Asisti",
+                "Şut Asisti başına xA": "Şut Asisti\nbaşına xA",
                 "Beklenen Asist (xA) / 90": "Beklenen\nAsist (xA)",
                 "Şut Asistleri / 90": "Şut\nAsist",
                 "Başarılı Orta %": "Baş.\nOrta %",
@@ -161,7 +161,7 @@ def column_mapping():
         "Aerial duels per 90.1": "Hava Mücadeleleri / 90.1", "Free kicks per 90": "Serbest Vuruşlar / 90", "Direct free kicks per 90": "Direkt Serbest Vuruşlar / 90",
         "Direct free kicks on target, %": "Direkt Serbest Vuruşlar Hedef %", "Corners per 90": "Kornerler / 90", "Penalties taken": "Kullanılan Penaltılar",
         "Penalty conversion, %": "Penaltı Dönüşümü %", "pAdj Tkl+Int per 90": "Top Çalma & Kesmeler (pAdj) / 90", "1st, 2nd, 3rd assists": "1., 2., 3. Asistler",
-        "xA per Shot Assist": "xA başına Şut Asisti", "Aerial duels won per 90": "Kazanılan Hava Mücadeleleri / 90", "Cards per 90": "Kartlar / 90",
+        "xA per Shot Assist": "Şut Asisti başına xA", "Aerial duels won per 90": "Kazanılan Hava Mücadeleleri / 90", "Cards per 90": "Kartlar / 90",
         "Clean sheets, %": "Gol Yememe %", "npxG": "npxG", "npxG per 90": "npxG / 90", "npxG per shot": "Şut Başına npxG", "npxGA per 90":"Penaltısız xGA / 90", "Vertical Pass %": "Dikey Pas %"
     }
     return column_mapping
