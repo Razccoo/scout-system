@@ -6,6 +6,8 @@ import os
 from scripts import utils
 from scripts.config import get_params_list, get_column_mapping, position_options
 
+st.set_page_config(page_title="Player Rating Model")
+
 # Add custom CSS to hide the GitHub icon
 hide_github_icon = """
 #GithubIcon {
@@ -13,8 +15,6 @@ hide_github_icon = """
 }
 """
 st.markdown(hide_github_icon, unsafe_allow_html=True)
-
-st.set_page_config(page_title="Player Rating Model")
 
 st.title("Potential Player Finder")
 st.sidebar.header("Options")
