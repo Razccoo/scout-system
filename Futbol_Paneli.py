@@ -5,6 +5,14 @@ from scripts import schemas, utils, scatterplot
 import warnings
 warnings.filterwarnings('ignore')
 
+# Add custom CSS to hide the GitHub icon
+hide_github_icon = """
+#MainMenu {
+  visibility: hidden;
+}
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 st.set_page_config(page_title="Futbol Paneli", layout="wide")
 
 crop_url = 'https://crop-circle.imageonline.co/'
