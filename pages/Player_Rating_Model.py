@@ -8,19 +8,6 @@ from scripts.config import get_params_list, get_column_mapping, position_options
 
 st.set_page_config(page_title="Player Rating Model")
 
-st.markdown(
-    """
-    <style>
-    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
-    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
-    .viewerBadge_text__1JaDK {
-        display: none;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 st.title("Potential Player Finder")
 st.sidebar.header("Options")
 
