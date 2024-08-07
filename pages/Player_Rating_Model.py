@@ -10,7 +10,7 @@ st.set_page_config(page_title="Player Rating Model")
 
 # Add custom CSS to hide the GitHub icon
 hide_github_icon = """
-#GithubIcon {
+#MainMenu {
   visibility: hidden;
 }
 """
