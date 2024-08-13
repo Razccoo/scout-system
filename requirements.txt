@@ -10,3 +10,4 @@ plotly
 highlight_text
 pillow
 adjustText
+socceraction

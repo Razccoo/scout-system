@@ -91,8 +91,7 @@ def process_event_data(data):
             "Player Name": event.get('playerName', 'N/A'),
             "Event Type": event.get('type', {}).get('displayName', 'N/A'),
             "Outcome": event.get('outcomeType', {}).get('displayName', 'N/A'),
-            "Team": 'Home' if event.get('teamId') == data.get('home', {}).get('teamId') else 'Away',
-            "Description": event.get('text', 'N/A')
+            "Team": 'Home' if event.get('teamId') == data.get('home', {}).get('teamId') else 'Away'
         }
         event_details.append(event_info)
     
