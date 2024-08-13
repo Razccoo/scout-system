@@ -36,21 +36,21 @@ if selected_competition_id:
             )
 
             # Load and parse data for the selected game
-            match_data = api.load()
+            match_data = api.events(selected_game_id)
 
             if match_data:
-                match_info = match_data['match']
-                events = match_data['events']
+                # match_info = match_data['match']
+                # events = match_data['events']
 
-                # Display match information
-                st.header('Match Information')
-                match_info_df = pd.DataFrame([match_info])
-                st.dataframe(match_info_df)
+                # # Display match information
+                # st.header('Match Information')
+                # match_info_df = pd.DataFrame([match_info])
+                # st.dataframe(match_info_df)
 
                 # Display event data
                 st.header('Match Events')
-                events_df = pd.DataFrame(events)
-                st.dataframe(events_df)
+                # events_df = pd.DataFrame(events)
+                st.dataframe(match_data)
             else:
                 st.write("No data found for the selected game.")
 else:
