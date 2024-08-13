@@ -14,18 +14,57 @@ def load_json(file):
 
 # Function to process JSON data and extract relevant information
 def process_match_data(data):
-    # Example processing: extract match information
+    # Extract basic match information
     match_info = {
         "Match ID": data.get('matchId', 'N/A'),
         "Date": data.get('date', 'N/A'),
         "Home Team": data.get('home', {}).get('name', 'N/A'),
         "Away Team": data.get('away', {}).get('name', 'N/A'),
-        "Score": f"{data.get('home', {}).get('score', 'N/A')} - {data.get('away', {}).get('score', 'N/A')}",
+        "Home Score": data.get('home', {}).get('score', 'N/A'),
+        "Away Score": data.get('away', {}).get('score', 'N/A'),
+        "Attendance": data.get('attendance', 'N/A'),
     }
-    
-    # Convert to DataFrame for display
+
+    # Convert match info to DataFrame for display
     match_info_df = pd.DataFrame.from_dict([match_info])
-    return match_info_df
+
+    # Extract player statistics for home and away teams
+    home_players = data.get('home', {}).get('players', [])
+    away_players = data.get('away', {}).get('players', [])
+
+    home_player_stats = []
+    for player in home_players:
+        player_info = {
+            "Name": player.get('name'),
+            "Position": player.get('position'),
+            "Shirt No": player.get('shirtNo'),
+            "Age": player.get('age'),
+            "Height": player.get('height'),
+            "Weight": player.get('weight'),
+            "Is First Eleven": player.get('isFirstEleven'),
+            "Is Man of the Match": player.get('isManOfTheMatch')
+        }
+        home_player_stats.append(player_info)
+
+    away_player_stats = []
+    for player in away_players:
+        player_info = {
+            "Name": player.get('name'),
+            "Position": player.get('position'),
+            "Shirt No": player.get('shirtNo'),
+            "Age": player.get('age'),
+            "Height": player.get('height'),
+            "Weight": player.get('weight'),
+            "Is First Eleven": player.get('isFirstEleven'),
+            "Is Man of the Match": player.get('isManOfTheMatch')
+        }
+        away_player_stats.append(player_info)
+
+    # Convert player stats to DataFrames
+    home_player_stats_df = pd.DataFrame(home_player_stats)
+    away_player_stats_df = pd.DataFrame(away_player_stats)
+
+    return match_info_df, home_player_stats_df, away_player_stats_df
 
 # App title
 st.title('WhoScored Match Data Viewer')
@@ -48,11 +87,19 @@ if selected_file:
     
     # Display basic match information
     st.header('Match Information')
-    match_info_df = process_match_data(data)
+    match_info_df, home_player_stats_df, away_player_stats_df = process_match_data(data)
     st.dataframe(match_info_df)
 
+    # Display player statistics for home team
+    st.header('Home Team Player Statistics')
+    st.dataframe(home_player_stats_df)
+
+    # Display player statistics for away team
+    st.header('Away Team Player Statistics')
+    st.dataframe(away_player_stats_df)
+
     # Add more sections here for detailed data exploration
-    # For example, team stats, player stats, etc.
+    # For example, specific player stats, events, etc.
 
 else:
     st.write('Please select a JSON file to view the match data.')
