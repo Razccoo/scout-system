@@ -27,9 +27,6 @@ def process_match_data(data):
         "Full-Time Score": data.get('ftScore', 'N/A'),
         "Attendance": data.get('attendance', 'N/A'),
     }
-    
-    # Convert match info to DataFrame for display
-    match_info_df = pd.DataFrame.from_dict([match_info])
 
     # Extract player statistics for home and away teams
     home_players = data.get('home', {}).get('players', [])
@@ -45,7 +42,12 @@ def process_match_data(data):
             "Height": player.get('height'),
             "Weight": player.get('weight'),
             "Is First Eleven": player.get('isFirstEleven'),
-            "Is Man of the Match": player.get('isManOfTheMatch')
+            "Is Man of the Match": player.get('isManOfTheMatch'),
+            "Passes Accurate": sum(player.get('stats', {}).get('passesAccurate', {}).values()),
+            "Passes Total": sum(player.get('stats', {}).get('passesTotal', {}).values()),
+            "Shots On Target": sum(player.get('stats', {}).get('shotsOnTarget', {}).values()),
+            "Shots Total": sum(player.get('stats', {}).get('shotsTotal', {}).values()),
+            "Tackles Total": sum(player.get('stats', {}).get('tacklesTotal', {}).values()),
         }
         home_player_stats.append(player_info)
 
@@ -59,7 +61,12 @@ def process_match_data(data):
             "Height": player.get('height'),
             "Weight": player.get('weight'),
             "Is First Eleven": player.get('isFirstEleven'),
-            "Is Man of the Match": player.get('isManOfTheMatch')
+            "Is Man of the Match": player.get('isManOfTheMatch'),
+            "Passes Accurate": sum(player.get('stats', {}).get('passesAccurate', {}).values()),
+            "Passes Total": sum(player.get('stats', {}).get('passesTotal', {}).values()),
+            "Shots On Target": sum(player.get('stats', {}).get('shotsOnTarget', {}).values()),
+            "Shots Total": sum(player.get('stats', {}).get('shotsTotal', {}).values()),
+            "Tackles Total": sum(player.get('stats', {}).get('tacklesTotal', {}).values()),
         }
         away_player_stats.append(player_info)
 
@@ -68,6 +75,25 @@ def process_match_data(data):
     away_player_stats_df = pd.DataFrame(away_player_stats)
 
     return match_info_df, home_player_stats_df, away_player_stats_df
+
+# Function to extract and process event data
+def process_event_data(data):
+    events = data.get('events', [])
+    
+    event_details = []
+    for event in events:
+        event_info = {
+            "Minute": event.get('minute', 'N/A'),
+            "Player Name": event.get('playerName', 'N/A'),
+            "Event Type": event.get('type', {}).get('displayName', 'N/A'),
+            "Outcome": event.get('outcomeType', {}).get('displayName', 'N/A'),
+            "Team": 'Home' if event.get('teamId') == data.get('home', {}).get('teamId') else 'Away',
+            "Description": event.get('text', 'N/A')
+        }
+        event_details.append(event_info)
+    
+    event_details_df = pd.DataFrame(event_details)
+    return event_details_df
 
 # App title
 st.title('WhoScored Match Data Viewer')
@@ -101,8 +127,10 @@ if selected_file:
     st.header('Away Team Player Statistics')
     st.dataframe(away_player_stats_df)
 
-    # Add more sections here for detailed data exploration
-    # For example, specific player stats, events, etc.
+    # Display event data
+    st.header('Match Events')
+    event_details_df = process_event_data(data)
+    st.dataframe(event_details_df)
 
 else:
     st.write('Please select a JSON file to view the match data.')
