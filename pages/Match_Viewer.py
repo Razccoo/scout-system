@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 # Directory containing the JSON files
-json_directory = 'events/TUR - Super Lig'
+json_directory = 'events/TUR - Super Lig/2324'
 
 # Function to load JSON data
 def load_json(file):
