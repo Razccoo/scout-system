@@ -16,12 +16,11 @@ def load_json(file):
 def process_match_data(data):
     # Extract basic match information
     match_info = {
-        "Match ID": data.get('matchId', 'N/A'),
-        "Date": data.get('date', 'N/A'),
+        "Match Date": data.get('startDate', 'N/A'),
         "Home Team": data.get('home', {}).get('name', 'N/A'),
         "Away Team": data.get('away', {}).get('name', 'N/A'),
-        "Home Score": data.get('home', {}).get('score', 'N/A'),
-        "Away Score": data.get('away', {}).get('score', 'N/A'),
+        "Half-Time Score": data.get('htScore', 'N/A'),
+        "Full-Time Score": data.get('ftScore', 'N/A'),
         "Attendance": data.get('attendance', 'N/A'),
     }
 
