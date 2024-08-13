@@ -50,10 +50,6 @@ if selected_file:
     st.header('Match Information')
     match_info_df = process_match_data(data)
     st.dataframe(match_info_df)
-    
-    # Expand to show raw JSON data
-    with st.expander("Show Raw JSON Data"):
-        st.json(data)
 
     # Add more sections here for detailed data exploration
     # For example, team stats, player stats, etc.
