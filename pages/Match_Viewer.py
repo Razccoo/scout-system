@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import json
 import os
+from datetime import datetime
 
 # Directory containing the JSON files
 json_directory = 'events/TUR - Super Lig'
@@ -14,16 +15,19 @@ def load_json(file):
 
 # Function to process JSON data and extract relevant information
 def process_match_data(data):
-    # Extract basic match information
+    # Parse and format the match date
+    raw_date = data.get('startDate', 'N/A')
+    match_date = datetime.strptime(raw_date, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d') if raw_date != 'N/A' else 'N/A'
+
     match_info = {
-        "Match Date": data.get('startDate', 'N/A'),
+        "Match Date": match_date,
         "Home Team": data.get('home', {}).get('name', 'N/A'),
         "Away Team": data.get('away', {}).get('name', 'N/A'),
         "Half-Time Score": data.get('htScore', 'N/A'),
         "Full-Time Score": data.get('ftScore', 'N/A'),
         "Attendance": data.get('attendance', 'N/A'),
     }
-
+    
     # Convert match info to DataFrame for display
     match_info_df = pd.DataFrame.from_dict([match_info])
 
