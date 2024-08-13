@@ -79,26 +79,42 @@ def process_match_data(data):
 
     return match_info_df, home_player_stats_df, away_player_stats_df
 
-
 # Function to extract and process event data
-def process_event_data(data):
+def extract_event_data(data, game_id):
     events = data.get('events', [])
-    
-    event_details = []
+
+    event_data = []
     for event in events:
         event_info = {
-            "Minute": event.get('minute', 'N/A'),
-            "Player Name": event.get('playerName', 'N/A'),
-            "Event Type": event.get('type', {}).get('displayName', 'N/A'),
-            "Outcome": event.get('outcomeType', {}).get('displayName', 'N/A'),
-            "Team": 'Home' if event.get('teamId') == data.get('home', {}).get('teamId') else 'Away'
+            "game_id": game_id,
+            "event_id": event.get('id', 'N/A'),
+            "period_id": event.get('period', {}).get('value', 'N/A'),
+            "team_id": event.get('teamId', 'N/A'),
+            "team_name": 'Home' if event.get('teamId') == data.get('home', {}).get('teamId') else 'Away',
+            "player_id": event.get('playerId', 'N/A'),
+            "player_name": event.get('playerName', 'N/A'),
+            "type_id": event.get('type', {}).get('value', 'N/A'),
+            "timestamp": event.get('minuteInfo', {}).get('minuteString', 'N/A'),
+            "minute": event.get('minute', 'N/A'),
+            "second": event.get('second', 'N/A'),
+            "outcome": event.get('outcomeType', {}).get('displayName', 'N/A'),
+            "start_x": event.get('x', 'N/A'),
+            "start_y": event.get('y', 'N/A'),
+            "end_x": event.get('endX', 'N/A'),
+            "end_y": event.get('endY', 'N/A'),
+            "qualifiers": [qualifier.get('type', {}).get('displayName') for qualifier in event.get('qualifiers', [])],
+            "touch": event.get('isTouch', False),
+            "goal": event.get('isGoal', False),
+            "shot": event.get('isShot', False),
+            "type_name": event.get('type', {}).get('displayName', 'N/A')
         }
-        event_details.append(event_info)
-    
-    event_details_df = pd.DataFrame(event_details)
-    return event_details_df
+        event_data.append(event_info)
 
-# App title
+    # Convert the list of dictionaries into a DataFrame
+    event_df = pd.DataFrame(event_data)
+    return event_df
+
+# Streamlit App
 st.title('WhoScored Match Data Viewer')
 
 # Sidebar for file selection
@@ -115,6 +131,7 @@ selected_file = st.sidebar.selectbox('Select a JSON file', json_files)
 # Load and process the selected JSON file
 if selected_file:
     file_path = os.path.join(json_directory, selected_file)
+    game_id = os.path.splitext(selected_file)[0]  # Use filename without extension as game_id
     data = load_json(file_path)
     
     # Display basic match information
@@ -130,10 +147,10 @@ if selected_file:
     st.header('Away Team Player Statistics')
     st.dataframe(away_player_stats_df)
 
-    # Display event data
-    st.header('Match Events')
-    event_details_df = process_event_data(data)
-    st.dataframe(event_details_df)
+    # Extract and display event data
+    st.header('Match Events DataFrame')
+    event_df = extract_event_data(data, game_id)
+    st.dataframe(event_df)
 
 else:
     st.write('Please select a JSON file to view the match data.')
