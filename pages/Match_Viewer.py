@@ -28,6 +28,9 @@ def process_match_data(data):
         "Attendance": data.get('attendance', 'N/A'),
     }
 
+    # Convert match info to DataFrame for display
+    match_info_df = pd.DataFrame([match_info])
+
     # Extract player statistics for home and away teams
     home_players = data.get('home', {}).get('players', [])
     away_players = data.get('away', {}).get('players', [])
@@ -75,6 +78,7 @@ def process_match_data(data):
     away_player_stats_df = pd.DataFrame(away_player_stats)
 
     return match_info_df, home_player_stats_df, away_player_stats_df
+
 
 # Function to extract and process event data
 def process_event_data(data):
