@@ -11,3 +11,4 @@ highlight_text
 pillow
 adjustText
 socceraction
+pandera
