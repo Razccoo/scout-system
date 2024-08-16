@@ -11,7 +11,8 @@ st.set_page_config(page_title="Player Similarity Finder")
 @st.cache_data
 def load_data(df):
     
-    df = df[['Oyuncu', 'Yaş', 'Ana Pozisyon', 'Oynadığı dakikalar', 'Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 'İkili Mücadeleler / 90', 'Kazanılan İkili Mücadeleler %']]
+    df = df[['Player', 'Age', 'Main Position', 'Minutes played', 'Goals', 'xG', 'Assists', 'xA', 'Duels per 90', 'Duels won, %']]
+    # df = df[['Oyuncu', 'Yaş', 'Ana Pozisyon', 'Oynadığı dakikalar', 'Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 'İkili Mücadeleler / 90', 'Kazanılan İkili Mücadeleler %']]
     # Replace NaN values with 0
     df.fillna(0, inplace=True)
 
