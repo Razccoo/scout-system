@@ -63,7 +63,7 @@ def get_similar_players(df, similarity_df, player_name, top_n=10):
     similar_players_df = pd.DataFrame(most_similar_players).join(df.set_index('Player')[['Main Position', 'League']])
 
     # Rename the columns
-    similar_players_df.columns = ['Similarity', 'Main Position']
+    similar_players_df.columns = ['Similarity', 'Main Position', 'League']
 
     return similar_players_df
 
