@@ -71,7 +71,7 @@ st.title("Player Similarity Finder")
 
 league_list = list(utils.load_lg_data())
 selected_leagues = st.sidebar.multiselect("Lig Seçiniz", league_list)
-selected_season = st.sidebar.selectbox("Sezon Seçiniz", utils.load_lg_data(selected_leagues))
+# selected_season = st.sidebar.selectbox("Sezon Seçiniz", utils.load_lg_data(selected_leagues))
 
 # Function to load data for multiple leagues
 def load_multiple_leagues(selected_leagues, selected_season):
@@ -83,7 +83,7 @@ def load_multiple_leagues(selected_leagues, selected_season):
 
 # Load the data for the selected leagues and season
 if selected_leagues:
-    league_season_data = load_multiple_leagues(selected_leagues, selected_season)
+    league_season_data = load_multiple_leagues(selected_leagues, "23-24")
     
 selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
 min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
