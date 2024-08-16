@@ -46,7 +46,7 @@ def load_data(dataframe):
 
     # Convert the numpy array to a DataFrame for easier handling
     similarity_df = pd.DataFrame(similarity_matrix, index=df['Player'], columns=df['Player'])
-    similarity_df = pd.concat(similarity_df, dataframe[['Player', 'League']], how='left', on='Player')
+    similarity_df = pd.merge(similarity_df, dataframe[['Player', 'League']], how='left', on='Player')
     return df, similarity_df
 
 def get_similar_players(df, similarity_df, player_name, top_n=10):
