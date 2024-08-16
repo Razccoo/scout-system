@@ -9,9 +9,9 @@ from scripts.config import get_position_to_schema, get_params_list, get_schema_p
 st.set_page_config(page_title="Player Similarity Finder")
 
 @st.cache_data
-def load_data(df):
+def load_data(dataframe):
     
-    df = df[['Player', 'Age', 'Main Position', 'Minutes played', 'Goals', 'xG', 'Assists', 'xA', 'Duels per 90', 'Duels won, %']]
+    df = dataframe[['Player', 'Age', 'Main Position', 'Minutes played', 'Goals', 'xG', 'Assists', 'xA', 'Duels per 90', 'Duels won, %']]
     # df = df[['Oyuncu', 'Yaş', 'Ana Pozisyon', 'Oynadığı dakikalar', 'Goller', 'Beklenen Gol (xG)', 'Asistler', 'Beklenen Asist (xA)', 'İkili Mücadeleler / 90', 'Kazanılan İkili Mücadeleler %']]
     # Replace NaN values with 0
     df.fillna(0, inplace=True)
@@ -45,7 +45,7 @@ def load_data(df):
     # df['Name'] = df['Name'].str.strip()
 
     # Convert the numpy array to a DataFrame for easier handling
-    similarity_df = pd.DataFrame(similarity_matrix, index=df['Player'], columns=df['Player'])
+    similarity_df = pd.DataFrame(similarity_matrix, index=df['Player'], columns=df['Player']).join(dataframe.set_index('Player')[['League']])
 
     return df, similarity_df
 
@@ -60,7 +60,7 @@ def get_similar_players(df, similarity_df, player_name, top_n=10):
     most_similar_players = most_similar_players[most_similar_players.index != player_name]
 
     # Create a DataFrame with names and positions of the similar players
-    similar_players_df = pd.DataFrame(most_similar_players).join(df.set_index('Player')[['Main Position']])
+    similar_players_df = pd.DataFrame(most_similar_players).join(df.set_index('Player')[['Main Position', 'League']])
 
     # Rename the columns
     similar_players_df.columns = ['Similarity', 'Main Position']
