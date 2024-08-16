@@ -97,7 +97,7 @@ st.write(filtered_data)
 # # Load the data
 df, similarity_df = load_data(filtered_data)
 
-player_name = st.selectbox("Futbolcu Adı", df['Oyuncu'])
+player_name = st.selectbox("Futbolcu Adı", df['Player'])
 # Select number of similar players to display
 top_n = st.slider('Select number of similar players to display', min_value=1, max_value=50, value=10)
 
