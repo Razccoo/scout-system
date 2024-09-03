@@ -7,20 +7,17 @@ from PIL import Image
 import textwrap
 import matplotlib.pyplot as plt
 from highlight_text import fig_text
-import streamlit as st
 from scipy.stats import percentileofscore
 
 import warnings
 warnings.filterwarnings('ignore')
 
-st.set_page_config(page_title="Futbol Paneli")
+league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 
-font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
-                        'src/hinted/Roboto-Regular.ttf')
-font_italic = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
-                        'src/hinted/Roboto-Italic.ttf')
-font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apache/robotoslab/'
-                        'RobotoSlab[wght].ttf')
+# Constants and Configurations
+FONT_NORMAL = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/src/hinted/Roboto-Regular.ttf')
+FONT_ITALIC = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/src/hinted/Roboto-Italic.ttf')
+FONT_BOLD = FontManager('https://raw.githubusercontent.com/google/fonts/main/apache/robotoslab/RobotoSlab[wght].ttf')
 
 # Abbreviated constants for English column names
 COL_PLR = "Player"
@@ -439,14 +436,54 @@ def get_params_list():
         TR_GOL_YEMEME_PERCENT, TR_NPXG, TR_NPXG_90, TR_SUT_NPXG, TR_DIKEY_PAS_PERCENT
     ]
 
-st.title("Futbolcu Radar Oluşturma")
-st.subheader("Hazırlayan @AlfieScouting, konsept @BeGriffis\nTüm veriler Wyscout'tan")
-st.sidebar.header("Seçenekler")
+def pos_mapping(): 
+    pos_mapping = {
+    "Forvetler (OOS, K, SF)": "Forvet Oyuncularıyla",
+    "Forvetler ve Kanatlar": "Forvet ve Kanat Oyuncularıyla",
+    "Santrforsuz Forvetler (OOS, K)": "OOS ve Kanat Oyuncularıyla",
+    "Kanatlar": "Kanat Oyuncularıyla",
+    "Orta Saha (DOS, OS, OOS)": "Orta Saha Oyuncularıyla",
+    "DOS Olmayan Orta Saha (OS, OOS)": "OS & OOS Oyuncularıyla",
+    "OOS Olmayan Orta Saha (DOS, OS)": "DOS & OS Oyuncularıyla",
+    "Bekler (FB/KB)": "Bek Oyuncularıyla",
+    "Defansif Oyuncular (STP, FB/KB, DOS)": "Defansif Oyuncularıyla",
+    "Stoper & Defansif Orta Saha": "Stoper & DOS Oyuncularıyla",
+    "Santrforlar": "Santrafor Oyuncularıyla",
+    "Stoperler": "Stoper Oyuncularıyla"
+            }
+    return pos_mapping
 
-schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
-
-league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
-
+def get_schema_params():
+    return {
+        'attacking': {
+            'Defending': ['Aerial duels won, %', 'pAdj Tkl+Int per 90', 'Successful defensive actions per 90'],
+            'Ball Progression': ['Progressive runs per 90', 'Progressive passes per 90', 'Accelerations per 90', 'Successful dribbles, %'],
+            'Attacking': ['Touches in box per 90', 'Shots per 90', 'npxG per shot', 'Goal conversion, %', 'Non-penalty goals per 90', 'npxG per 90'],
+            'Chance Creation': ['Smart passes per 90', 'Second assists per 90', 'Assists per 90', 'xA per Shot Assist', 'xA per 90', 'Shot assists per 90'],
+            'Accuracy': ['Accurate crosses, %', 'Accurate smart passes, %', 'Accurate long passes, %', 'Accurate short / medium passes, %']
+        },
+        'defensive': {
+            'Defending': ['Successful defensive actions per 90', 'PAdj Sliding tackles', 'Defensive duels won, %', 'Shots blocked per 90', 'PAdj Interceptions', 'Aerial duels won per 90', 'Aerial duels won, %'],
+            'Attacking': ['Accurate long passes, %', 'Crosses per 90', 'Accurate crosses, %', '1st, 2nd, 3rd assists', 'Progressive passes per 90', 'Progressive runs per 90', 'Successful dribbles, %', 'Accelerations per 90', 'xA per 90'],
+            'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
+        },
+        'cb': {
+            'Defending': ['Successful defensive actions per 90', 'PAdj Sliding tackles', 'Defensive duels won, %', 'Shots blocked per 90', 'PAdj Interceptions', 'Aerial duels won per 90', 'Aerial duels won, %'],
+            'Attacking': ['Accurate long passes, %', '1st, 2nd, 3rd assists', 'Progressive passes per 90', 'Progressive runs per 90', 'Successful dribbles, %', 'Accelerations per 90', 'xA per 90'],
+            'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
+        },
+        'general': {
+            'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']
+        },
+        'strikers': {
+            'General': ['npxG per 90', 'Non-penalty goals per 90', 'Goal conversion, %', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Dribbles per 90', 'Touches in box per 90', 'Duels won, %', 'Aerial duels won, %', 'Received passes per 90']
+        },
+        'midfielders': {
+            'General': ['npxGA per 90', 'Successful defensive actions per 90', 'PAdj Interceptions', 'Duels per 90', 'Duels won, %', 'Progressive runs per 90', 'Dribbles per 90', 'Forward passes per 90', 'Through passes per 90', 'Key passes per 90', 'Progressive passes per 90', 'Passes to final third per 90']
+        },
+        'fullbacks': {'General': ['Successful defensive actions per 90', 'PAdj Interceptions', 'Duels per 90', 'Duels won, %', 'Progressive runs per 90', 'Dribbles per 90', 'Key passes per 90', 'Crosses per 90', 'Accurate short / medium passes, %', 'xA per 90', 'Aerial duels won, %']}
+    }
+    
 @st.cache_data
 def load_lg_data(selected_league=None):
     league_data = utils.read_csv(league_info_url)
@@ -461,10 +498,6 @@ def load_lg_data(selected_league=None):
     else:
         return leagues
     
-league_list = list(load_lg_data())
-selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(league_list.index("Süper Lig") if "Süper Lig" in league_list else 0))
-selected_season = st.sidebar.selectbox("Sezon Seçiniz", load_lg_data(selected_league))
-
 @st.cache_data  
 def load_season_data(selected_league, selected_season):
     full_league_name = f"{selected_league} {selected_season}"
@@ -473,53 +506,6 @@ def load_season_data(selected_league, selected_season):
     league_season_data['Season'] = f'{selected_season}'
     league_season_data = league_season_data[list(get_column_mapping().keys())]
     return league_season_data
-
-position_options = [
-    "Forvetler (OOS, K, SF)", "Forvetler ve Kanatlar", "Santrforsuz Forvetler (OOS, K)", "Kanatlar",
-    "Orta Saha (DOS, OS, OOS)", "DOS Olmayan Orta Saha (OS, OOS)", "OOS Olmayan Orta Saha (DOS, OS)",
-    "Bekler (FB/KB)", "Defansif Oyuncular (STP, FB/KB, DOS)", "Stoper & Defansif Orta Saha",
-    "Santrforlar", "Stoperler"
-]
-
-league_season_data = load_season_data(selected_league, selected_season)
-selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
-min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
-max_age = st.sidebar.slider("Max Yaş", min_value=15, max_value=40, value=36)
-
-if schema_type:
-    st.sidebar.header("Özel Şablon Oluşturma")
-    custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
-    num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
-    available_metrics = get_params_list()
-    custom_schema = {}
-
-    for i in range(1, num_groups + 1):
-        selected_metrics = st.sidebar.multiselect(f"Grup {i} için metrikleri seçin", available_metrics)
-        custom_schema[f"Group {i}"] = selected_metrics
-    
-    if st.sidebar.button("Özel Şablonu Kaydet"):
-        if "custom_schemas" not in st.session_state:
-            st.session_state.custom_schemas = {}
-        st.session_state.custom_schemas[custom_schema_name] = custom_schema
-        st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
-        
-@st.cache_data
-def load_top_5_leagues(season_selection=None):
-    top_5_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]
-    if season_selection is None:
-        season_selection = ["22-23", "23-24"]  # Default seasons if none are provided
-    
-
-    top_5_league_data = pd.DataFrame()
-    for league in top_5_leagues:
-        for season in season_selection:
-            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o").replace("ã", "a")
-            league_data = utils.read_csv2(f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league_file}')
-            league_data['League'] = league
-            league_data['Season'] = season
-            league_data = league_data[list(get_column_mapping().keys())]
-            top_5_league_data = pd.concat([top_5_league_data, league_data], ignore_index=True)
-    return top_5_league_data
 
 def filter_by_position(df, position):
     fw = ["CF", "RW", "LW", "AMF"]
@@ -572,6 +558,24 @@ def filter_by_position(df, position):
     else:
         return df
 
+@st.cache_data
+def load_top_5_leagues(season_selection=None):
+    top_5_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]
+    if season_selection is None:
+        season_selection = ["22-23", "23-24"]  # Default seasons if none are provided
+    
+
+    top_5_league_data = pd.DataFrame()
+    for league in top_5_leagues:
+        for season in season_selection:
+            league_file = f"{league} {season}.csv".replace(" ", "%20").replace("ü", "u").replace("ó", "o").replace("ö", "o").replace("ã", "a")
+            league_data = utils.read_csv2(f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{league_file}')
+            league_data['League'] = league
+            league_data['Season'] = season
+            league_data = league_data[list(get_column_mapping().keys())]
+            top_5_league_data = pd.concat([top_5_league_data, league_data], ignore_index=True)
+    return top_5_league_data
+
 def filter_data(league_season_data, selected_position, min_minutes_played, max_age):
     top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
     top_5_league_data = top_5_league_data[
@@ -585,39 +589,6 @@ def filter_data(league_season_data, selected_position, min_minutes_played, max_a
         (filtered_data['Age'] <= max_age)
     ].reset_index(drop=True)
     return filtered_data, top_5_league_data
-
-filtered_data, top_5_league_data = filter_data(league_season_data, selected_position, min_minutes_played, max_age)
-top_5_league_data = top_5_league_data[top_5_league_data['Season']==selected_season]
-renamed_data = filtered_data.rename(columns=get_column_mapping())
-
-st.subheader(f"Data for {selected_league} - {selected_season}")
-st.write(renamed_data)
-
-st.header("Radar Oluşturma\nRadarı oluşturmak için aşağıya oyuncu adını girin (yukarıdaki tablodan kopyalayıp yapıştırabilirsiniz)")
-
-player_list = list(filtered_data['Player'])
-player_name = st.selectbox("Futbolcu Adı", player_list)
-player_age = st.number_input("Futbolcu Yaşı", max_value=45)
-
-if schema_type:
-    schema_options = ["Default Schema"]
-    if "custom_schemas" in st.session_state:
-        schema_options += list(st.session_state.custom_schemas.keys())
-    selected_schema = st.selectbox("Şablon Seçin", schema_options)
-else:
-    selected_schema = "Default Schema"
-
-crop_url = 'https://crop-circle.imageonline.co/'
-st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
-player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
-
-comparison_options = ["Top 5 Ligi", "Kendi Ligi"]
-selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
-
-if selected_comparison == "Top 5 Ligi":
-    comparison_data = top_5_league_data
-else:
-    comparison_data = filtered_data
 
 def rank_column_percentile(df, column_name):
     """
@@ -830,23 +801,6 @@ def add_labels(angles, values, labels, offset, ax, text_colors):
             color=text_col,
         )
 
-def pos_mapping(): 
-    pos_mapping = {
-    "Forvetler (OOS, K, SF)": "Forvet Oyuncularıyla",
-    "Forvetler ve Kanatlar": "Forvet ve Kanat Oyuncularıyla",
-    "Santrforsuz Forvetler (OOS, K)": "OOS ve Kanat Oyuncularıyla",
-    "Kanatlar": "Kanat Oyuncularıyla",
-    "Orta Saha (DOS, OS, OOS)": "Orta Saha Oyuncularıyla",
-    "DOS Olmayan Orta Saha (OS, OOS)": "OS & OOS Oyuncularıyla",
-    "OOS Olmayan Orta Saha (DOS, OS)": "DOS & OS Oyuncularıyla",
-    "Bekler (FB/KB)": "Bek Oyuncularıyla",
-    "Defansif Oyuncular (STP, FB/KB, DOS)": "Defansif Oyuncularıyla",
-    "Stoper & Defansif Orta Saha": "Stoper & DOS Oyuncularıyla",
-    "Santrforlar": "Santrafor Oyuncularıyla",
-    "Stoperler": "Stoper Oyuncularıyla"
-            }
-    return pos_mapping
-
 def get_position_to_schema():
     return {
         'LCMF3': 'attacking', 'RCMF3': 'attacking', 'LAMF': 'attacking', 'LW': 'attacking',
@@ -857,38 +811,7 @@ def get_position_to_schema():
         'RAMF': 'attacking', 'RCB': 'cb', 'CB': 'cb', 'RCB3': 'cb', 'LCB3': 'cb',
         'RB5': 'defensive', 'RWB5': 'defensive', 'LB5': 'defensive', 'LWB5': 'defensive'
     }
-      
-def get_schema_params():
-    return {
-        'attacking': {
-            'Defending': ['Aerial duels won, %', 'pAdj Tkl+Int per 90', 'Successful defensive actions per 90'],
-            'Ball Progression': ['Progressive runs per 90', 'Progressive passes per 90', 'Accelerations per 90', 'Successful dribbles, %'],
-            'Attacking': ['Touches in box per 90', 'Shots per 90', 'npxG per shot', 'Goal conversion, %', 'Non-penalty goals per 90', 'npxG per 90'],
-            'Chance Creation': ['Smart passes per 90', 'Second assists per 90', 'Assists per 90', 'xA per Shot Assist', 'xA per 90', 'Shot assists per 90'],
-            'Accuracy': ['Accurate crosses, %', 'Accurate smart passes, %', 'Accurate long passes, %', 'Accurate short / medium passes, %']
-        },
-        'defensive': {
-            'Defending': ['Successful defensive actions per 90', 'PAdj Sliding tackles', 'Defensive duels won, %', 'Shots blocked per 90', 'PAdj Interceptions', 'Aerial duels won per 90', 'Aerial duels won, %'],
-            'Attacking': ['Accurate long passes, %', 'Crosses per 90', 'Accurate crosses, %', '1st, 2nd, 3rd assists', 'Progressive passes per 90', 'Progressive runs per 90', 'Successful dribbles, %', 'Accelerations per 90', 'xA per 90'],
-            'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
-        },
-        'cb': {
-            'Defending': ['Successful defensive actions per 90', 'PAdj Sliding tackles', 'Defensive duels won, %', 'Shots blocked per 90', 'PAdj Interceptions', 'Aerial duels won per 90', 'Aerial duels won, %'],
-            'Attacking': ['Accurate long passes, %', '1st, 2nd, 3rd assists', 'Progressive passes per 90', 'Progressive runs per 90', 'Successful dribbles, %', 'Accelerations per 90', 'xA per 90'],
-            'Fouling': ['Fouls per 90', 'Cards per 90', 'Fouls suffered per 90']
-        },
-        'general': {
-            'General': ['npxG per 90', 'Non-penalty goals per 90', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Progressive passes per 90', 'Shot assists per 90', 'Dribbles per 90', 'Touches in box per 90']
-        },
-        'strikers': {
-            'General': ['npxG per 90', 'Non-penalty goals per 90', 'Goal conversion, %', 'xA per 90', 'Key passes per 90', 'Through passes per 90', 'Dribbles per 90', 'Touches in box per 90', 'Duels won, %', 'Aerial duels won, %', 'Received passes per 90']
-        },
-        'midfielders': {
-            'General': ['npxGA per 90', 'Successful defensive actions per 90', 'PAdj Interceptions', 'Duels per 90', 'Duels won, %', 'Progressive runs per 90', 'Dribbles per 90', 'Forward passes per 90', 'Through passes per 90', 'Key passes per 90', 'Progressive passes per 90', 'Passes to final third per 90']
-        },
-        'fullbacks': {'General': ['Successful defensive actions per 90', 'PAdj Interceptions', 'Duels per 90', 'Duels won, %', 'Progressive runs per 90', 'Dribbles per 90', 'Key passes per 90', 'Crosses per 90', 'Accurate short / medium passes, %', 'xA per 90', 'Aerial duels won, %']}
-    }
-          
+             
 def selected_player_data(filtered_data, comparison_data, player_name, player_age, max_age, selected_comparison, selected_schema, selected_league, selected_season, selected_position, player_image = None):
     player_data = filtered_data[
         (filtered_data['Player'] == player_name) &
@@ -1008,9 +931,85 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
             newax.imshow(image)
             newax.axis('off')
             
-        fig.text(0.5175, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=font_bold.prop) 
+        fig.text(0.5175, 0.02, "@ALFIESCOUTING", ha='center', va='center', size=26, fontproperties=FONT_BOLD.prop) 
     return st.pyplot(fig, dpi=400)
 
+position_options = [
+    "Forvetler (OOS, K, SF)", "Forvetler ve Kanatlar", "Santrforsuz Forvetler (OOS, K)", "Kanatlar",
+    "Orta Saha (DOS, OS, OOS)", "DOS Olmayan Orta Saha (OS, OOS)", "OOS Olmayan Orta Saha (DOS, OS)",
+    "Bekler (FB/KB)", "Defansif Oyuncular (STP, FB/KB, DOS)", "Stoper & Defansif Orta Saha",
+    "Santrforlar", "Stoperler"
+]
+
+##################################################################################################################################
+##################################################################################################################################
+##################################################################################################################################
+
+st.title("Futbolcu Radar Oluşturma")
+st.subheader("Hazırlayan @AlfieScouting, konsept @BeGriffis\nTüm veriler Wyscout'tan")
+st.sidebar.header("Seçenekler")
+
+schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
+
+league_list = list(load_lg_data())
+selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(league_list.index("Süper Lig") if "Süper Lig" in league_list else 0))
+selected_season = st.sidebar.selectbox("Sezon Seçiniz", load_lg_data(selected_league))
+
+league_season_data = load_season_data(selected_league, selected_season)
+selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
+min_minutes_played = st.sidebar.number_input("Minimum Oynanan Dakikalar", value=900, min_value=0)
+max_age = st.sidebar.slider("Max Yaş", min_value=15, max_value=40, value=36)
+
+if schema_type:
+    st.sidebar.header("Özel Şablon Oluşturma")
+    custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
+    num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
+    available_metrics = get_params_list()
+    custom_schema = {}
+
+    for i in range(1, num_groups + 1):
+        selected_metrics = st.sidebar.multiselect(f"Grup {i} için metrikleri seçin", available_metrics)
+        custom_schema[f"Group {i}"] = selected_metrics
+    
+    if st.sidebar.button("Özel Şablonu Kaydet"):
+        if "custom_schemas" not in st.session_state:
+            st.session_state.custom_schemas = {}
+        st.session_state.custom_schemas[custom_schema_name] = custom_schema
+        st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
+        
+filtered_data, top_5_league_data = filter_data(league_season_data, selected_position, min_minutes_played, max_age)
+top_5_league_data = top_5_league_data[top_5_league_data['Season']==selected_season]
+renamed_data = filtered_data.rename(columns=get_column_mapping())
+
+st.subheader(f"Data for {selected_league} - {selected_season}")
+st.write(renamed_data)
+
+st.header("Radar Oluşturma\nRadarı oluşturmak için aşağıya oyuncu adını girin (yukarıdaki tablodan kopyalayıp yapıştırabilirsiniz)")
+
+player_list = list(filtered_data['Player'])
+player_name = st.selectbox("Futbolcu Adı", player_list)
+player_age = st.number_input("Futbolcu Yaşı", max_value=45)
+
+if schema_type:
+    schema_options = ["Default Schema"]
+    if "custom_schemas" in st.session_state:
+        schema_options += list(st.session_state.custom_schemas.keys())
+    selected_schema = st.selectbox("Şablon Seçin", schema_options)
+else:
+    selected_schema = "Default Schema"
+
+crop_url = 'https://crop-circle.imageonline.co/'
+st.markdown("Eğer resim eklemek istiyorsanız, orijinal resmi [https://crop-circle.imageonline.co/](%s) adresine yükleyerek dönüştürün." % crop_url)
+player_image = st.file_uploader("Futbolcunun Resmini Yükle", type=["png", "jpg", "jpeg"])
+
+comparison_options = ["Top 5 Ligi", "Kendi Ligi"]
+selected_comparison = st.selectbox("Karşılaştırma", comparison_options)
+
+if selected_comparison == "Top 5 Ligi":
+    comparison_data = top_5_league_data
+else:
+    comparison_data = filtered_data
+    
 if st.button("Radar Oluştur"):
     try:
         selected_player_data(filtered_data, comparison_data, player_name, player_age, max_age, selected_comparison, selected_schema, selected_league, selected_season, selected_position, player_image)
