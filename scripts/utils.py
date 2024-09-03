@@ -1,7 +1,7 @@
 # utils.py
 import pandas as pd
 import numpy as np
-from scripts import schemas
+from scripts import schemas, config
 from scipy import stats
 from mplsoccer import Radar, FontManager, grid
 from PIL import Image
@@ -376,7 +376,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
     player_main_position = filtered_data.loc[filtered_data['Player'] == player_name, 'Main Position'].values[0]
 
     # Determine schema based on player's main position
-    selected_schema_type = schemas.position_to_schema().get(player_main_position)
+    selected_schema_type = config.get_position_to_schema().get(player_main_position)
     
     # Initialize combined_data
     combined_data = pd.DataFrame()
@@ -422,7 +422,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
         
         # Use selected schema
         if selected_schema == "Default Schema":
-            schema_to_use = schemas.schema_params()[selected_schema_type]
+            schema_to_use = config.get_schema_params()[selected_schema_type]
         else:
             schema_to_use = st.session_state.custom_schemas[selected_schema]
         
