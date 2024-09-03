@@ -26,7 +26,7 @@ def load_lg_data(selected_league = None):
     else:      
         return leagues
     
-league_list = [lg.replace("ü", "u").replace("ó", "o").replace("ö", "o").replace("ã", "a") for lg in list(load_lg_data())]
+league_list = [lg.replace("ü", "u").replace("ó", "o").replace("ö", "o") for lg in list(load_lg_data())]
 selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(league_list.index("Süper Lig") if "Süper Lig" in league_list else 0))
 selected_season = st.sidebar.selectbox("Sezon Seçiniz", load_lg_data(selected_league))
 
