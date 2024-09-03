@@ -961,7 +961,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
                     mean_value = combined_data[metric].mean()
                     
                     # Calculate the percentile of the mean value within the combined data
-                    mean_percentile = stats.percentileofscore(ranked_values, mean_value) / 100
+                    mean_percentile = stats.percentileofscore(ranked_values, mean_value)
                     
                     # Append the values for plotting
                     radar_values.append(player_ranked_value)
