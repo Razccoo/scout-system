@@ -14,6 +14,7 @@ from urllib.request import urlopen
 import os
 import requests
 import matplotlib.font_manager as fm
+from scipy.stats import percentileofscore
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
                         'src/hinted/Roboto-Regular.ttf')
@@ -316,6 +317,16 @@ def read_csv2(link):
 def rank_column(df, column_name):
     return stats.rankdata(df[column_name], "average") / len(df[column_name])
 
+def rank_column_percentile(df, column_name):
+    """
+    Ranks the values in a specified column of a DataFrame based on their percentile rank.
+    
+    :param df: The DataFrame containing the column to be ranked.
+    :param column_name: The name of the column to be ranked.
+    :return: A list of percentile ranks corresponding to the values in the specified column.
+    """
+    return df[column_name].apply(lambda x: percentileofscore(df[column_name], x) / 100)
+
 def calculate_score(df, schema):
     for category, details in schema.items():
         weight = details['weight']
@@ -436,7 +447,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
             for metric in metrics:
                 if metric in player_data.columns:
                     player_value = player_data.iloc[0][metric]
-                    ranked_values = rank_column(combined_data, metric)
+                    ranked_values = rank_column_percentile(combined_data, metric)
                     player_ranked_value = ranked_values[combined_data.index[combined_data['Player'] == player_name].tolist()[0]]
                     radar_values.append(player_ranked_value)
                     radar_labels.append(metric)
