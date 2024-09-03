@@ -136,7 +136,8 @@ def filter_by_position(df, position):
         return df[df['Main Position'].str.contains('|'.join(cb), na=False)]
     else:
         return df
- 
+
+@st.cache_data
 def filter_data(league_season_data, selected_position, min_minutes_played, max_age):
     top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
     top_5_league_data = top_5_league_data[
@@ -151,7 +152,7 @@ def filter_data(league_season_data, selected_position, min_minutes_played, max_a
     ].reset_index(drop=True)
     return filtered_data, top_5_league_data
 
-filtered_data, top_5_league_data = filter_data(league_season_data, selected_position, min_minutes_played, max_age, selected_season)
+filtered_data, top_5_league_data = filter_data(league_season_data, selected_position, min_minutes_played, max_age)
 renamed_data = filtered_data.rename(columns=get_column_mapping())
 
 st.subheader(f"Data for {selected_league} - {selected_season}")
