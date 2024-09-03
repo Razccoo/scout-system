@@ -11,6 +11,7 @@ from scipy.stats import percentileofscore
 
 import warnings
 warnings.filterwarnings('ignore')
+st.set_page_config(page_title="Futbol Paneli")
 
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 
@@ -944,7 +945,6 @@ position_options = [
 ##################################################################################################################################
 ##################################################################################################################################
 ##################################################################################################################################
-
 st.title("Futbolcu Radar Oluşturma")
 st.subheader("Hazırlayan @AlfieScouting, konsept @BeGriffis\nTüm veriler Wyscout'tan")
 st.sidebar.header("Seçenekler")
