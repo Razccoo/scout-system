@@ -17,16 +17,20 @@ schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
 league_info_url = 'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/league_info_lookup.csv'
 
 @st.cache_data
-def load_lg_data(selected_league = None):
+def load_lg_data(selected_league=None):
     league_data = utils.read_csv(league_info_url)
+    # Apply replacements to the 'League' column
+    league_data['League'] = league_data['League'].str.replace("ü", "u").replace("ó", "o").replace("ö", "o")
     leagues = league_data['League'].unique()
-    if selected_league != None:
+    if selected_league is not None:
+        # Apply the replacements to the selected league if it's used for filtering
+        selected_league = selected_league.replace("ü", "u").replace("ó", "o").replace("ö", "o")
         filtered_season = league_data[league_data['League'] == selected_league]['Season'].sort_values(ascending=False).unique()
         return filtered_season
-    else:      
+    else:
         return leagues
     
-league_list = [lg.replace("ü", "u").replace("ó", "o").replace("ö", "o") for lg in list(load_lg_data())]
+league_list = list(load_lg_data())
 selected_league = st.sidebar.selectbox("Lig Seçiniz", league_list, index=(league_list.index("Süper Lig") if "Süper Lig" in league_list else 0))
 selected_season = st.sidebar.selectbox("Sezon Seçiniz", load_lg_data(selected_league))
 
