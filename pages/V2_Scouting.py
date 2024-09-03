@@ -986,9 +986,22 @@ st.write(renamed_data)
 
 st.header("Radar Oluşturma\nRadarı oluşturmak için aşağıya oyuncu adını girin (yukarıdaki tablodan kopyalayıp yapıştırabilirsiniz)")
 
+# List of players
 player_list = list(filtered_data['Player'])
 player_name = st.selectbox("Futbolcu Adı", player_list)
-player_age = st.number_input("Futbolcu Yaşı", max_value=45)
+
+# Filter the DataFrame to find rows with the selected player name
+temp_pl_data = filtered_data[filtered_data['Player'] == player_name]
+
+# Check how many records exist for the selected player
+if len(temp_pl_data) == 1:
+    # Autofill the player age if only one record exists
+    player_age = temp_pl_data['Age'].values[0]
+    st.write(f"Futbolcu Yaşı: {player_age}")
+else:
+    # If there are multiple records, show a selectbox to choose the correct age
+    ages = temp_pl_data['Age'].unique()
+    player_age = st.selectbox("Futbolcu Yaşı", options=ages)
 
 if schema_type:
     schema_options = ["Default Schema"]
