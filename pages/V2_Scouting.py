@@ -1,20 +1,13 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from scripts import utils, config
-
-from scipy import stats
-from mplsoccer import Radar, FontManager, grid
+from scripts import utils
+from mplsoccer import FontManager
 from PIL import Image
 import textwrap
 import matplotlib.pyplot as plt
 from highlight_text import fig_text
 import streamlit as st
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-from urllib.request import urlopen
-import os
-import requests
-import matplotlib.font_manager as fm
 from scipy.stats import percentileofscore
 
 import warnings
