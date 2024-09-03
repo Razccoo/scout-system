@@ -68,7 +68,6 @@ if schema_type:
         st.session_state.custom_schemas[custom_schema_name] = custom_schema
         st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
 
-@st.cache_data
 def load_top_5_leagues(season_selection=None):
     top_5_leagues = ["La Liga", "Premier League", "Bundesliga", "Serie A", "Ligue 1"]
     if season_selection is None:
@@ -136,7 +135,8 @@ def filter_by_position(df, position):
         return df[df['Main Position'].str.contains('|'.join(cb), na=False)]
     else:
         return df
-    
+
+@st.cache_data    
 def filter_data(league_season_data, selected_position, min_minutes_played, max_age, selected_season=None):
     top_5_league_data = filter_by_position(load_top_5_leagues(selected_season), selected_position)
     top_5_league_data = top_5_league_data[
