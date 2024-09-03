@@ -663,6 +663,7 @@ def scout_report(df):
     df["name"] = df["name"].replace(get_column_mapping())
     df["name"] = df["name"].replace(get_label_mapping())
     MEAN = df["mean_value"].values
+    MEAN_PERCENTILE = df["mean_percentile"].values
     RAW_VALUES = df["raw_value"].values
     VALUES = df["value"].values
     LABELS = df["name"].values
@@ -747,7 +748,7 @@ def scout_report(df):
     
     wrapped_labels = wrap_labels(LABELS, 10)
     
-    add_labels(ANGLES[IDXS], VALUES, wrapped_labels, OFFSET, ax, text_cs, MEAN)
+    add_labels(ANGLES[IDXS], VALUES, wrapped_labels, OFFSET, ax, text_cs, MEAN_PERCENTILE)
     
     PAD = 0.02
     ax.text(0.15, 0 + PAD, "0", size=10, color='#4A2E19')
@@ -804,9 +805,9 @@ def get_label_rotation(angle, offset):
 #             color=text_col,
 #         )
 
-def add_labels(angles, values, labels, offset, ax, text_colors, mean_values):
+def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
     """
-    Adds labels to the radar plot with additional logic to plot mean values as 3-dotted labels.
+    Adds labels to the radar plot and plots the mean value percentile as a dotted line.
 
     :param angles: List of angles where each bar is positioned.
     :param values: List of values corresponding to each bar.
@@ -814,36 +815,27 @@ def add_labels(angles, values, labels, offset, ax, text_colors, mean_values):
     :param offset: The offset used for rotating text on the polar plot.
     :param ax: The matplotlib axis object where the plot is drawn.
     :param text_colors: List of colors used for the text labels.
-    :param mean_values: List of mean values corresponding to each metric, to be plotted as 3-dotted labels.
+    :param mean_percentiles: List of mean percentiles to plot as dotted lines.
     """
     padding = .05
 
-    for angle, value, label, text_col, mean in zip(angles, values, labels, text_colors, mean_values):
-        # Determine label rotation and alignment based on angle
+    for i, (angle, value, label, text_col, mean_percentile) in enumerate(zip(angles, values, labels, text_colors, mean_percentiles)):
+        # Obtain text rotation and alignment
         rotation, alignment = get_label_rotation(angle, offset)
 
         # Add the main metric label around the plot
         ax.text(
-            x=angle, 
-            y=1.10,
-            s=label, 
-            ha=alignment, 
-            va="center", 
+            x=angle,
+            y=1.05,
+            s=label,
+            ha=alignment,
+            va="center",
             rotation=rotation,
             color=text_col,
         )
-        
-        # Plot the mean value as a 3-dotted label inside the bar
-        ax.annotate(
-            f"··· {mean:.2f}",  # Format mean value as 3-dotted label
-            (angle, value),  # Position inside the bar
-            ha='center', 
-            va='center', 
-            fontsize=10,
-            color='#555555',  # Color of the mean value label
-            xytext=(0, -10),  # Slightly below the bar value
-            textcoords='offset points'
-        )
+
+        # Plot the mean percentile as a 3-dotted line
+        ax.hlines(mean_percentile, angle - 0.055, angle + 0.055, colors='black', linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
 
 def add_labels_dist(angles, values, labels, offset, ax, text_colors, raw_vals_full):
 
@@ -953,6 +945,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
         radar_groups = []
         radar_raw_values = []
         radar_means = []
+        radar_mean_percentiles = []
 
         for group, metrics in schema_to_use.items():
             for metric in metrics:
@@ -967,20 +960,25 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
                     # Calculate the mean value of the metric across the combined data
                     mean_value = combined_data[metric].mean()
                     
+                    # Calculate the percentile of the mean value within the combined data
+                    mean_percentile = stats.percentileofscore(ranked_values, mean_value) / 100
+                    
                     # Append the values for plotting
                     radar_values.append(player_ranked_value)
                     radar_labels.append(metric)
                     radar_groups.append(group)
                     radar_raw_values.append(player_value)
                     radar_means.append(mean_value)
+                    radar_mean_percentiles.append(mean_percentile)
 
         # Create a DataFrame with the radar data and include the mean values
         radar_data = pd.DataFrame({
-            'value': radar_values,          # Percentile rank of the player's value
-            'name': radar_labels,           # Metric names
-            'group': radar_groups,          # Group/category of metrics
-            'raw_value': radar_raw_values,  # Raw values of the player's metrics
-            'mean_value': radar_means       # Mean values of each metric
+            'value': radar_values,                # Percentile rank of the player's value
+            'name': radar_labels,                 # Metric names
+            'group': radar_groups,                # Group/category of metrics
+            'raw_value': radar_raw_values,        # Raw values of the player's metrics
+            'mean_value': radar_means,            # Mean values of each metric
+            'mean_percentile': radar_mean_percentiles  # Percentiles of mean values
         }).sort_values('group')
         
         fig, ax = scout_report(radar_data)
