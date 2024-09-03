@@ -806,6 +806,26 @@ def get_label_rotation(angle, offset):
 #         )
 
 def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
+    padding = .05
+    
+    for angle, value, label, text_col in zip(angles, values, labels, text_colors):
+        angle = angle
+        
+        rotation, alignment = get_label_rotation(angle, offset)
+
+        ax.text(
+            x=angle, 
+            y=1.10,
+            s=label, 
+            ha=alignment, 
+            va="center", 
+            rotation=rotation,
+            color=text_col,
+        )
+
+        ax.hlines(mean_percentiles/100, angle - 0.055, angle + 0.055, colors='black', linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
+        
+def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
     """
     Adds labels to the radar plot and plots the mean value percentile as a dotted line.
 
@@ -961,7 +981,7 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
                     mean_value = combined_data[metric].mean()
                     
                     # Calculate the percentile of the mean value within the combined data
-                    mean_percentile = stats.percentileofscore(ranked_values, mean_value)
+                    mean_percentile = stats.percentileofscore(ranked_values, mean_value) / 100
                     
                     # Append the values for plotting
                     radar_values.append(player_ranked_value)
