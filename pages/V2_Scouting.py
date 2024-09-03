@@ -137,7 +137,6 @@ def filter_by_position(df, position):
     else:
         return df
 
-@st.cache_data
 def filter_data(league_season_data, selected_position, min_minutes_played, max_age):
     top_5_league_data = filter_by_position(load_top_5_leagues(), selected_position)
     top_5_league_data = top_5_league_data[
