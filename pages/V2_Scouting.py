@@ -748,7 +748,7 @@ def scout_report(df):
     
     wrapped_labels = wrap_labels(LABELS, 10)
     
-    add_labels(ANGLES[IDXS], VALUES, wrapped_labels, OFFSET, ax, text_cs, MEAN_PERCENTILE)
+    add_labels(ANGLES[IDXS], VALUES, wrapped_labels, OFFSET, ax, text_cs)
     
     PAD = 0.02
     ax.text(0.15, 0 + PAD, "0", size=10, color='#4A2E19')
@@ -787,25 +787,7 @@ def get_label_rotation(angle, offset):
         alignment = "center"
     return rotation, alignment
 
-# def add_labels(angles, values, labels, offset, ax, text_colors):
-#     padding = .05
-    
-#     for angle, value, label, text_col in zip(angles, values, labels, text_colors):
-#         angle = angle
-        
-#         rotation, alignment = get_label_rotation(angle, offset)
-
-#         ax.text(
-#             x=angle, 
-#             y=1.10,
-#             s=label, 
-#             ha=alignment, 
-#             va="center", 
-#             rotation=rotation,
-#             color=text_col,
-#         )
-
-def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
+def add_labels(angles, values, labels, offset, ax, text_colors):
     padding = .05
     
     for angle, value, label, text_col in zip(angles, values, labels, text_colors):
@@ -823,73 +805,23 @@ def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles
             color=text_col,
         )
 
-        ax.hlines(mean_percentiles/100, angle - 0.055, angle + 0.055, colors='black', linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
-        
 # def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
-#     """
-#     Adds labels to the radar plot and plots the mean value percentile as a dotted line.
-
-#     :param angles: List of angles where each bar is positioned.
-#     :param values: List of values corresponding to each bar.
-#     :param labels: List of metric labels for each bar.
-#     :param offset: The offset used for rotating text on the polar plot.
-#     :param ax: The matplotlib axis object where the plot is drawn.
-#     :param text_colors: List of colors used for the text labels.
-#     :param mean_percentiles: List of mean percentiles to plot as dotted lines.
-#     """
 #     padding = .05
-
-#     for i, (angle, value, label, text_col, mean_percentile) in enumerate(zip(angles, values, labels, text_colors, mean_percentiles)):
-#         # Obtain text rotation and alignment
+    
+#     for angle, value, label, text_col in zip(angles, values, labels, text_colors):
+#         angle = angle
+        
 #         rotation, alignment = get_label_rotation(angle, offset)
 
-#         # Add the main metric label around the plot
 #         ax.text(
-#             x=angle,
-#             y=1.05,
-#             s=label,
-#             ha=alignment,
-#             va="center",
+#             x=angle, 
+#             y=1.10,
+#             s=label, 
+#             ha=alignment, 
+#             va="center", 
 #             rotation=rotation,
 #             color=text_col,
 #         )
-
-#         # Plot the mean percentile as a 3-dotted line
-#         ax.hlines(mean_percentile, angle - 0.055, angle + 0.055, colors='black', linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
-
-def add_labels_dist(angles, values, labels, offset, ax, text_colors, raw_vals_full):
-
-    # This is the space between the end of the bar and the label
-    padding = .05
-
-    # Iterate over angles, values, and labels, to add all of them.
-    for i, (angle, value, label, text_col) in enumerate(zip(angles, values, labels, text_colors)):
-        angle = angle
-        
-        # Obtain text rotation and alignment
-        rotation, alignment = get_label_rotation(angle, offset)
-
-        # And finally add the text
-        ax.text(
-            x=angle, 
-            y=1.05,
-            s=label, 
-            ha=alignment, 
-            va="center", 
-            rotation=rotation,
-            color=text_col,
-        )
-        
-        data_to_use = raw_vals_full.iloc[:,i+1].tolist()
-        mean_val = np.mean(data_to_use)
-        std_dev = 0.5*np.std(data_to_use)
-        mean_percentile = stats.percentileofscore(data_to_use, mean_val)
-        std_dev_up_percentile = stats.percentileofscore(data_to_use, mean_val+std_dev)
-        std_dev_down_percentile = stats.percentileofscore(data_to_use, mean_val-std_dev)
-        
-        ax.hlines(mean_percentile/100, angle - 0.055, angle + 0.055, colors='black', linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
-        ax.hlines(std_dev_up_percentile/100, angle - 0.055, angle + 0.055, colors=text_col, linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
-        ax.hlines(std_dev_down_percentile/100, angle - 0.055, angle + 0.055, colors=text_col, linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
         
 def get_position_to_schema():
     return {
