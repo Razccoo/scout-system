@@ -805,25 +805,25 @@ def get_label_rotation(angle, offset):
 #             color=text_col,
 #         )
 
-def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
-    padding = .05
+# def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
+#     padding = .05
     
-    for angle, value, label, text_col in zip(angles, values, labels, text_colors):
-        angle = angle
+#     for angle, value, label, text_col in zip(angles, values, labels, text_colors):
+#         angle = angle
         
-        rotation, alignment = get_label_rotation(angle, offset)
+#         rotation, alignment = get_label_rotation(angle, offset)
 
-        ax.text(
-            x=angle, 
-            y=1.10,
-            s=label, 
-            ha=alignment, 
-            va="center", 
-            rotation=rotation,
-            color=text_col,
-        )
+#         ax.text(
+#             x=angle, 
+#             y=1.10,
+#             s=label, 
+#             ha=alignment, 
+#             va="center", 
+#             rotation=rotation,
+#             color=text_col,
+#         )
 
-        ax.hlines(mean_percentiles/100, angle - 0.055, angle + 0.055, colors='black', linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
+#         ax.hlines(mean_percentiles/100, angle - 0.055, angle + 0.055, colors='black', linestyles='dotted', linewidth=2, alpha=0.8, zorder=3)
         
 def add_labels(angles, values, labels, offset, ax, text_colors, mean_percentiles):
     """
