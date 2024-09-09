@@ -7,6 +7,8 @@ from matplotlib.font_manager import FontProperties
 st.title("Player Comparison Radar Chart")
 st.sidebar.header("Player Selection")
 
+schema_type = st.sidebar.toggle("Kendi şablonumu kullanmak istiyorum")
+
 all_leagues_df = utils.load_top_9_leagues()
 selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options+["All"])
 df = utils.filter_by_position(all_leagues_df, selected_position)
@@ -15,8 +17,34 @@ currentseason = df[df['Season'] == '23-24']
 
 selected_players = st.sidebar.multiselect("Select Players to Compare", df['Player'].unique())
 
-schema_options = ["Default Schema"] + list(get_schema_params().keys())
-selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
+if schema_type:
+    st.sidebar.header("Özel Şablon Oluşturma")
+    custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
+    num_groups = st.sidebar.number_input("Grup Sayısı", min_value=1, max_value=10, value=1)
+    available_metrics = get_params_list()
+    custom_schema = {}
+
+    for i in range(1, num_groups + 1):
+        selected_metrics = st.sidebar.multiselect(f"Grup {i} için metrikleri seçin", available_metrics)
+        custom_schema[f"Group {i}"] = selected_metrics
+    
+    if st.sidebar.button("Özel Şablonu Kaydet"):
+        if "custom_schemas" not in st.session_state:
+            st.session_state.custom_schemas = {}
+        st.session_state.custom_schemas[custom_schema_name] = custom_schema
+        st.sidebar.success(f"Özel şablon '{custom_schema_name}' kaydedildi.", icon="✅")
+
+if schema_type:
+    schema_options = ["Default Schema"] + list(get_schema_params().keys())
+    if "custom_schemas" in st.session_state:
+        schema_options += list(st.session_state.custom_schemas.keys())
+    selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
+else:
+    schema_options = ["Default Schema"] + list(get_schema_params().keys())
+    selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
+            
+# schema_options = ["Default Schema"] + list(get_schema_params().keys())
+# selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
 
 seasons = {}
 for player in selected_players:
