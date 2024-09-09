@@ -84,7 +84,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
     # Plot each player's radar using draw_radar_solid with markers
-    for idx, (player_stats, player_name) in enumerate(zip(player_data, player_names)):
+    for idx, (player_stats, player_name, player_team) in enumerate(zip(player_data, player_names, player_teams)):
         # Select a color for the player from the colors list, cycling if more players than colors
         color = colors[idx % len(colors)]
 
