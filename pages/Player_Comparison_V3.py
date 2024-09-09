@@ -47,7 +47,6 @@ selected_players = st.sidebar.multiselect("Select Players to Compare", df['Playe
 available_seasons = df['Season'].unique()
 player_seasons = {player: st.sidebar.selectbox(f"Select Season for {player}", available_seasons) for player in selected_players}
 
-# Define the radar chart generation function
 def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_high, radar_low):
     """
     Generates a radar chart comparing selected players using mplsoccer's Radar class.
@@ -60,36 +59,38 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
     :return: Matplotlib figure object of the radar chart.
     """
 
-    # Initialize the Radar object with min and max values for each metric
-    radar = Radar(label_fontsize=13, range_fontsize=11, 
-                  params=metrics, 
-                  min_range=radar_low.tolist(), 
-                  max_range=radar_high.tolist())
+    # Define the minimum and maximum ranges for each metric
+    min_range = radar_low.tolist()
+    max_range = radar_high.tolist()
 
-    # Create a figure and axes using mplsoccer
-    fig, ax = radar.setup_axis(figsize=(8, 8))
+    # Initialize the Radar object with the correct parameters
+    radar = Radar(
+        params=metrics,  # List of metrics to display
+        min_range=min_range,  # Minimum range for each metric
+        max_range=max_range  # Maximum range for each metric
+    )
+
+    # Create the radar figure and axes
+    fig, ax = radar.setup_axis()
 
     # Plot each player's data on the radar chart
     for player_stats, player_name in zip(player_data, player_names):
-        # Normalize player stats to fit within the min and max range
-        normalized_stats = (player_stats - radar_low) / (radar_high - radar_low)
-        normalized_stats = np.clip(normalized_stats, 0, 1)  # Ensure stats are within the range
-        radar_values = normalized_stats * (radar_high - radar_low) + radar_low
+        # Plot radar values directly
+        radar_values = player_stats.tolist()
         
-        radar_values = radar_values.tolist()  # Convert to list for plotting
-        
-        # Plot the radar chart for the player
-        radar.draw_radar(ax, values=radar_values, 
-                         compare_values=None,  # No comparison data
-                         compare_kwargs=None,
-                         kwargs={'color': 'green', 'alpha': 0.6, 'lw': 2},
-                         label=player_name)
+        # Draw the radar chart for the player
+        radar.draw_radar(
+            values=radar_values, 
+            ax=ax, 
+            kwargs={'color': 'green', 'alpha': 0.6, 'lw': 2},  # Customize the plot appearance
+            label=player_name
+        )
 
-    # Title and legend settings
+    # Adding title and legends
     ax.set_title("Player Comparison Radar Chart", size=20, pad=20)
-    ax.legend(loc='upper right', bbox_to_anchor=(1.1, 1.1))
+    plt.legend(loc='upper right', bbox_to_anchor=(1.1, 1.1))
 
-    # Return the figure object for further use in Streamlit or other display contexts
+    # Return the figure object
     return fig
 
 # Button to generate the radar chart
