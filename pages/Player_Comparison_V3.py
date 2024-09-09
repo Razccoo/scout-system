@@ -96,7 +96,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
 
         # Add 'o' markers for each metric point using scatter
         ax.scatter(vertices[:, 0], vertices[:, 1],
-                   c=color, marker='o', s=75, zorder=2)
+                   c=color, marker='o', s=50, zorder=2)
 
         # Add a label for the player near the chart
         ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes,
