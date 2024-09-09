@@ -68,7 +68,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
         params=metrics,  # List of parameter names
         min_range=min_range,  # Minimum range for each parameter
         max_range=max_range,  # Maximum range for each parameter
-        num_rings=4,  # Number of concentric circles
+        num_rings=6,  # Number of concentric circles
         ring_width=1,  # Width of each ring
         center_circle_radius=1  # Radius of the center circle
     )
