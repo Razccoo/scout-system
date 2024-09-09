@@ -115,7 +115,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
             ax.text(0.0, 1.07 - (idx // 2) * 0.07, player_team, ha='left', va='center', transform=ax.transAxes,
                     fontsize=10, color=color)
         else:  # Odd index - place on the right
-            ax.text(1, 1.1 - ((idx - 1) // 2) * 0.07, f"{player_name} ({season})", ha='right', va='center', transform=ax.transAxes,
+            ax.text(1, 1.1 - ((idx - 1) // 2) * 0.07, f"({season}) {player_name}", ha='right', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
             ax.text(1, 1.07 - ((idx - 1) // 2) * 0.07, player_team, ha='right', va='center', transform=ax.transAxes,
                     fontsize=10, color=color)
