@@ -78,17 +78,23 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
     # Draw concentric circles for the radar chart
     radar.draw_circles(ax=ax, facecolor='#f0f0f0', edgecolor='#d9d9d9')
 
+    # Define a list of colors to use for different players
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+
     # Plot each player's radar
-    for player_stats, player_name in zip(player_data, player_names):
+    for idx, (player_stats, player_name) in enumerate(zip(player_data, player_names)):
+        # Select a color for the player from the colors list, cycling if more players than colors
+        color = colors[idx % len(colors)]
+
         # Draw radar chart with player's data
         radar.draw_radar(
             values=player_stats.tolist(),
             ax=ax,
-            kwargs_radar={'facecolor': '#00f2c1', 'alpha': 0.6, 'edgecolor': 'black'},  # Custom styling for radar
-            kwargs_rings={'facecolor': '#ffb2b2', 'alpha': 0.3}  # Styling for the outer rings clipped to the radar
+            kwargs_radar={'facecolor': color, 'alpha': 0.6, 'edgecolor': 'black'},  # Unique color for each player
+            kwargs_rings={'facecolor': color, 'alpha': 0.3}  # Styling for the outer rings clipped to the radar
         )
         # Add a label for the player
-        ax.text(0.5, 1.1, player_name, ha='center', va='center', transform=ax.transAxes, fontsize=12, weight='bold')
+        ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes, fontsize=12, weight='bold', color=color)
 
     # Draw the parameter labels and range labels
     radar.draw_param_labels(ax=ax, wrap=15, offset=1)
@@ -96,7 +102,6 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
 
     # Title and final adjustments
     ax.set_title("Player Comparison Radar Chart", size=20, pad=20)
-    plt.legend(loc='upper right', bbox_to_anchor=(1.1, 1.1))
 
     # Return the figure for rendering
     return fig
