@@ -85,7 +85,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     fig, ax = radar.setup_axis(figsize=(8, 8))
 
     # Draw concentric circles for the radar chart
-    radar.draw_circles(ax=ax, facecolor='#f0f0f0', edgecolor='#d9d9d9')
+    radar.draw_circles(ax=ax, facecolor='#28252C', edgecolor='#39353f')
 
     # Define a list of colors to use for different players
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
@@ -133,7 +133,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     twitter_icon = twitter_icon.resize((30, 30), Image.LANCZOS)  # Resize to desired dimensions
 
     # Add the resized icon to the figure
-    fig.figimage(twitter_icon, 10, 10, zorder=3, alpha=0.6)  # Position the icon at the bottom left of the figure
+    fig.figimage(twitter_icon, 10, 10, zorder=3, alpha=1)  # Position the icon at the bottom left of the figure
 
     # Add your Twitter handle
     fig.text(0.1, 0.02, '@AlfieScouting', fontsize=12, ha='left', va='center', color='black')
