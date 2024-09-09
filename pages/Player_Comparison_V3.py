@@ -87,7 +87,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
         color = colors[idx % len(colors)]
 
         # Draw radar chart with player's data
-        radar.draw_radar_solid(
+        radar.draw_radar(
             values=player_stats.tolist(),
             ax=ax,
             kwargs_radar={'facecolor': color, 'alpha': 0.4, 'edgecolor': color},  # Unique color for each player
