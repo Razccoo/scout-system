@@ -129,8 +129,11 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     twitter_icon_url = 'https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png'
     twitter_icon = Image.open(urlopen(twitter_icon_url))
 
-    # Add the icon to the figure
-    fig.figimage(twitter_icon, 0.5, 0.5, zorder=3, alpha=1)  # Position the icon at the bottom left of the figure
+    # Resize the icon to make it smaller
+    twitter_icon = twitter_icon.resize((30, 30), Image.ANTIALIAS)  # Resize to desired dimensions
+
+    # Add the resized icon to the figure
+    fig.figimage(twitter_icon, 10, 10, zorder=3, alpha=0.6)  # Position the icon at the bottom left of the figure
 
     # Add your Twitter handle
     fig.text(0.1, 0.02, '@AlfieScouting', fontsize=12, ha='left', va='center', color='black')
