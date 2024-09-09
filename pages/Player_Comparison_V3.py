@@ -79,7 +79,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
     radar.draw_circles(ax=ax, facecolor='#f0f0f0', edgecolor='#d9d9d9')
 
     # Define a list of colors to use for different players
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+    colors = ['#1f77b4', '#2ca02c', '#d62728', '#ff7f0e', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
     # Plot each player's radar
     for idx, (player_stats, player_name) in enumerate(zip(player_data, player_names)):
@@ -87,10 +87,10 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
         color = colors[idx % len(colors)]
 
         # Draw radar chart with player's data
-        radar.draw_radar(
+        radar.draw_radar_solid(
             values=player_stats.tolist(),
             ax=ax,
-            kwargs_radar={'facecolor': color, 'alpha': 0.4, 'edgecolor': 'black'},  # Unique color for each player
+            kwargs_radar={'facecolor': color, 'alpha': 0.4, 'edgecolor': color},  # Unique color for each player
             kwargs_rings={'facecolor': color, 'alpha': 0.0}  # Styling for the outer rings clipped to the radar
         )
         # Add a label for the player
