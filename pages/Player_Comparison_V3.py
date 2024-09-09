@@ -75,7 +75,7 @@ def generate_radar_chart(player_data, player_names, metrics, radar_high, radar_l
     return fig
 
 # Button to generate the radar chart
-if st.button("Generate Radar Chart"):
+if st.sidebar.button("Generate Radar Chart"):
     if selected_players:
         reference_df = leagues_df[leagues_df['Season'] == '23-24']
         radar_high = reference_df[selected_metrics].quantile(0.95)
