@@ -662,8 +662,6 @@ def wrap_labels(labels, width):
 def scout_report(df):
     df["name"] = df["name"].replace(get_column_mapping())
     df["name"] = df["name"].replace(get_label_mapping())
-    MEAN = df["mean_value"].values
-    MEAN_PERCENTILE = df["mean_percentile"].values
     RAW_VALUES = df["raw_value"].values
     VALUES = df["value"].values
     LABELS = df["name"].values
@@ -896,41 +894,23 @@ def selected_player_data(filtered_data, comparison_data, player_name, player_age
         radar_labels = []
         radar_groups = []
         radar_raw_values = []
-        radar_means = []
-        radar_mean_percentiles = []
-
+        
         for group, metrics in schema_to_use.items():
             for metric in metrics:
                 if metric in player_data.columns:
-                    # Get the player's value for the metric
                     player_value = player_data.iloc[0][metric]
-                    
-                    # Calculate percentile rank of the player within the combined data
                     ranked_values = rank_column_percentile(combined_data, metric)
                     player_ranked_value = ranked_values[combined_data.index[combined_data['Player'] == player_name].tolist()[0]]
-                    
-                    # Calculate the mean value of the metric across the combined data
-                    mean_value = combined_data[metric].mean()
-                    
-                    # Calculate the percentile of the mean value within the combined data
-                    mean_percentile = rank_column_percentile(combined_data[metric], mean_value) / 100
-                    
-                    # Append the values for plotting
                     radar_values.append(player_ranked_value)
                     radar_labels.append(metric)
                     radar_groups.append(group)
                     radar_raw_values.append(player_value)
-                    radar_means.append(mean_value)
-                    radar_mean_percentiles.append(mean_percentile)
-
-        # Create a DataFrame with the radar data and include the mean values
+        
         radar_data = pd.DataFrame({
-            'value': radar_values,                # Percentile rank of the player's value
-            'name': radar_labels,                 # Metric names
-            'group': radar_groups,                # Group/category of metrics
-            'raw_value': radar_raw_values,        # Raw values of the player's metrics
-            'mean_value': radar_means,            # Mean values of each metric
-            'mean_percentile': radar_mean_percentiles  # Percentiles of mean values
+            'value': radar_values,
+            'name': radar_labels,
+            'group': radar_groups,
+            'raw_value': radar_raw_values
         }).sort_values('group')
         
         fig, ax = scout_report(radar_data)
