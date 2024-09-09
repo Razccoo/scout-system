@@ -71,8 +71,10 @@ if st.sidebar.button("Generate Radar Chart"):
     label_mapping = get_label_mapping()
     column_mapping = get_column_mapping()
 
+    # # Map parameters to labels
+    # params = [label_mapping.get(column_mapping.get(param, param), param) for param in schema]
     # Map parameters to labels
-    params = [label_mapping.get(column_mapping.get(param, param), param) for param in schema]
+    params = schema
 
     # Prepare data columns
     cols = ['Player', 'Team within selected timeframe', 'Season'] + schema
