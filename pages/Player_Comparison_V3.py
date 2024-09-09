@@ -143,8 +143,22 @@ if st.sidebar.button("Generate Radar Chart"):
                 player_teams.append(team_name)
 
         if player_data:
-            # Pass player data, names, and team names to the radar chart function
-            fig = generate_mplsoccer_radar_chart(player_data, selected_players, player_teams, selected_metrics, radar_high, radar_low)
+            # Normalize the player data using radar_low and radar_high values
+            normalized_data = [(data - radar_low) / (radar_high - radar_low) for data in player_data]
+
+            # Calculate the sum of normalized values for each player to determine the plotting order
+            player_sums = [sum(data) for data in normalized_data]
+
+            # Sort players by the sum of their normalized values in descending order
+            sorted_indices = sorted(range(len(player_sums)), key=lambda i: player_sums[i], reverse=True)
+            
+            # Reorder player data, names, and teams based on sorted indices
+            sorted_player_data = [player_data[i] for i in sorted_indices]
+            sorted_player_names = [selected_players[i] for i in sorted_indices]
+            sorted_player_teams = [player_teams[i] for i in sorted_indices]
+
+            # Pass sorted data to the radar chart function
+            fig = generate_mplsoccer_radar_chart(sorted_player_data, sorted_player_names, sorted_player_teams, selected_metrics, radar_high, radar_low)
             st.pyplot(fig)
         else:
             st.warning("No data available for the selected players and seasons.")
