@@ -82,7 +82,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     )
 
     # Create the radar figure and axis
-    fig, ax = radar.setup_axis(figsize=(8, 8), facecolor='#28252C')
+    fig, ax = radar.setup_axis(figsize=(8, 8))
 
     # Draw concentric circles for the radar chart
     radar.draw_circles(ax=ax, facecolor='#28252C', edgecolor='#39353f')
@@ -137,6 +137,8 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
 
     # Add your Twitter handle
     fig.text(0.1, 0.02, '@AlfieScouting', fontsize=12, ha='left', va='center', color='black')
+    
+    fig.set_facecolor('#070707')
     
     # Return the figure for rendering
     return fig
