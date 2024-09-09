@@ -37,11 +37,6 @@ if schema_type:
         st.session_state.custom_schema
     )
 
-    # Display selected metrics for review
-    if st.session_state.custom_schema:
-        st.sidebar.write("Seçilen Metrikler:")
-        st.sidebar.write(", ".join(st.session_state.custom_schema))
-
     # Save the custom schema
     if st.sidebar.button("Özel Şablonu Kaydet"):
         if custom_schema_name:
