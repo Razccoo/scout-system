@@ -47,13 +47,14 @@ selected_players = st.sidebar.multiselect("Select Players to Compare", df['Playe
 available_seasons = df['Season'].unique()
 player_seasons = {player: st.sidebar.selectbox(f"Select Season for {player}", available_seasons) for player in selected_players}
 
-def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_high, radar_low):
+def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metrics, radar_high, radar_low):
     """
     Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid
-    and markers for each metric point using ax.scatter.
+    and markers for each metric point using ax.scatter. Displays player names and their teams.
 
     :param player_data: List of player stats for each selected player, each as a list of metric values.
     :param player_names: List of player names corresponding to the player data.
+    :param player_teams: List of team names corresponding to each player.
     :param metrics: List of metric names to be used in the radar chart.
     :param radar_high: Series or list of high values (95th quantile) for each metric.
     :param radar_low: Series or list of low values (5th quantile) for each metric.
@@ -100,11 +101,15 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
 
         # Alternate player name placement between left and right
         if idx % 2 == 0:  # Even index - place on the left
-            ax.text(0.1, 1.1 - (idx // 2) * 0.05, player_name, ha='right', va='center', transform=ax.transAxes,
+            ax.text(0.1, 1.1 - (idx // 2) * 0.1, player_name, ha='right', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
+            ax.text(0.1, 1.05 - (idx // 2) * 0.1, player_team, ha='right', va='center', transform=ax.transAxes,
+                    fontsize=10, color='gray')
         else:  # Odd index - place on the right
-            ax.text(0.9, 1.1 - ((idx - 1) // 2) * 0.05, player_name, ha='left', va='center', transform=ax.transAxes,
+            ax.text(0.9, 1.1 - ((idx - 1) // 2) * 0.1, player_name, ha='left', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
+            ax.text(0.9, 1.05 - ((idx - 1) // 2) * 0.1, player_team, ha='left', va='center', transform=ax.transAxes,
+                    fontsize=10, color='gray')
 
     # Draw the parameter labels and range labels
     radar.draw_param_labels(ax=ax, wrap=15, offset=1)
@@ -119,19 +124,27 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
 # Button to generate the radar chart
 if st.sidebar.button("Generate Radar Chart"):
     if selected_players:
+        # Reference data for radar high and low quantiles
         reference_df = leagues_df[leagues_df['Season'] == '23-24']
         radar_high = reference_df[selected_metrics].quantile(0.95)
         radar_low = reference_df[selected_metrics].quantile(0.05)
 
         player_data = []
+        player_teams = []
+
+        # Collect player data and team names
         for player in selected_players:
             season = player_seasons[player]
             player_stats = df[(df['Player'] == player) & (df['Season'] == season)][selected_metrics]
+            team_name = df[(df['Player'] == player) & (df['Season'] == season)]['Team within selected timeframe'].iloc[0] if not player_stats.empty else ""
+
             if not player_stats.empty:
                 player_data.append(player_stats.iloc[0].values)
+                player_teams.append(team_name)
 
         if player_data:
-            fig = generate_mplsoccer_radar_chart(player_data, selected_players, selected_metrics, radar_high, radar_low)
+            # Pass player data, names, and team names to the radar chart function
+            fig = generate_mplsoccer_radar_chart(player_data, selected_players, player_teams, selected_metrics, radar_high, radar_low)
             st.pyplot(fig)
         else:
             st.warning("No data available for the selected players and seasons.")
