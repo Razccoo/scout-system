@@ -70,6 +70,8 @@ if st.sidebar.button("Generate Radar Chart"):
 
     if selected_schema == "Default Schema":
         schema_to_use = new_schema[selected_schema_type]
+    elif selected_schema not in ["Default Schema"] + list(get_schema_params().keys()):
+        schema_to_use = selected_schema
     else:
         schema_to_use = new_schema[selected_schema]
 
