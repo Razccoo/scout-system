@@ -49,7 +49,8 @@ player_seasons = {player: st.sidebar.selectbox(f"Select Season for {player}", av
 
 def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_high, radar_low):
     """
-    Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid.
+    Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid
+    and markers for each metric point.
 
     :param player_data: List of player stats for each selected player, each as a list of metric values.
     :param player_names: List of player names corresponding to the player data.
@@ -81,7 +82,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
     # Define a list of colors to use for different players
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
-    # Plot each player's radar using draw_radar_solid
+    # Plot each player's radar using draw_radar_solid with markers
     for idx, (player_stats, player_name) in enumerate(zip(player_data, player_names)):
         # Select a color for the player from the colors list, cycling if more players than colors
         color = colors[idx % len(colors)]
@@ -92,6 +93,13 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
             ax=ax,
             kwargs={'facecolor': color, 'alpha': 0.6, 'edgecolor': 'black'}  # Unique color for each player
         )
+
+        # Add 'o' markers for each metric point
+        angles = radar.spoke_angles()  # Get the angles for each spoke
+        values = player_stats.tolist()
+        for angle, value in zip(angles, values):
+            ax.plot(angle, value, 'o', color='black', markersize=6, markerfacecolor=color, markeredgewidth=1)
+
         # Add a label for the player
         ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes, fontsize=12, weight='bold', color=color)
 
