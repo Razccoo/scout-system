@@ -44,3 +44,12 @@ if schema_type:
             st.session_state.custom_schema = []  # Reset custom schema after saving
         else:
             st.sidebar.error("Lütfen şablon adı giriniz.")
+            
+if schema_type:
+    schema_options = ["Default Schema"] + list(get_schema_params().keys())
+    if "custom_schemas" in st.session_state:
+        schema_options += list(st.session_state.custom_schemas.keys())
+    selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
+else:
+    schema_options = ["Default Schema"] + list(get_schema_params().keys())
+    selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
