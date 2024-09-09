@@ -50,7 +50,7 @@ selected_players = st.sidebar.multiselect("Select Players to Compare", df['Playe
 available_seasons = df['Season'].unique()
 player_seasons = {player: st.sidebar.selectbox(f"Select Season for {player}", available_seasons) for player in selected_players}
 
-def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metrics, radar_high, radar_low):
+def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metrics, radar_high, radar_low, player_seasons):
     """
     Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid
     and markers for each metric point using ax.scatter. Displays player names and their teams.
@@ -92,6 +92,8 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
 
     # Plot each player's radar using draw_radar_solid with markers
     for idx, (player_stats, player_name, player_team) in enumerate(zip(player_data, player_names, player_teams)):
+        season = player_seasons[player_name]
+        
         # Select a color for the player from the colors list, cycling if more players than colors
         color = colors[idx % len(colors)]
 
@@ -108,12 +110,12 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
 
         # Alternate player name placement between left and right
         if idx % 2 == 0:  # Even index - place on the left
-            ax.text(0.0, 1.1 - (idx // 2) * 0.07, player_name, ha='left', va='center', transform=ax.transAxes,
+            ax.text(0.0, 1.1 - (idx // 2) * 0.07, f"{player_name} ({season})", ha='left', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
             ax.text(0.0, 1.07 - (idx // 2) * 0.07, player_team, ha='left', va='center', transform=ax.transAxes,
                     fontsize=10, color=color)
         else:  # Odd index - place on the right
-            ax.text(1, 1.1 - ((idx - 1) // 2) * 0.07, player_name, ha='right', va='center', transform=ax.transAxes,
+            ax.text(1, 1.1 - ((idx - 1) // 2) * 0.07, f"{player_name} ({season})", ha='right', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
             ax.text(1, 1.07 - ((idx - 1) // 2) * 0.07, player_team, ha='right', va='center', transform=ax.transAxes,
                     fontsize=10, color=color)
@@ -180,7 +182,7 @@ if st.sidebar.button("Generate Radar Chart"):
             sorted_player_teams = [player_teams[i] for i in sorted_indices]
 
             # Pass sorted data to the radar chart function
-            fig = generate_mplsoccer_radar_chart(sorted_player_data, sorted_player_names, sorted_player_teams, selected_metrics, radar_high, radar_low)
+            fig = generate_mplsoccer_radar_chart(sorted_player_data, sorted_player_names, sorted_player_teams, selected_metrics, radar_high, radar_low, player_seasons)
             st.pyplot(fig)
         else:
             st.warning("No data available for the selected players and seasons.")
