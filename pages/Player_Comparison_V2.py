@@ -31,7 +31,7 @@ if schema_type:
         st.session_state.custom_schema = []
 
     # Select metrics for the custom schema
-    selected_metrics = st.sidebar.multiselect("Şablon için metrikleri seçin", available_metrics, st.session_state.custom_schema)
+    selected_metrics = st.sidebar.multiselect("Şablon için metrikleri seçin", available_metrics)
     st.session_state.custom_schema = selected_metrics
 
     # Save the custom schema
