@@ -25,17 +25,14 @@ if schema_type:
     st.sidebar.header("Özel Şablon Oluşturma")
     custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
     available_metrics = get_params_list()
-    
-    # Initialize session state for custom schema creation
+
+    # Initialize session state for the custom schema
     if "custom_schema" not in st.session_state:
         st.session_state.custom_schema = []
 
     # Select metrics for the custom schema
-    st.session_state.custom_schema = st.sidebar.multiselect(
-        "Şablon için metrikleri seçin", 
-        available_metrics, 
-        st.session_state.custom_schema
-    )
+    selected_metrics = st.sidebar.multiselect("Şablon için metrikleri seçin", available_metrics, st.session_state.custom_schema)
+    st.session_state.custom_schema = selected_metrics
 
     # Save the custom schema
     if st.sidebar.button("Özel Şablonu Kaydet"):
