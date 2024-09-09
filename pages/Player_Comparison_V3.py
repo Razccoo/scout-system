@@ -4,7 +4,7 @@ from scripts.config import get_column_mapping, position_options
 
 import matplotlib.pyplot as plt
 import numpy as np
-from mplsoccer import Radar, FontManager
+from mplsoccer import Radar
 
 # Load the data and required functions
 leagues_df = utils.load_top_9_leagues()
@@ -58,39 +58,47 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
     :param radar_low: Series or list of low values (5th quantile) for each metric.
     :return: Matplotlib figure object of the radar chart.
     """
-
-    # Define the minimum and maximum ranges for each metric
+    # Convert radar_high and radar_low to lists
     min_range = radar_low.tolist()
     max_range = radar_high.tolist()
 
-    # Initialize the Radar object with the correct parameters
+    # Initialize the Radar object
     radar = Radar(
-        params=metrics,  # List of metrics to display
-        min_range=min_range,  # Minimum range for each metric
-        max_range=max_range  # Maximum range for each metric
+        params=metrics,  # List of parameter names
+        min_range=min_range,  # Minimum range for each parameter
+        max_range=max_range,  # Maximum range for each parameter
+        num_rings=4,  # Number of concentric circles
+        ring_width=1,  # Width of each ring
+        center_circle_radius=1  # Radius of the center circle
     )
 
-    # Create the radar figure and axes
-    fig, ax = radar.setup_axis()
+    # Create the radar figure and axis
+    fig, ax = radar.setup_axis(figsize=(8, 8))
 
-    # Plot each player's data on the radar chart
+    # Draw concentric circles for the radar chart
+    radar.draw_circles(ax=ax, facecolor='#f0f0f0', edgecolor='#d9d9d9')
+
+    # Plot each player's radar
     for player_stats, player_name in zip(player_data, player_names):
-        # Plot radar values directly
-        radar_values = player_stats.tolist()
-        
-        # Draw the radar chart for the player
+        # Draw radar chart with player's data
         radar.draw_radar(
-            values=radar_values, 
-            ax=ax, 
-            kwargs={'color': 'green', 'alpha': 0.6, 'lw': 2},  # Customize the plot appearance
-            label=player_name
+            values=player_stats.tolist(),
+            ax=ax,
+            kwargs_radar={'facecolor': '#00f2c1', 'alpha': 0.6, 'edgecolor': 'black'},  # Custom styling for radar
+            kwargs_rings={'facecolor': '#ffb2b2', 'alpha': 0.3}  # Styling for the outer rings clipped to the radar
         )
+        # Add a label for the player
+        ax.text(0.5, 1.1, player_name, ha='center', va='center', transform=ax.transAxes, fontsize=12, weight='bold')
 
-    # Adding title and legends
+    # Draw the parameter labels and range labels
+    radar.draw_param_labels(ax=ax, wrap=15, offset=1)
+    radar.draw_range_labels(ax=ax, offset=0.1)
+
+    # Title and final adjustments
     ax.set_title("Player Comparison Radar Chart", size=20, pad=20)
     plt.legend(loc='upper right', bbox_to_anchor=(1.1, 1.1))
 
-    # Return the figure object
+    # Return the figure for rendering
     return fig
 
 # Button to generate the radar chart
