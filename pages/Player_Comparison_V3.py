@@ -82,7 +82,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     )
 
     # Create the radar figure and axis
-    fig, ax = radar.setup_axis(figsize=(8, 8))
+    fig, ax = radar.setup_axis(figsize=(8, 8), facecolor='None')
 
     # Draw concentric circles for the radar chart
     radar.draw_circles(ax=ax, facecolor='#28252C', edgecolor='#39353f')
