@@ -66,24 +66,20 @@ if st.sidebar.button("Generate Radar Chart"):
     combined_df = pd.concat(players_data)
     player_main_position = combined_df.loc[combined_df['Player'] == selected_players[0], 'Main Position'].values[0]
 
-    # Determine schema based on selected option
-    schema = get_schema_params() if selected_schema == "Default Schema" else st.session_state.custom_schemas.get(selected_schema, {})
-    label_mapping = get_label_mapping()
-    column_mapping = get_column_mapping()
+    # Determine schema based on the selected option
+    schema = get_schema_params() if selected_schema == "Default Schema" else st.session_state.custom_schemas.get(selected_schema, [])
 
-    # Map parameters to labels
-    params = [label_mapping.get(column_mapping.get(param, param), param) for param in schema]
+    # Prepare the list of columns to be used, including only those that exist in the DataFrame
+    available_columns = combined_df.columns
+    cols = ['Player', 'Team within selected timeframe', 'Season'] + [col for col in schema if col in available_columns]
 
-    # Prepare data columns
-    cols = ['Player', 'Team within selected timeframe', 'Season'] + schema
-
-    # Rename columns based on mapping
-    currentseason = currentseason[cols].rename(columns=column_mapping).rename(columns=label_mapping)
-    combined_df = combined_df[cols].rename(columns=column_mapping).rename(columns=label_mapping)
+    # Ensure only existing columns are selected for both DataFrames
+    currentseason = currentseason[cols]
+    combined_df = combined_df[cols]
 
     # Set low and high percentiles for scaling
-    low = currentseason[params].quantile(0.05).tolist()
-    high = currentseason[params].quantile(0.95).tolist()
+    low = currentseason[schema].quantile(0.05).tolist()
+    high = currentseason[schema].quantile(0.95).tolist()
 
     # Generate radar chart
-    utils.player_comparison_radar(combined_df, selected_players, params, low, high)
+    utils.player_comparison_radar(combined_df, selected_players, schema, low, high)
