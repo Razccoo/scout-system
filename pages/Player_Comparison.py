@@ -8,7 +8,7 @@ st.title("Player Comparison Radar Chart")
 st.sidebar.header("Player Selection")
 
 all_leagues_df = utils.load_top_9_leagues()
-selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options)
+selected_position = st.sidebar.selectbox("Pozisyon Seçiniz", position_options+["All"])
 df = utils.filter_by_position(all_leagues_df, selected_position)
 df = df[df['Minutes played'] >= 900]
 currentseason = df[df['Season'] == '23-24']
