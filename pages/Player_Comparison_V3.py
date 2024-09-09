@@ -100,10 +100,10 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
 
         # Alternate player name placement between left and right
         if idx % 2 == 0:  # Even index - place on the left
-            ax.text(0, 1.1 - (idx // 2) * 0.05, player_name, ha='right', va='center', transform=ax.transAxes,
+            ax.text(0.1, 1.1 - (idx // 2) * 0.05, player_name, ha='right', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
         else:  # Odd index - place on the right
-            ax.text(1, 1.1 - ((idx - 1) // 2) * 0.05, player_name, ha='left', va='center', transform=ax.transAxes,
+            ax.text(0.9, 1.1 - ((idx - 1) // 2) * 0.05, player_name, ha='left', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
 
     # Draw the parameter labels and range labels
