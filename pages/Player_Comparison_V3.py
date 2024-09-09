@@ -91,7 +91,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
         radar_poly, vertices = radar.draw_radar_solid(
             values=player_stats.tolist(),
             ax=ax,
-            kwargs={'facecolor': color, 'alpha': 0.6, 'edgecolor': color, 'lw': 3}  # Unique color for each player
+            kwargs={'facecolor': color, 'alpha': 0.6, 'edgecolor': color, 'lw': 2}  # Unique color for each player
         )
 
         # Add 'o' markers for each metric point using scatter
