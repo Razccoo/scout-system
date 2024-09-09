@@ -49,7 +49,7 @@ player_seasons = {player: st.sidebar.selectbox(f"Select Season for {player}", av
 
 def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_high, radar_low):
     """
-    Generates a radar chart comparing selected players using mplsoccer's Radar class.
+    Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid.
 
     :param player_data: List of player stats for each selected player, each as a list of metric values.
     :param player_names: List of player names corresponding to the player data.
@@ -79,19 +79,18 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
     radar.draw_circles(ax=ax, facecolor='#f0f0f0', edgecolor='#d9d9d9')
 
     # Define a list of colors to use for different players
-    colors = ['#1f77b4', '#2ca02c', '#d62728', '#ff7f0e', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
-    # Plot each player's radar
+    # Plot each player's radar using draw_radar_solid
     for idx, (player_stats, player_name) in enumerate(zip(player_data, player_names)):
         # Select a color for the player from the colors list, cycling if more players than colors
         color = colors[idx % len(colors)]
 
-        # Draw radar chart with player's data
-        radar.draw_radar(
+        # Draw radar chart with player's data without clipping to the rings
+        radar.draw_radar_solid(
             values=player_stats.tolist(),
             ax=ax,
-            kwargs_radar={'facecolor': color, 'alpha': 0.4, 'edgecolor': color},  # Unique color for each player
-            kwargs_rings={'facecolor': color, 'alpha': 0.0}  # Styling for the outer rings clipped to the radar
+            kwargs={'facecolor': color, 'alpha': 0.6, 'edgecolor': 'black'}  # Unique color for each player
         )
         # Add a label for the player
         ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes, fontsize=12, weight='bold', color=color)
