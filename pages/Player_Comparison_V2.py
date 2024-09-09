@@ -5,7 +5,66 @@ from scripts.config import get_position_to_schema, get_params_list, get_schema_p
 from matplotlib.font_manager import FontProperties
 from mplsoccer import Radar
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+
+def generate_plotly_radar_chart(data, labels, players, lows, highs):
+    """
+    Generate a radar chart for player comparisons using Plotly.
+
+    Parameters:
+        data (DataFrame): Data containing player statistics.
+        labels (list): Metrics to be displayed on the radar chart.
+        players (list): List of players to compare.
+        lows (list): Lower percentile values for scaling.
+        highs (list): Upper percentile values for scaling.
+
+    Returns:
+        None: Displays the radar chart.
+    """
+    fig = go.Figure()
+
+    # Add each player's data to the radar chart
+    for player in players:
+        player_values = data[data['Player'] == player][labels].values.flatten().tolist()
+        fig.add_trace(go.Scatterpolar(
+            r=player_values,
+            theta=labels,
+            fill='toself',
+            name=player
+        ))
+
+    # Add scaling lines for low and high percentiles
+    fig.add_trace(go.Scatterpolar(
+        r=lows,
+        theta=labels,
+        fill='toself',
+        name='Low Percentiles',
+        line=dict(color='blue', dash='dash')
+    ))
+    fig.add_trace(go.Scatterpolar(
+        r=highs,
+        theta=labels,
+        fill='toself',
+        name='High Percentiles',
+        line=dict(color='red', dash='dash')
+    ))
+
+    # Update layout
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[min(lows), max(highs)]
+            )
+        ),
+        showlegend=True,
+        title="Player Comparison Radar Chart"
+    )
+
+    # Display the chart
+    fig.show()
     
+        
 st.title("Player Comparison Radar Chart")
 st.sidebar.header("Player Selection")
 
@@ -84,5 +143,6 @@ if st.sidebar.button("Generate Radar Chart"):
     high = currentseason[schema].quantile(0.95).tolist()
 
     # # Generate radar chart
-    utils.player_comparison_radar(combined_df, selected_players, schema, low, high)
+    # utils.player_comparison_radar(combined_df, selected_players, schema, low, high)
+    generate_plotly_radar_chart(combined_df, schema, selected_players, low, high)
     
