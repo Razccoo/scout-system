@@ -91,7 +91,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
             values=player_stats.tolist(),
             ax=ax,
             kwargs_radar={'facecolor': color, 'alpha': 0.2, 'edgecolor': 'black'},  # Unique color for each player
-            kwargs_rings={'facecolor': color, 'alpha': 0.3}  # Styling for the outer rings clipped to the radar
+            kwargs_rings={'facecolor': color, 'alpha': 0.0}  # Styling for the outer rings clipped to the radar
         )
         # Add a label for the player
         ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes, fontsize=12, weight='bold', color=color)
