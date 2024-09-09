@@ -130,7 +130,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     twitter_icon = Image.open(urlopen(twitter_icon_url))
 
     # Resize the icon to make it smaller
-    twitter_icon = twitter_icon.resize((30, 30), Image.ANTIALIAS)  # Resize to desired dimensions
+    twitter_icon = twitter_icon.resize(30, 30)  # Resize to desired dimensions
 
     # Add the resized icon to the figure
     fig.figimage(twitter_icon, 10, 10, zorder=3, alpha=0.6)  # Position the icon at the bottom left of the figure
