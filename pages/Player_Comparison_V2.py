@@ -44,12 +44,46 @@ if schema_type:
             st.session_state.custom_schema = []  # Reset custom schema after saving
         else:
             st.sidebar.error("Lütfen şablon adı giriniz.")
-            
+
+builtin_schemas = ["Default Schema"] + list(get_schema_params().keys())
+
 if schema_type:
-    schema_options = ["Default Schema"] + list(get_schema_params().keys())
+    schema_options = builtin_schemas
     if "custom_schemas" in st.session_state:
         schema_options += list(st.session_state.custom_schemas.keys())
     selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
 else:
-    schema_options = ["Default Schema"] + list(get_schema_params().keys())
+    schema_options = builtin_schemas
     selected_schema = st.sidebar.selectbox("Şablon Seçin", schema_options)
+    
+
+if st.sidebar.button("Generate Radar Chart"):
+    players_data = []
+    for player, season in seasons.items():
+        player_data = df[(df['Player'] == player) & (df['Season'] == season)]
+        players_data.append(player_data)
+
+    combined_df = pd.concat(players_data)
+    player_main_position = combined_df.loc[combined_df['Player'] == selected_players[0], 'Main Position'].values[0]
+
+    # Determine schema based on selected option
+    schema = get_schema_params() if selected_schema == builtin_schemas else st.session_state.custom_schemas.get(selected_schema, {})
+    label_mapping = get_label_mapping()
+    column_mapping = get_column_mapping()
+
+    # Map parameters to labels
+    params = [label_mapping.get(column_mapping.get(param, param), param) for param in schema]
+
+    # Prepare data columns
+    cols = ['Player', 'Team within selected timeframe', 'Season'] + schema
+
+    # Rename columns based on mapping
+    currentseason = currentseason[cols].rename(columns=column_mapping).rename(columns=label_mapping)
+    combined_df = combined_df[cols].rename(columns=column_mapping).rename(columns=label_mapping)
+
+    # Set low and high percentiles for scaling
+    low = currentseason[params].quantile(0.05).tolist()
+    high = currentseason[params].quantile(0.95).tolist()
+
+    # Generate radar chart
+    utils.player_comparison_radar(combined_df, selected_players, params, low, high)
