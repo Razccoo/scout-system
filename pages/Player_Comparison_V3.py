@@ -106,8 +106,8 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
     radar.draw_param_labels(ax=ax, wrap=15, offset=1)
     radar.draw_range_labels(ax=ax, offset=0.1)
 
-    # Title and final adjustments
-    ax.set_title("Player Comparison Radar Chart", size=20, pad=20)
+    # # Title and final adjustments
+    # ax.set_title("Player Comparison Radar Chart", size=20, pad=20)
 
     # Return the figure for rendering
     return fig
