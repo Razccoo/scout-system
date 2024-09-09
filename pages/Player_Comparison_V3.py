@@ -103,13 +103,13 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
         if idx % 2 == 0:  # Even index - place on the left
             ax.text(0.1, 1.1 - (idx // 2) * 0.1, player_name, ha='right', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
-            ax.text(0.1, 1.05 - (idx // 2) * 0.1, player_team, ha='right', va='center', transform=ax.transAxes,
-                    fontsize=10, color='gray')
+            ax.text(0.1, 1.07 - (idx // 2) * 0.1, player_team, ha='right', va='center', transform=ax.transAxes,
+                    fontsize=10, color=color)
         else:  # Odd index - place on the right
             ax.text(0.9, 1.1 - ((idx - 1) // 2) * 0.1, player_name, ha='left', va='center', transform=ax.transAxes,
                     fontsize=12, weight='bold', color=color)
-            ax.text(0.9, 1.05 - ((idx - 1) // 2) * 0.1, player_team, ha='left', va='center', transform=ax.transAxes,
-                    fontsize=10, color='gray')
+            ax.text(0.9, 1.07 - ((idx - 1) // 2) * 0.1, player_team, ha='left', va='center', transform=ax.transAxes,
+                    fontsize=10, color=color)
 
     # Draw the parameter labels and range labels
     radar.draw_param_labels(ax=ax, wrap=15, offset=1)
