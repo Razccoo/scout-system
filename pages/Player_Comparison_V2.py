@@ -5,35 +5,6 @@ from scripts.config import get_position_to_schema, get_params_list, get_schema_p
 from matplotlib.font_manager import FontProperties
 from mplsoccer import Radar
 import matplotlib.pyplot as plt
-
-def generate_radar_chart(data, labels, players, low, high):
-    """
-    Generate a radar chart based on player comparison data.
-
-    Parameters:
-        data (DataFrame): The DataFrame containing player data.
-        labels (list): List of parameter labels for the radar chart.
-        players (list): List of selected players to compare.
-        low (list): Lower percentile values for scaling.
-        high (list): Upper percentile values for scaling.
-
-    Returns:
-        None: Displays the radar chart.
-    """
-    # Extract values for each player
-    values = [data[data['Player'] == player][labels].values.flatten().tolist() for player in players]
-
-    # Initialize radar chart
-    radar = Radar(labels, low, high)
-
-    # Plot each player's values
-    for i, player_values in enumerate(values):
-        radar.plot(player_values, label=players[i])
-
-    # Customize and show the radar chart
-    plt.legend(loc='upper right', bbox_to_anchor=(1.2, 1.1))
-    plt.title("Player Comparison Radar Chart")
-    plt.show()
     
 st.title("Player Comparison Radar Chart")
 st.sidebar.header("Player Selection")
@@ -113,6 +84,5 @@ if st.sidebar.button("Generate Radar Chart"):
     high = currentseason[schema].quantile(0.95).tolist()
 
     # # Generate radar chart
-    # utils.player_comparison_radar(combined_df, selected_players, schema, low, high)
-    generate_radar_chart(combined_df, schema, selected_players, low, high)
+    utils.player_comparison_radar(combined_df, selected_players, schema, low, high)
     
