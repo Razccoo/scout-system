@@ -50,7 +50,7 @@ player_seasons = {player: st.sidebar.selectbox(f"Select Season for {player}", av
 def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_high, radar_low):
     """
     Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid
-    and markers for each metric point.
+    and markers for each metric point using ax.scatter.
 
     :param player_data: List of player stats for each selected player, each as a list of metric values.
     :param player_names: List of player names corresponding to the player data.
@@ -88,20 +88,19 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
         color = colors[idx % len(colors)]
 
         # Draw radar chart with player's data without clipping to the rings
-        radar.draw_radar_solid(
+        radar_poly, vertices = radar.draw_radar_solid(
             values=player_stats.tolist(),
             ax=ax,
-            kwargs={'facecolor': color, 'alpha': 0.6, 'edgecolor': 'black'}  # Unique color for each player
+            kwargs={'facecolor': color, 'alpha': 0.6, 'edgecolor': 'black', 'lw': 2}  # Unique color for each player
         )
 
-        # Add 'o' markers for each metric point
-        angles = radar.spoke_angles()  # Get the angles for each spoke
-        values = player_stats.tolist()
-        for angle, value in zip(angles, values):
-            ax.plot(angle, value, 'o', color='black', markersize=6, markerfacecolor=color, markeredgewidth=1)
+        # Add 'o' markers for each metric point using scatter
+        ax.scatter(vertices[:, 0], vertices[:, 1],
+                   c=color, edgecolors='black', marker='o', s=100, zorder=2)
 
-        # Add a label for the player
-        ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes, fontsize=12, weight='bold', color=color)
+        # Add a label for the player near the chart
+        ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes,
+                fontsize=12, weight='bold', color=color)
 
     # Draw the parameter labels and range labels
     radar.draw_param_labels(ax=ax, wrap=15, offset=1)
