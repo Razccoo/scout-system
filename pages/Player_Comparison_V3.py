@@ -98,9 +98,13 @@ def generate_mplsoccer_radar_chart(player_data, player_names, metrics, radar_hig
         ax.scatter(vertices[:, 0], vertices[:, 1],
                    c=color, marker='o', s=50, zorder=2)
 
-        # Add a label for the player near the chart
-        ax.text(0.5, 1.1 - idx * 0.05, player_name, ha='center', va='center', transform=ax.transAxes,
-                fontsize=12, weight='bold', color=color)
+        # Alternate player name placement between left and right
+        if idx % 2 == 0:  # Even index - place on the left
+            ax.text(-0.1, 1.1 - (idx // 2) * 0.05, player_name, ha='right', va='center', transform=ax.transAxes,
+                    fontsize=12, weight='bold', color=color)
+        else:  # Odd index - place on the right
+            ax.text(1.1, 1.1 - ((idx - 1) // 2) * 0.05, player_name, ha='left', va='center', transform=ax.transAxes,
+                    fontsize=12, weight='bold', color=color)
 
     # Draw the parameter labels and range labels
     radar.draw_param_labels(ax=ax, wrap=15, offset=1)
