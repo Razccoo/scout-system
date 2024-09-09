@@ -24,7 +24,7 @@ for player in selected_players:
 if schema_type:
     st.sidebar.header("Özel Şablon Oluşturma")
     custom_schema_name = st.sidebar.text_input("Özel Şablon Adı")
-    available_metrics = get_params_list()
+    available_metrics = get_column_mapping().keys()
 
     # Initialize session state for the custom schema
     if "custom_schema" not in st.session_state:
