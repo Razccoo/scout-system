@@ -596,7 +596,8 @@ def player_comparison_radar(df, players, params, low, high, lower_is_better=None
 
     range_labels = radar.draw_range_labels(ax=axs['radar'], fontsize=20, fontproperties=robotto_bold.prop, color='#FFFFFF')
     param_labels = radar.draw_param_labels(ax=axs['radar'], wrap=10, fontsize=20, fontproperties=robotto_bold.prop, color='#FFFFFF')
-
+    lines = radar.spoke(ax=axs['radar'], color='#a6a4a1', linestyle='--', zorder=2)
+    
     # Display the players alternately on the left and right
     title_coords = [(0.01, 0.65), (0.99, 0.65)]
     team_coords = [(0.01, 0.25), (0.99, 0.25)]
