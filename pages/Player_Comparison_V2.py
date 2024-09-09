@@ -67,14 +67,12 @@ if st.sidebar.button("Generate Radar Chart"):
     player_main_position = combined_df.loc[combined_df['Player'] == selected_players[0], 'Main Position'].values[0]
 
     # Determine schema based on selected option
-    schema = get_schema_params() if selected_schema == ["Default Schema"] else st.session_state.custom_schemas.get(selected_schema, {})
+    schema = get_schema_params() if selected_schema == "Default Schema" else st.session_state.custom_schemas.get(selected_schema, {})
     label_mapping = get_label_mapping()
     column_mapping = get_column_mapping()
 
-    # # Map parameters to labels
-    # params = [label_mapping.get(column_mapping.get(param, param), param) for param in schema]
     # Map parameters to labels
-    params = schema
+    params = [label_mapping.get(column_mapping.get(param, param), param) for param in schema]
 
     # Prepare data columns
     cols = ['Player', 'Team within selected timeframe', 'Season'] + schema
