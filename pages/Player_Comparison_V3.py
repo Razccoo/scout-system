@@ -4,7 +4,10 @@ from scripts.config import get_column_mapping, position_options
 
 import matplotlib.pyplot as plt
 import numpy as np
-from mplsoccer import Radar
+from mplsoccer import Radar, FontManager
+from PIL import Image
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+from urllib.request import urlopen
 
 # Load the data and required functions
 leagues_df = utils.load_top_9_leagues()
@@ -60,6 +63,10 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     :param radar_low: Series or list of low values (5th quantile) for each metric.
     :return: Matplotlib figure object of the radar chart.
     """
+    URL5 = ('https://raw.githubusercontent.com/google/fonts/main/apache/robotoslab/'
+            'RobotoSlab%5Bwght%5D.ttf')
+    robotto_bold = FontManager(URL5)
+    
     # Convert radar_high and radar_low to lists
     min_range = radar_low.tolist()
     max_range = radar_high.tolist()
@@ -114,10 +121,20 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     # Draw the parameter labels and range labels
     radar.draw_param_labels(ax=ax, wrap=15, offset=1)
     radar.draw_range_labels(ax=ax, offset=0.1)
-
+    
     # # Title and final adjustments
     # ax.set_title("Player Comparison Radar Chart", size=20, pad=20)
 
+    # Add Twitter icon and handle at the bottom of the figure
+    twitter_icon_url = 'https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png'
+    twitter_icon = Image.open(urlopen(twitter_icon_url))
+
+    # Add the icon to the figure
+    fig.figimage(twitter_icon, 10, 10, zorder=3, alpha=0.6)  # Position the icon at the bottom left of the figure
+
+    # Add your Twitter handle
+    fig.text(0.1, 0.02, '@YourTwitterHandle', fontsize=12, ha='left', va='center', color='black')
+    
     # Return the figure for rendering
     return fig
 
