@@ -102,7 +102,7 @@ else:
 selected_position = st.sidebar.selectbox("Select Position", position_options + ["All"])
 # df = utils.filter_by_position(leagues_df, selected_position)
 df = utils.filter_by_position(combined_data, selected_position)
-df = df[df['Minutes played'] >= 900]
+df = df[df['Minutes played'] >= 600]
 selected_players = st.sidebar.multiselect("Select Players to Compare", df['Player'].unique())
 
 # Season Selection for Each Player
