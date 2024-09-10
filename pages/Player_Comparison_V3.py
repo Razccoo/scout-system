@@ -165,7 +165,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     fig.text(0.52, 0.05, 'ALFIESCOUTING', fontsize=12, ha='center', va='center', color='#FFFFFF',
             fontproperties=robotto_bold.prop)  # Use the custom font
     
-    fig.text(0.12, 0.05, 'Tüm değerler 90 başına.', fontsize=12,
+    fig.text(0.13, 0.05, 'Tüm değerler 90 başına.', fontsize=12,
                                     fontproperties=robotto_bold.prop, ha='left',
                                     va='center', color='#FFFFFF')
     
