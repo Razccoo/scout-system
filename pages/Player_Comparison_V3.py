@@ -50,6 +50,17 @@ selected_players = st.sidebar.multiselect("Select Players to Compare", df['Playe
 available_seasons = df['Season'].unique()
 player_seasons = {player: st.sidebar.selectbox(f"Select Season for {player}", available_seasons) for player in selected_players}
 
+# Sidebar toggle to choose which labels to use
+use_custom_labels = st.sidebar.checkbox("Use Custom Labels", value=False)  # Default is original labels
+
+# Determine which labels to use based on the toggle state
+if use_custom_labels:
+    # Map the selected metrics to their new labels using the label_mapping dictionary
+    mapped_metrics = [get_column_mapping().get(metric, metric) for metric in selected_metrics]  # Use original if no mapping exists
+    mapped_labels = [get_label_mapping().get(metric, metric) for metric in mapped_metrics]  # Use original if no mapping exists
+else:
+    mapped_labels = selected_metrics  # Use original labels
+    
 def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metrics, radar_high, radar_low, player_seasons):
     """
     Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid
@@ -71,9 +82,9 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     min_range = radar_low.tolist()
     max_range = radar_high.tolist()
 
-    # Map the selected metrics to their new labels using the label_mapping dictionary
-    mapped_metrics = [get_column_mapping().get(metric, metric) for metric in metrics]  # Use original if no mapping exists
-    mapped_labels = [get_label_mapping().get(metric, metric) for metric in mapped_metrics]  # Use original if no mapping exists
+    # # Map the selected metrics to their new labels using the label_mapping dictionary
+    # mapped_metrics = [get_column_mapping().get(metric, metric) for metric in metrics]  # Use original if no mapping exists
+    # mapped_labels = [get_label_mapping().get(metric, metric) for metric in mapped_metrics]  # Use original if no mapping exists
 
     # Initialize the Radar object
     radar = Radar(
@@ -197,7 +208,7 @@ if st.sidebar.button("Generate Radar Chart"):
             sorted_player_teams = [player_teams[i] for i in sorted_indices]
 
             # Pass sorted data to the radar chart function
-            fig = generate_mplsoccer_radar_chart(sorted_player_data, sorted_player_names, sorted_player_teams, selected_metrics, radar_high, radar_low, player_seasons)
+            fig = generate_mplsoccer_radar_chart(sorted_player_data, sorted_player_names, sorted_player_teams, mapped_labels, radar_high, radar_low, player_seasons)
             st.pyplot(fig)
         else:
             st.warning("No data available for the selected players and seasons.")
