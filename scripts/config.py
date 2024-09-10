@@ -116,9 +116,11 @@ def get_label_mapping():
         "Aldığı paslar / 90": "Aldığı\npaslar",
         "Penaltısız xGA / 90": "Penaltısız\nxGA",
         "İkili Mücadeleler / 90": "İkili Müc.",
-        "Üçüncü Bölgeye Paslar / 90": "Üçüncü\nBölgeye Paslar",
+        "Üçüncü Bölgeye Paslar / 90": "3. Bölgeye\nPaslar",
         "Başarılı İleri Paslar %": "Baş.\nİleri Paslar %",
-        "İleri Paslar / 90": "İleri\nPaslar"
+        "İleri Paslar / 90": "İleri\nPaslar",
+        "Dikey Paslar / 90": "Dikey\nPaslar",
+        "Paslar / 90": "Paslar"
     }
 
 def get_column_mapping():
