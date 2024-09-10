@@ -76,7 +76,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
         params=metrics,  # List of parameter names
         min_range=min_range,  # Minimum range for each parameter
         max_range=max_range,  # Maximum range for each parameter
-        num_rings=6,  # Number of concentric circles
+        num_rings=4,  # Number of concentric circles
         ring_width=1,  # Width of each ring
         center_circle_radius=1  # Radius of the center circle
     )
@@ -97,11 +97,16 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
         # Select a color for the player from the colors list, cycling if more players than colors
         color = colors[idx % len(colors)]
 
-        # Draw radar chart with player's data without clipping to the rings
+        # Draw radar chart with player's data without the edge
         radar_poly, vertices = radar.draw_radar_solid(
             values=player_stats.tolist(),
             ax=ax,
-            kwargs={'facecolor': color, 'alpha': 0.5, 'edgecolor': color, 'lw': 2}  # Unique color for each player
+            kwargs={
+                'facecolor': color, 
+                'alpha': 0.6,  # Opacity of the radar fill
+                'edgecolor': 'none',  # No edge drawn initially
+                'lw': 0  # No line width
+            }
         )
 
         # Ensure the edge reconnects with the starting point by appending the first vertex to the end
