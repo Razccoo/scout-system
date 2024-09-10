@@ -158,11 +158,18 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     # Resize the icon to make it smaller
     twitter_icon = twitter_icon.resize((40, 40), Image.LANCZOS)  # Resize to desired dimensions
 
+    # # Add the resized icon to the figure
+    # fig.figimage(twitter_icon, 465, 17, zorder=3, alpha=1)  # Position the icon at the bottom left of the figure
+    
     # Add the resized icon to the figure
-    fig.figimage(twitter_icon, 465, 17, zorder=3, alpha=1)  # Position the icon at the bottom left of the figure
+    fig.figimage(twitter_icon, 850, 17, zorder=3, alpha=1)  # Position the icon at the bottom left of the figure
 
+    # # Add your Twitter handle with the custom font
+    # fig.text(0.52, 0.05, 'ALFIESCOUTING', fontsize=12, ha='center', va='center', color='#FFFFFF',
+    #         fontproperties=robotto_bold.prop)  # Use the custom font
+    
     # Add your Twitter handle with the custom font
-    fig.text(0.52, 0.05, 'ALFIESCOUTING', fontsize=12, ha='center', va='center', color='#FFFFFF',
+    fig.text(0.90, 0.05, 'ALFIESCOUTING', fontsize=12, ha='right', va='center', color='#FFFFFF',
             fontproperties=robotto_bold.prop)  # Use the custom font
     
     fig.text(0.13, 0.05, 'Tüm değerler 90 başına.', fontsize=12,
