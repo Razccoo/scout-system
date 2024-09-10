@@ -16,7 +16,7 @@ def load_season_data(selected_league, selected_season):
     league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","%C3%A3")}.csv'))
     league_season_data['League'] = f'{selected_league}'
     league_season_data['Season'] = f'{selected_season}'
-    league_season_data = league_season_data[list(get_column_mapping().keys())]
+    # league_season_data = league_season_data[list(get_column_mapping().keys())]
     return league_season_data
 
 # Load the data and required functions
