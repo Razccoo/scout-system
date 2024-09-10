@@ -36,7 +36,7 @@ selected_schema = st.sidebar.selectbox("Select Schema", schema_options)
 
 # Retrieve selected metrics based on selected schema
 if selected_schema in list(radar_params().keys()):
-    selected_metrics = available_metrics  # Default to all available metrics
+    selected_metrics = radar_params()[selected_schema]  # Default to all available metrics
 else:
     selected_metrics = st.session_state.custom_schemas[selected_schema]
 
