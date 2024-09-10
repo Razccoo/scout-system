@@ -161,8 +161,9 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     # Add the resized icon to the figure
     fig.figimage(twitter_icon, 465, 17, zorder=3, alpha=1)  # Position the icon at the bottom left of the figure
 
-    # Add your Twitter handle
-    fig.text(0.52, 0.05, '@Alfiescouting', fontsize=12, ha='center', va='center', color='#FFFFFF')
+    # Add your Twitter handle with the custom font
+    fig.text(0.52, 0.05, '@Alfiescouting', fontsize=12, ha='center', va='center', color='#FFFFFF',
+            fontproperties=robotto_bold.prop)  # Use the custom font
     
     fig.set_facecolor('#070707')
     
