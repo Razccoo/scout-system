@@ -8,6 +8,7 @@ from mplsoccer import Radar, FontManager
 from PIL import Image
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from urllib.request import urlopen
+import pandas as pd
 
 # Load the data and required functions
 leagues_df = utils.load_top_9_leagues()
@@ -21,6 +22,37 @@ st.sidebar.header("Player Selection")
 if 'custom_schemas' not in st.session_state:
     st.session_state.custom_schemas = {}
 
+# Load the list of available leagues
+league_list = list(utils.load_lg_data())
+
+# Allow multiple leagues to be selected using multiselect
+selected_leagues = st.sidebar.multiselect(
+    "Lig Seçiniz", 
+    league_list, 
+    default=["Süper Lig"] if "Süper Lig" in league_list else [league_list[0]]
+)
+
+# Allow multiple seasons to be selected
+selected_seasons = st.sidebar.multiselect(
+    "Sezon Seçiniz", 
+    sorted(set(utils.load_lg_data(league) for league in selected_leagues))
+)
+
+# Initialize an empty list to collect data from multiple leagues and seasons
+league_season_data = []
+
+# Load data for each selected league and season combination
+for league in selected_leagues:
+    for season in selected_seasons:
+        data = utils.load_season_data(league, season)
+        league_season_data.append(data)
+
+# Combine data into a single DataFrame if needed
+if league_season_data:
+    combined_data = pd.concat(league_season_data, ignore_index=True)
+else:
+    combined_data = pd.DataFrame()  # Empty DataFrame if no data is loaded
+    
 # Custom Schema Toggle
 create_custom_schema = st.sidebar.checkbox("Create Custom Schema")
 if create_custom_schema:
@@ -42,7 +74,8 @@ else:
 
 # Position and Player Filtering
 selected_position = st.sidebar.selectbox("Select Position", position_options + ["All"])
-df = utils.filter_by_position(leagues_df, selected_position)
+# df = utils.filter_by_position(leagues_df, selected_position)
+df = utils.filter_by_position(combined_data, selected_position)
 df = df[df['Minutes played'] >= 900]
 selected_players = st.sidebar.multiselect("Select Players to Compare", df['Player'].unique())
 
@@ -185,7 +218,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
 if st.sidebar.button("Generate Radar Chart"):
     if selected_players:
         # Reference data for radar high and low quantiles
-        reference_df = leagues_df[leagues_df['Season'] == '23-24']
+        reference_df = combined_data[combined_data['Season'] == '23-24']
         radar_high = reference_df[selected_metrics].quantile(0.95)
         radar_low = reference_df[selected_metrics].quantile(0.05)
 
