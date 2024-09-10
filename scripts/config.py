@@ -173,6 +173,10 @@ position_options = [
 ]
 
 def radar_params():
-    return [
-        "Key passes per 90","Progressive passes per 90","Duels won, %","Successful defensive actions per 90","Progressive runs per 90","Forward passes per 90","Accurate forward passes, %"
-        ]
+    return {
+        'datamb_midfielders': ["Key passes per 90","Progressive passes per 90","Duels won, %","Successful defensive actions per 90","Progressive runs per 90","Forward passes per 90","Accurate forward passes, %"],
+        'datamb_strikers': ["Received passes per 90","Aerial duels won, %","Non-penalty goals per 90","npxG per 90","Passes to penalty area per 90","xA per 90","Successful attacking actions per 90"],
+        'datamb_wingers': ["Progressive runs per 90","Dribbles per 90","Successful dribbles, %","Non-penalty goals per 90","npxGA per 90","Assists per 90","Key passes per 90","Successful attacking actions per 90"],
+        'datamb_fullbacks': ["Accurate crosses, %","xA per 90","Progressive passes per 90","Successful defensive actions per 90","Defensive duels won, %","Aerial duels won, %","Progressive runs per 90"],
+        'datamb_centrebacks': ["Passes per 90","Accurate passes, %","Accurate forward passes, %","Progressive passes per 90","Successful defensive actions per 90","Defensive duels won, %","Aerial duels won, %","Progressive runs per 90"]
+    }
