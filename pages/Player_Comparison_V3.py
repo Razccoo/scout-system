@@ -162,7 +162,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     fig.figimage(twitter_icon, 465, 17, zorder=3, alpha=1)  # Position the icon at the bottom left of the figure
 
     # Add your Twitter handle
-    fig.text(0.52, 0.05, '@AlfieScouting', fontsize=12, ha='center', va='center', color='#FFFFFF')
+    fig.text(0.52, 0.05, '@Alfiescouting', fontsize=12, ha='center', va='center', color='#FFFFFF')
     
     fig.set_facecolor('#070707')
     
