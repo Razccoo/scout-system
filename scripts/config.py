@@ -171,3 +171,8 @@ position_options = [
     "Bekler (FB/KB)", "Defansif Oyuncular (STP, FB/KB, DOS)", "Stoper & Defansif Orta Saha",
     "Santrforlar", "Stoperler"
 ]
+
+def radar_params():
+    return [
+        "Key passes per 90","Progressive passes per 90","Duels won, %","Successful defensive actions per 90","Progressive runs per 90","Forward passes per 90","Accurate forward passes, %"
+        ]

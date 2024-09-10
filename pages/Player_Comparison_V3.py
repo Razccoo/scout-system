@@ -1,6 +1,6 @@
 import streamlit as st
 from scripts import utils
-from scripts.config import get_column_mapping, position_options, get_label_mapping
+from scripts.config import get_column_mapping, position_options, get_label_mapping, get_schema_params
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,11 +31,11 @@ if create_custom_schema:
         st.sidebar.success(f"Schema '{schema_name}' saved.")
 
 # Schema Selection
-schema_options = ["Default Schema"] + list(st.session_state.custom_schemas.keys())
+schema_options = list(get_schema_params().keys()) + list(st.session_state.custom_schemas.keys())
 selected_schema = st.sidebar.selectbox("Select Schema", schema_options)
 
 # Retrieve selected metrics based on selected schema
-if selected_schema == "Default Schema":
+if selected_schema in list(get_schema_params().keys()):
     selected_metrics = available_metrics  # Default to all available metrics
 else:
     selected_metrics = st.session_state.custom_schemas[selected_schema]
