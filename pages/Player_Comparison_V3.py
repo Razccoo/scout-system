@@ -104,6 +104,9 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
             kwargs={'facecolor': color, 'alpha': 0.5, 'edgecolor': color, 'lw': 2}  # Unique color for each player
         )
 
+        # Draw the edges separately to keep them fully visible
+        ax.plot(vertices[:, 0], vertices[:, 1], color='black', lw=2, zorder=3)  # Draw edge with full opacity
+
         # Add 'o' markers for each metric point using scatter
         ax.scatter(vertices[:, 0], vertices[:, 1],
                    c=color, marker='o', s=50, zorder=2)
