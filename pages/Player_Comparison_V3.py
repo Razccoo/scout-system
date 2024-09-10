@@ -71,9 +71,12 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     min_range = radar_low.tolist()
     max_range = radar_high.tolist()
 
+    # Map the selected metrics to their new labels using the label_mapping dictionary
+    mapped_labels = [get_column_mapping.get(metric, metric) for metric in metrics]  # Use original if no mapping exists
+
     # Initialize the Radar object
     radar = Radar(
-        params=metrics,  # List of parameter names
+        params=mapped_labels,  # List of parameter names
         min_range=min_range,  # Minimum range for each parameter
         max_range=max_range,  # Maximum range for each parameter
         num_rings=6,  # Number of concentric circles
