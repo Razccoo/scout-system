@@ -31,10 +31,14 @@ selected_leagues = st.sidebar.multiselect(
     league_list
 )
 
+# Flatten the list of seasons for selected leagues and remove duplicates
+all_seasons = [season for league in selected_leagues for season in utils.load_lg_data(league)]
+unique_seasons = sorted(set(all_seasons))
+
 # Allow multiple seasons to be selected
 selected_seasons = st.sidebar.multiselect(
     "Sezon Seçiniz", 
-    sorted(set(utils.load_lg_data(league) for league in selected_leagues))
+    unique_seasons
 )
 
 # Initialize an empty list to collect data from multiple leagues and seasons
