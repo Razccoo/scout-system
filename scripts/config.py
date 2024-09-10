@@ -120,7 +120,7 @@ def get_label_mapping():
         "Başarılı İleri Paslar %": "Baş.\nİleri Paslar %",
         "İleri Paslar / 90": "İleri\nPaslar",
         "Dikey Paslar / 90": "Dikey\nPaslar",
-        "Paslar / 90": "Paslar"
+        "Paslar / 90": "Pas"
     }
 
 def get_column_mapping():
