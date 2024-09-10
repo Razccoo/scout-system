@@ -104,8 +104,11 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
             kwargs={'facecolor': color, 'alpha': 0.5, 'edgecolor': color, 'lw': 2}  # Unique color for each player
         )
 
+        # Ensure the edge reconnects with the starting point by appending the first vertex to the end
+        closed_vertices = np.append(vertices, [vertices[0]], axis=0)
+
         # Draw the edges separately to keep them fully visible
-        ax.plot(vertices[:, 0], vertices[:, 1], color='black', lw=2, zorder=3)  # Draw edge with full opacity
+        ax.plot(closed_vertices[:, 0], closed_vertices[:, 1], color=color, lw=2, zorder=3)  # Draw edge with full opacity
 
         # Add 'o' markers for each metric point using scatter
         ax.scatter(vertices[:, 0], vertices[:, 1],
