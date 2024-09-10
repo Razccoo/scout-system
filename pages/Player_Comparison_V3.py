@@ -28,8 +28,7 @@ league_list = list(utils.load_lg_data())
 # Allow multiple leagues to be selected using multiselect
 selected_leagues = st.sidebar.multiselect(
     "Lig Seçiniz", 
-    league_list, 
-    default=["Süper Lig"] if "Süper Lig" in league_list else [league_list[0]]
+    league_list
 )
 
 # Allow multiple seasons to be selected
