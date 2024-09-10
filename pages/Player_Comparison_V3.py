@@ -31,6 +31,15 @@ st.sidebar.header("Player Selection")
 if 'custom_schemas' not in st.session_state:
     st.session_state.custom_schemas = {}
 
+# Helper function to standardize season names
+def standardize_season_name(season):
+    # Define standardization logic
+    if len(season) == 4 and season.isdigit():  # Handles format like "2023"
+        return f"{season[2:]}-{str(int(season[2:]) + 1).zfill(2)}"  # Converts "2023" to "23-24"
+    elif "-" in season and len(season.split("-")[0]) == 2:  # Handles formats like "23-24"
+        return season
+    return season  # Return the season as is if it doesn't match any known patterns
+
 # Load the list of available leagues
 league_list = list(utils.load_lg_data())
 
@@ -41,7 +50,7 @@ selected_leagues = st.sidebar.multiselect(
 )
 
 # Flatten the list of seasons for selected leagues and remove duplicates
-all_seasons = [season for league in selected_leagues for season in utils.load_lg_data(league)]
+all_seasons = [standardize_season_name(season) for league in selected_leagues for season in utils.load_lg_data(league)]
 unique_seasons = sorted(set(all_seasons))
 
 # Allow multiple seasons to be selected
@@ -56,8 +65,13 @@ league_season_data = []
 # Load data for each selected league and season combination
 for league in selected_leagues:
     for season in selected_seasons:
-        data = load_season_data(league, season)
-        league_season_data.append(data)
+        # Convert the selected season back to match the league's format if necessary
+        league_seasons = utils.load_lg_data(league)
+        matching_season = next((s for s in league_seasons if standardize_season_name(s) == season), None)
+
+        if matching_season:
+            data = load_season_data(league, matching_season)
+            league_season_data.append(data)
 
 # Combine data into a single DataFrame if needed
 if league_season_data:
