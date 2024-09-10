@@ -1,6 +1,6 @@
 import streamlit as st
 from scripts import utils
-from scripts.config import get_column_mapping, position_options
+from scripts.config import get_column_mapping, position_options, get_label_mapping
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -72,7 +72,8 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
     max_range = radar_high.tolist()
 
     # Map the selected metrics to their new labels using the label_mapping dictionary
-    mapped_labels = [get_column_mapping().get(metric, metric) for metric in metrics]  # Use original if no mapping exists
+    mapped_metrics = [get_column_mapping().get(metric, metric) for metric in metrics]  # Use original if no mapping exists
+    mapped_labels = [get_label_mapping().get(metric, metric) for metric in mapped_metrics]  # Use original if no mapping exists
 
     # Initialize the Radar object
     radar = Radar(
