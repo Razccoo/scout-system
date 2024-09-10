@@ -103,7 +103,7 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
             ax=ax,
             kwargs={
                 'facecolor': color, 
-                'alpha': 0.6,  # Opacity of the radar fill
+                'alpha': 0.4,  # Opacity of the radar fill
                 'edgecolor': 'none',  # No edge drawn initially
                 'lw': 0  # No line width
             }
