@@ -61,6 +61,8 @@ if use_custom_labels:
 else:
     mapped_labels = selected_metrics  # Use original labels
     
+st.write(mapped_labels)
+
 def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metrics, radar_high, radar_low, player_seasons):
     """
     Generates a radar chart comparing selected players using mplsoccer's Radar class with draw_radar_solid
