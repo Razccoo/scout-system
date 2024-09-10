@@ -10,6 +10,15 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from urllib.request import urlopen
 import pandas as pd
 
+@st.cache_data
+def load_season_data(selected_league, selected_season):
+    full_league_name = f"{selected_league} {selected_season}"
+    league_season_data = utils.read_csv2((f'https://raw.githubusercontent.com/griffisben/Wyscout_Prospect_Research/main/Main%20App/{full_league_name.replace(" ","%20").replace("ü","u").replace("ó","o").replace("ö","o").replace("ã","%C3%A3")}.csv'))
+    league_season_data['League'] = f'{selected_league}'
+    league_season_data['Season'] = f'{selected_season}'
+    league_season_data = league_season_data[list(get_column_mapping().keys())]
+    return league_season_data
+
 # Load the data and required functions
 leagues_df = utils.load_top_9_leagues()
 available_metrics = get_column_mapping().keys()
@@ -47,7 +56,7 @@ league_season_data = []
 # Load data for each selected league and season combination
 for league in selected_leagues:
     for season in selected_seasons:
-        data = utils.load_season_data(league, season)
+        data = load_season_data(league, season)
         league_season_data.append(data)
 
 # Combine data into a single DataFrame if needed
