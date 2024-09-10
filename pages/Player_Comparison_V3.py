@@ -132,8 +132,8 @@ def generate_mplsoccer_radar_chart(player_data, player_names, player_teams, metr
                     fontsize=10, color=color)
 
     # Draw the parameter labels and range labels
-    radar.draw_param_labels(ax=ax, wrap=15, offset=1, kwargs={'fontweight': 'bold'})  # Add 'fontweight' to make the labels bold
-    radar.draw_range_labels(ax=ax, offset=0.1, color='#FFFFFF', kwargs={'fontweight': 'bold'})
+    radar.draw_param_labels(ax=ax, wrap=15, offset=1, fontweight='bold')
+    radar.draw_range_labels(ax=ax, offset=0.1, color='#FFFFFF', fontweight='bold')
     
     # # Title and final adjustments
     # ax.set_title("Player Comparison Radar Chart", size=20, pad=20)
